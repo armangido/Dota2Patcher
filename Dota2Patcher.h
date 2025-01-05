@@ -2,6 +2,7 @@
 #include <format>
 #include <vector>
 #include <Windows.h>
+#include <iostream>
 
 class Registry {
 public:
@@ -69,4 +70,15 @@ public:
 	}
 
 	std::vector<PatchInfo> patches;
+};
+
+class Updater {
+public:
+	std::string get_remote_version();
+	std::string get_local_version();
+	void check_update();
+
+private:
+	const std::string remote_version_url = "https://raw.githubusercontent.com/Wolf49406/Dota2Patcher/main/version.txt";
+	const std::string update_url = "https://github.com/Wolf49406/Dota2Patcher/releases/latest";
 };

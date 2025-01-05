@@ -1,6 +1,9 @@
 ﻿#include "Dota2Patcher.h"
 
 int main() {
+	Updater updater;
+	updater.check_update();
+
 	FileSystem fylesystem;
 
 	if (!fylesystem.Init()) {
@@ -40,6 +43,6 @@ int main() {
 	}
 
 	printf("[+] Done!\n");
-	system("pause");
+	std::cin.get();
 	return 0;
 }
