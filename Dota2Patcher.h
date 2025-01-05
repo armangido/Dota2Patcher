@@ -75,10 +75,10 @@ public:
 class Updater {
 public:
 	std::string get_remote_version();
-	std::string get_local_version();
 	void check_update();
 
 private:
+	const std::string local_version = "1.0.0.2";
 	const std::string remote_version_url = "https://raw.githubusercontent.com/Wolf49406/Dota2Patcher/main/version.txt";
 	const std::string update_url = "https://github.com/Wolf49406/Dota2Patcher/releases/latest";
 };

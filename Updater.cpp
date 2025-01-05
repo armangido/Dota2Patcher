@@ -1,7 +1,5 @@
 #include "Dota2Patcher.h"
 #include <curl/curl.h>
-#include <iostream>
-#include <fstream>
 #include <string>
 
 std::wstring string_to_wstring(const std::string& str) {
@@ -37,31 +35,14 @@ std::string Updater::get_remote_version() {
     return read_buffer;
 }
 
-std::string Updater::get_local_version() {
-    std::ifstream file("version.txt");
-    if (!file.is_open()) {
-        printf("[!] Can't open version.txt\n");
-        return "";
-    }
-
-    std::string version;
-    std::getline(file, version);
-    file.close();
-
-    return version;
-}
-
 void Updater::check_update() {
-    std::string local_version = get_local_version();
     std::string remove_version = get_remote_version();
-
-    if (local_version.empty() || remove_version.empty())
+    if (remove_version.empty())
         return;
 
-    local_version.erase(local_version.find_last_not_of(" \n\r\t") + 1);
     remove_version.erase(remove_version.find_last_not_of(" \n\r\t") + 1);
 
-    if (local_version == remove_version)
+    if (remove_version == local_version)
         return;
 
     printf("[!!!] Update Required!\n");
