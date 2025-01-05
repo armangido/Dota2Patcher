@@ -1,6 +1,5 @@
 #include "Dota2Patcher.h"
 #include <regex>
-#include <Windows.h>
 
 bool Registry::find_dota_path() {
     HKEY h_key{};
