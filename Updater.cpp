@@ -6,9 +6,9 @@
 #include <filesystem>
 #include "md5.h"
 
-static std::string ToUpper(std::string s) {
+static std::string ToLower(std::string s) {
     std::transform(s.begin(), s.end(), s.begin(), [](unsigned char c) {
-        return std::toupper(c);
+        return std::tolower(c);
         });
     return s;
 }
@@ -49,7 +49,6 @@ std::string Updater::get_remote_hash() {
 std::string Updater::get_local_hash() {
     if (!std::filesystem::exists("Dota2Patcher.exe"))
         return "";
-
     std::ifstream inBigArrayfile;
     inBigArrayfile.open("Dota2Patcher.exe", std::ios::binary | std::ios::in);
     inBigArrayfile.seekg(0, std::ios::end);
@@ -59,7 +58,7 @@ std::string Updater::get_local_hash() {
     inBigArrayfile.read(InFileData, Length);
     std::string HASH = md5(InFileData, Length);
     delete[] InFileData;
-    return ToUpper(HASH);
+    return HASH;
 }
 
 
@@ -72,7 +71,7 @@ void Updater::check_update() {
 
     remote_hash.erase(remote_hash.find_last_not_of(" \n\r\t") + 1);
 
-    if (remote_hash == local_hash)
+    if (ToLower(remote_hash) == ToLower(local_hash))
         return;
 
     printf("[!] Update Required!\n");
