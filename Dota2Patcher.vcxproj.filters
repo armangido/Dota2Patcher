@@ -42,6 +42,8 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <Text Include="MD5" />
+    <Text Include="MD5">
+      <Filter>Source files\Updater</Filter>
+    </Text>
   </ItemGroup>
 </Project>
