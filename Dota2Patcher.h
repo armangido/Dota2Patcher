@@ -1,69 +1,17 @@
 #pragma once
-#include <format>
-#include <vector>
-#include <Windows.h>
 #include <iostream>
+#include <Windows.h>
+#include <vector>
 
-class Registry {
-public:
-	bool find_dota_path();
-	bool regex_fix_path();
-
-	std::string get_dota_path() const {
-		return dota_path_fixed;
-	}
-
-private:
-	std::string dota_path_from_reg;
-	std::string dota_path_fixed;
-};
-
-class FileSystem : public Registry {
-public:
-	enum class PathType {
-		game_bin,
-		game_dota
-	};
-
-	bool Init() {
-		return find_dota_path() && regex_fix_path();
-	}
-
-	std::string dota_path() const {
-		return get_dota_path();
-	}
-
-	std::string library(const std::string& name, PathType type) {
-		std::string sub_path = get_path_by_type(type);
-		return get_dota_path() + std::format("{}\\{}.dll", sub_path, name);
-	}
-
-private:
-	std::string get_path_by_type(PathType type) const {
-		switch (type) {
-		case PathType::game_bin:
-			return "\\game\\bin\\win64";
-		case PathType::game_dota:
-			return "\\game\\dota\\bin\\win64";
-		default:
-			return "";
-		}
-	}
-};
-
-class Patcher {
+class Patches {
 public:
 	struct PatchInfo {
-		std::string patch_name;
-		std::string library;
-		FileSystem::PathType patch_type;
+		std::string name;
+		std::string module;
 		std::string pattern;
-		std::string replace;
-		int offset = 0;
+		std::string patch_bytes;
+		int offset;
 	};
-
-	int find_offset(const std::string& file_path, const std::string& pattern);
-	void apply_patch(const std::string& file_path, int patch_offset, const std::string& replace_str);
 
 	void add_patch(const PatchInfo& patch) {
 		patches.push_back(patch);
@@ -74,11 +22,12 @@ public:
 
 class Updater {
 public:
-	std::string get_remote_version();
 	void check_update();
 
 private:
-	const std::string local_version = "1.0.0.2";
-	const std::string remote_version_url = "https://raw.githubusercontent.com/Wolf49406/Dota2Patcher/main/version.txt";
+	std::string get_remote_hash();
+	std::string get_local_hash();
+
+	const std::string remote_version_url = "https://raw.githubusercontent.com/Wolf49406/Dota2Patcher/main/MD5";
 	const std::string update_url = "https://github.com/Wolf49406/Dota2Patcher/releases/latest";
 };
