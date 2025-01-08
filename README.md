@@ -4,10 +4,9 @@
 ### How To Install:
 * Download [latest release](https://github.com/Wolf49406/Dota2Patcher/releases/latest)
 * Launch Dota2Patcher.exe
+* Launch Dota 2
+* Wait for Patcher to do his job
 * That's all!
-
-### How To Remove:
-* Just check integrity of game files
 
 ## New Feature: set_rendering_enabled
 Remember removed `dota_use_particle_fow` convar? So this is it but better.  
