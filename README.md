@@ -13,6 +13,10 @@ Now you don't have to use ConVars (ex: `dota_camera_distance 1500; r_farz 18000`
 Dota2Patcher will do it for you. Default value is 1500 which is pretty safe to use.  
 But you still can use `dota_camera_distance` if you want to.
 
+### Set custom Camera Distance and FoW
+You can set your own values by rinning Dota2Patcher with launch arguments:  
+`Dota2Patcher.exe -camera_distance 1500 -fow_amount 100`
+
 ## set_rendering_enabled
 Remember removed `dota_use_particle_fow` convar? So this is it but better.  
 Shows ALL hidden particles in FOW: Enemy TP's, spells, even jungle farm particles (blood splashes).  
