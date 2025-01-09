@@ -44,11 +44,11 @@ public:
         // pop		rbx
         // retn
 
-        uintptr_t base = memory_->pattern_scan(hProc, module, "48 8D ? ? ? ? ? 48 83 C4 ? 5B C3 48 8D ? ? ? ? ? E8 ? ? ? ? 83 3D 76 B2 98 03");
+        const uintptr_t base = memory_->pattern_scan(hProc, module, "48 8D ? ? ? ? ? 48 83 C4 ? 5B C3 48 8D ? ? ? ? ? E8 ? ? ? ? 83 3D 76 B2 98 03");
         if (base == -1)
             return false;
 
-        uintptr_t camera_base_address = memory_->absolute_address(hProc, base, 3, 7);
+        const uintptr_t camera_base_address = memory_->absolute_address(hProc, base, 3, 7);
         if (camera_base_address == -1)
             return false;
 
