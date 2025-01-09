@@ -4,11 +4,11 @@
 
 // CDOTA_Camera 21 vfunc
 // 
-// sub							rsp, 48h
-// movaps[rsp + 48h + var_18],	xmm6
-// movaps						xmm6, xmm1
-// movaps[rsp + 48h + var_28],	xmm7
-// call							get_camera_distance <<<
+// sub                          rsp, 48h
+// movaps[rsp + 48h + var_18],  xmm6
+// movaps                       xmm6, xmm1
+// movaps[rsp + 48h + var_28],  xmm7
+// call                         get_camera_distance <<<
 
 class CDOTACamera {
 public:
