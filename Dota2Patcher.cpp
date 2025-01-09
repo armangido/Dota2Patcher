@@ -3,7 +3,7 @@
 #include "CDOTACamera.h"
 #include "Memory.h"
 
-int main() {
+int main(int argc, char* argv[]) {
 #ifndef _DEBUG
 	Updater updater;
 	updater.check_update();
@@ -76,12 +76,27 @@ int main() {
 	}
 
 	CDOTACamera camera;
+
+	if (argc >= 3) {
+		for (int i = 0; i < argc; i++) {
+			if (!strcmp(argv[i], "-distance")) {
+				camera.default_distance = (float)std::stoi(argv[i + 1]);
+				continue;
+			}
+			if (!strcmp(argv[i], "-fow")) {
+				camera.default_fow = (float)std::stoi(argv[i + 1]);
+				continue;
+			}
+		}
+	}
+
 	if (!camera.find_camera(process.get(), memory.loaded_modules["client.dll"])) {
 		printf("[-] Can't find CDOTACamera! Use ConVars instead...\n");
 	}
 	else {
-		camera.set_distance(process.get(), 1500);
-		camera.set_r_farz(process.get(), 18000);
+		camera.set_distance(process.get(), camera.default_distance);
+		camera.set_r_farz(process.get(), camera.default_distance * 2);
+		camera.set_fow(process.get(), camera.default_fow);
 	}
 
 	printf("[+] Done!\n");

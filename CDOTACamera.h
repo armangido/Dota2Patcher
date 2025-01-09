@@ -12,6 +12,9 @@
 
 class CDOTACamera {
 public:
+	float default_distance = 1200;
+	float default_fow = 70;
+
 	void set_distance(HANDLE hProc, float distance) {
 		Memory memory;
 		memory.write_memory(hProc, camera_base, distance);
