@@ -1,5 +1,7 @@
 # Dota2Patcher
- The return of legendary Dota2Patcher. Will add more features later
+ The return of legendary Dota2Patcher. Will add more features later  
+ 
+ [![MSBuild](https://github.com/Wolf49406/Dota2Patcher/actions/workflows/msbuild.yml/badge.svg?branch=main)](https://github.com/Wolf49406/Dota2Patcher/actions/workflows/msbuild.yml)
 
 ### How To Install:
 * Download [latest release](https://github.com/Wolf49406/Dota2Patcher/releases/latest)
