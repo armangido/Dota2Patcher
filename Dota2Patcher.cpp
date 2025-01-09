@@ -1,7 +1,8 @@
 ﻿#include "Dota2Patcher.h"
 #include "ProcessHandle.h"
-#include "CDOTACamera.h"
 #include "Memory.h"
+#include "CDOTACamera.h"
+#include "CDOTAGamerules.h"
 
 int main(int argc, char* argv[]) {
 #ifndef _DEBUG
@@ -31,7 +32,7 @@ int main(int argc, char* argv[]) {
 
 	Memory memory;
 
-	printf("[~] Loading moules...\n");
+	printf("[~] Waiting for moules to load...\n");
 
 	if (!memory.load_modules(process.get())) {
 		printf("[-] Failed to load modules, aborting...\n");
@@ -40,6 +41,48 @@ int main(int argc, char* argv[]) {
 	}
 
 	printf("[+] Modules loaded: %d\n", (int)memory.loaded_modules.size());
+
+	// GAMERULES
+
+	CDOTAGamerules game_rules;
+
+	if (!game_rules.find_gamerules(process.get(), memory.loaded_modules["client.dll"])) {
+		printf("[-] Can't find C_DOTAGamerules_Proxy!\n");
+		std::cin.get();
+		return 0;
+	}
+
+	printf("[~] Waiting for lobby to start...\n");
+	while (!game_rules.in_lobby(process.get()))
+		Sleep(1000);
+
+	// CAMERA HACK
+
+	CDOTACamera camera;
+
+	if (argc >= 3) {
+		for (int i = 0; i < argc; i++) {
+			if (!strcmp(argv[i], "-camera_distance")) {
+				camera.DEFAULT_DISTANCE = (float)std::stoi(argv[i + 1]);
+				continue;
+			}
+			if (!strcmp(argv[i], "-fow_amount")) {
+				camera.DEFAULT_FOW = (float)std::stoi(argv[i + 1]);
+				continue;
+			}
+		}
+	}
+
+	if (!camera.find_camera(process.get(), memory.loaded_modules["client.dll"])) {
+		printf("[-] Can't find CDOTACamera! Use ConVars instead...\n");
+	}
+	else {
+		camera.set_distance(process.get(), camera.DEFAULT_DISTANCE);
+		camera.set_r_farz(process.get(), camera.DEFAULT_DISTANCE * 2);
+		camera.set_fow(process.get(), camera.DEFAULT_FOW);
+	}
+
+	// PATCHES
 
 	Patches ptch;
 
@@ -75,31 +118,6 @@ int main(int argc, char* argv[]) {
 		printf("[+] \"%s\" patched successfully\n", patch.name.c_str());
 	}
 
-	CDOTACamera camera;
-
-	if (argc >= 3) {
-		for (int i = 0; i < argc; i++) {
-			if (!strcmp(argv[i], "-camera_distance")) {
-				camera.DEFAULT_DISTANCE = (float)std::stoi(argv[i + 1]);
-				continue;
-			}
-			if (!strcmp(argv[i], "-fow_amount")) {
-				camera.DEFAULT_FOW = (float)std::stoi(argv[i + 1]);
-				continue;
-			}
-		}
-	}
-
-	if (!camera.find_camera(process.get(), memory.loaded_modules["client.dll"])) {
-		printf("[-] Can't find CDOTACamera! Use ConVars instead...\n");
-	}
-	else {
-		camera.set_distance(process.get(), camera.DEFAULT_DISTANCE);
-		camera.set_r_farz(process.get(), camera.DEFAULT_DISTANCE * 2);
-		camera.set_fow(process.get(), camera.DEFAULT_FOW);
-	}
-
 	printf("[+] Done!\n");
-	std::cin.get();
 	return 0;
 }

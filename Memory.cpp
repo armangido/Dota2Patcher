@@ -103,7 +103,7 @@ bool Memory::load_modules(HANDLE hProc) {
             break;
 
         modules.clear();
-        Sleep(1000);
+        Sleep(2000);
     }
 
 

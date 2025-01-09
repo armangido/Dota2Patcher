@@ -102,6 +102,7 @@
     <ClCompile Include="Updater.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="CDOTAGamerules.h" />
     <ClInclude Include="Dota2Patcher.h" />
     <ClInclude Include="md5.h" />
     <ClInclude Include="Memory.h" />

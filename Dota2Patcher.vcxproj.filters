@@ -43,6 +43,9 @@
     <ClInclude Include="md5.h">
       <Filter>Source files\Updater</Filter>
     </ClInclude>
+    <ClInclude Include="CDOTAGamerules.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="MD5">

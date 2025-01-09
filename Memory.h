@@ -35,5 +35,22 @@ public:
 		return true;
 	}
 
+	template<typename T>
+	std::optional<T> read_memory(HANDLE hProc, uintptr_t address) {
+		T value{};
+		SIZE_T bytesRead;
+		if (!ReadProcessMemory(hProc, reinterpret_cast<LPCVOID>(address), &value, sizeof(T), &bytesRead)) {
+			printf("[-] Failed to read memory at 0x%llX: 0x%X\n", address, GetLastError());
+			return std::nullopt;
+		}
+
+		if (bytesRead != sizeof(T)) {
+			printf("[-] Partial read at 0x%llX\n", address);
+			return std::nullopt;
+		}
+
+		return value;
+	}
+
 	std::unordered_map<std::string, ModuleInfo> loaded_modules;
 };
