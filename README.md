@@ -5,7 +5,9 @@
 * Download [latest release](https://github.com/Wolf49406/Dota2Patcher/releases/latest)
 * Launch Dota2Patcher.exe
 * Launch Dota 2
+	* Patcher will wait for a lobby to start
 * Wait for Patcher to do his job
+	* Patcher will close if no errors occurred
 * That's all!
 
 ## New Feature: Camera distance patch without ConVars
