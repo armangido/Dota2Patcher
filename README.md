@@ -3,7 +3,7 @@
  
  [![MSBuild](https://github.com/Wolf49406/Dota2Patcher/actions/workflows/msbuild.yml/badge.svg?branch=main)](https://github.com/Wolf49406/Dota2Patcher/actions/workflows/msbuild.yml)
 
-### How To Install:
+### How To:
 * Download [latest release](https://github.com/Wolf49406/Dota2Patcher/releases/latest)
 * Launch Dota2Patcher.exe
 * Launch Dota 2
