@@ -135,3 +135,27 @@ bool Memory::patch(const HANDLE hProc, const uintptr_t patch_addr, const std::st
 
     return true;
 }
+
+uintptr_t Memory::absolute_address(HANDLE hProc, uintptr_t instruction_ptr, ptrdiff_t offset, std::optional<uint32_t> size) {
+    int32_t relative_offset = 0;
+
+    if (!ReadProcessMemory(hProc, reinterpret_cast<LPCVOID>(instruction_ptr + offset), &relative_offset, sizeof(relative_offset), nullptr)) {
+        printf("[-] (absolute_address) ReadProcessMemory failed: 0x%d\n", GetLastError());
+        return -1;
+    }
+
+    uintptr_t absolute_address = instruction_ptr + relative_offset + size.value_or(offset + sizeof(int32_t));
+
+    return absolute_address;
+}
+
+uintptr_t Memory::get_pointer(HANDLE hProc, uintptr_t base_address, uintptr_t offset) {
+    uintptr_t instance_address = 0;
+
+    if (!ReadProcessMemory(hProc, reinterpret_cast<LPCVOID>(base_address + offset), &instance_address, sizeof(instance_address), nullptr)) {
+        printf("[-] (get_pointer) ReadProcessMemory failed: 0x%d\n", GetLastError());
+        return -1;
+    }
+
+    return instance_address;
+}

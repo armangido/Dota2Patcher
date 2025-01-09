@@ -1,5 +1,6 @@
 ﻿#include "Dota2Patcher.h"
 #include "ProcessHandle.h"
+#include "CDOTACamera.h"
 #include "Memory.h"
 
 int main() {
@@ -72,6 +73,15 @@ int main() {
 		}
 
 		printf("[+] \"%s\" patched successfully\n", patch.name.c_str());
+	}
+
+	CDOTACamera camera;
+	if (!camera.find_camera(process.get(), memory.loaded_modules["client.dll"])) {
+		printf("[-] Can't find CDOTACamera! Use ConVars instead...\n");
+	}
+	else {
+		camera.set_distance(process.get(), 1400);
+		camera.set_r_farz(process.get(), 2800);
 	}
 
 	printf("[+] Done!\n");

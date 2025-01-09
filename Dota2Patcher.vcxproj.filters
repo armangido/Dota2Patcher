@@ -26,6 +26,9 @@
     <ClCompile Include="md5.cpp">
       <Filter>Source files\Updater</Filter>
     </ClCompile>
+    <ClCompile Include="CDOTACamera.h">
+      <Filter>Headers</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Dota2Patcher.h">

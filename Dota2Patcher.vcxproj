@@ -94,6 +94,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="CDOTACamera.h" />
     <ClCompile Include="Dota2Patcher.cpp" />
     <ClCompile Include="md5.cpp" />
     <ClCompile Include="Memory.cpp" />
