@@ -80,11 +80,11 @@ int main(int argc, char* argv[]) {
 	if (argc >= 3) {
 		for (int i = 0; i < argc; i++) {
 			if (!strcmp(argv[i], "-camera_distance")) {
-				camera.default_distance = (float)std::stoi(argv[i + 1]);
+				camera.DEFAULT_DISTANCE = (float)std::stoi(argv[i + 1]);
 				continue;
 			}
 			if (!strcmp(argv[i], "-fow_amount")) {
-				camera.default_fow = (float)std::stoi(argv[i + 1]);
+				camera.DEFAULT_FOW = (float)std::stoi(argv[i + 1]);
 				continue;
 			}
 		}
@@ -94,9 +94,9 @@ int main(int argc, char* argv[]) {
 		printf("[-] Can't find CDOTACamera! Use ConVars instead...\n");
 	}
 	else {
-		camera.set_distance(process.get(), camera.default_distance);
-		camera.set_r_farz(process.get(), camera.default_distance * 2);
-		camera.set_fow(process.get(), camera.default_fow);
+		camera.set_distance(process.get(), camera.DEFAULT_DISTANCE);
+		camera.set_r_farz(process.get(), camera.DEFAULT_DISTANCE * 2);
+		camera.set_fow(process.get(), camera.DEFAULT_FOW);
 	}
 
 	printf("[+] Done!\n");

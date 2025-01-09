@@ -6,7 +6,7 @@
 #include <filesystem>
 #include "md5.h"
 
-static std::string ToLower(std::string s) {
+static std::string to_lower(std::string s) {
     std::transform(s.begin(), s.end(), s.begin(), [](unsigned char c) {
         return std::tolower(c);
         });
@@ -20,7 +20,7 @@ static std::wstring string_to_wstring(const std::string& str) {
     return wstr;
 }
 
-static size_t WriteCallback(void* contents, size_t size, size_t nmemb, void* userp) {
+static size_t curl_callback(void* contents, size_t size, size_t nmemb, void* userp) {
     ((std::string*)userp)->append((char*)contents, size * nmemb);
     return size * nmemb;
 }
@@ -33,7 +33,7 @@ std::string Updater::get_remote_hash() {
     curl = curl_easy_init();
     if (curl) {
         curl_easy_setopt(curl, CURLOPT_URL, remote_version_url.c_str());
-        curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallback);
+        curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, curl_callback);
         curl_easy_setopt(curl, CURLOPT_WRITEDATA, &read_buffer);
         res = curl_easy_perform(curl);
         curl_easy_cleanup(curl);
@@ -71,7 +71,7 @@ void Updater::check_update() {
 
     remote_hash.erase(remote_hash.find_last_not_of(" \n\r\t") + 1);
 
-    if (ToLower(remote_hash) == ToLower(local_hash))
+    if (to_lower(remote_hash) == to_lower(local_hash))
         return;
 
     printf("[!] Update Required!\n");
