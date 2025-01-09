@@ -11,7 +11,7 @@
 ## New Feature: Camera distance patch without ConVars
 Now you don't have to use ConVars (ex: `dota_camera_distance 1500; r_farz 18000`) to set camera distance!  
 Dota2Patcher will do it for you. Default value is 1500 which is pretty safe to use.  
-But yoo still can use `dota_camera_distance` if you want to.
+But you still can use `dota_camera_distance` if you want to.
 
 ## set_rendering_enabled
 Remember removed `dota_use_particle_fow` convar? So this is it but better.  
