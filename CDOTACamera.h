@@ -14,7 +14,7 @@ class CDOTACamera {
 public:
     CDOTACamera() = default;
 
-    float DEFAULT_DISTANCE = 1200.0f;
+    float DEFAULT_DISTANCE = 1500.0f;
     float DEFAULT_FOW = 70.0f;
 
     void set_distance(HANDLE hProc, float distance) {
