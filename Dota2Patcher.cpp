@@ -79,11 +79,11 @@ int main(int argc, char* argv[]) {
 
 	if (argc >= 3) {
 		for (int i = 0; i < argc; i++) {
-			if (!strcmp(argv[i], "-distance")) {
+			if (!strcmp(argv[i], "-camera_distance")) {
 				camera.default_distance = (float)std::stoi(argv[i + 1]);
 				continue;
 			}
-			if (!strcmp(argv[i], "-fow")) {
+			if (!strcmp(argv[i], "-fow_amount")) {
 				camera.default_fow = (float)std::stoi(argv[i + 1]);
 				continue;
 			}
