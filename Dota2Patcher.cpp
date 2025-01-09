@@ -80,8 +80,8 @@ int main() {
 		printf("[-] Can't find CDOTACamera! Use ConVars instead...\n");
 	}
 	else {
-		camera.set_distance(process.get(), 1400);
-		camera.set_r_farz(process.get(), 2800);
+		camera.set_distance(process.get(), 1500);
+		camera.set_r_farz(process.get(), 18000);
 	}
 
 	printf("[+] Done!\n");
