@@ -1,9 +1,9 @@
 # Dota2Patcher
- The return of legendary Dota2Patcher. Will add more features later  
+ The return of legendary Dota2Patcher  
  
  [![MSBuild](https://github.com/Wolf49406/Dota2Patcher/actions/workflows/msbuild.yml/badge.svg?branch=main)](https://github.com/Wolf49406/Dota2Patcher/actions/workflows/msbuild.yml)
 
-### How To:
+## ❓ How To:
 * Download [latest release](https://github.com/Wolf49406/Dota2Patcher/releases/latest)
 * Launch Dota2Patcher.exe
 * Launch Dota 2
@@ -12,22 +12,28 @@
 	* Patcher will close if no errors occurred
 * That's all!
 
-## New Feature: Camera distance patch without ConVars
+## ❗ Features:
+
+### ✨ New: Camera distance patch without ConVars
 Now you don't have to use ConVars (ex: `dota_camera_distance 1500; r_farz 18000`) to set camera distance!  
 Dota2Patcher will do it for you. Default value is 1500 which is pretty safe to use.  
 But you still can use `dota_camera_distance` if you want to.
 
 ### Set custom Camera Distance and FoW
 You can set your own values by rinning Dota2Patcher with launch arguments:  
-`Dota2Patcher.exe -camera_distance 1500 -fow_amount 100`
+`Dota2Patcher.exe -camera_distance 1500 -fow_amount 100`  
+`r_farz` will be automatically set to `camera_distance * 2`
 
-## set_rendering_enabled
+### ✨ fog_enable patch
+Disable fog (`fog_enable 0`) without ConVars!
+
+### ✨ set_rendering_enabled
 Remember removed `dota_use_particle_fow` convar? So this is it but better.  
 Shows ALL hidden particles in FOW: Enemy TP's, spells, even jungle farm particles (blood splashes).  
 
 ![image](https://i.ibb.co/L08kLBZ/photo-2025-01-04-23-41-17.jpg)
 
-## sv_cheats unlock
+### ✨ sv_cheats unlock
 Allows you to use any cheat-protected commands in multiplayer (ex: `dota_camera_distance 1500`)
 
 ### Popular convars (cheat commands):
