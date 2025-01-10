@@ -94,6 +94,13 @@ int main(int argc, char* argv[]) {
 		});
 
 	ptch.add_patch({
+		"fog_enable",
+		"engine2.dll",
+		Patches::Patterns::fog_enable,
+		"EB"
+		});
+
+	ptch.add_patch({
 		"set_rendering_enabled",
 		"particles.dll",
 		Patches::Patterns::set_rendering_enabled,
