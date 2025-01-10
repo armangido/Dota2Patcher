@@ -48,7 +48,7 @@ public:
     bool find_gamerules(HANDLE hProc, const Memory::ModuleInfo& module) {
         memory_ = std::make_unique<Memory>();
 
-        const uintptr_t base = memory_->pattern_scan(hProc, module, "48 8B ? ? ? ? ? 48 85 ? 74 ? 48 8B ? 45 33 ? 66 0F");
+        const uintptr_t base = memory_->pattern_scan(hProc, module, Patches::Patterns::CDOTAGamerules);
         if (base == static_cast<uintptr_t>(-1)) {
             return false;
         }

@@ -89,14 +89,14 @@ int main(int argc, char* argv[]) {
 	ptch.add_patch({
 		"sv_cheats",
 		"engine2.dll",
-		"75 ? 48 8B 56 ? 48 8D 0D",
+		Patches::Patterns::sv_cheats,
 		"EB"
 		});
 
 	ptch.add_patch({
 		"set_rendering_enabled",
 		"particles.dll",
-		"0F 84 ? ? ? ? 4D 89 73",
+		Patches::Patterns::set_rendering_enabled,
 		"85",
 		1
 		});

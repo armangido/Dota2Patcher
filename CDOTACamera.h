@@ -44,7 +44,7 @@ public:
         // pop		rbx
         // retn
 
-        const uintptr_t base = memory_->pattern_scan(hProc, module, "48 8D ? ? ? ? ? 48 83 C4 ? 5B C3 48 8D ? ? ? ? ? E8 ? ? ? ? 83 3D 76 B2 98 03");
+        const uintptr_t base = memory_->pattern_scan(hProc, module, Patches::Patterns::CDOTACamera);
         if (base == -1)
             return false;
 
@@ -59,5 +59,5 @@ public:
 
 private:
     std::unique_ptr<Memory> memory_;
-    uintptr_t camera_base_ = -1;
+    uintptr_t camera_base_ = static_cast<uintptr_t>(-1);
 };
