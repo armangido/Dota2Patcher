@@ -117,8 +117,8 @@ int main(int argc, char* argv[]) {
 
 		printf("[+] \"%s\" patch addr: %p\n", patch.name.c_str(), (void*)patch_addr);
 
-		if (!memory.patch(process.get(), patch_addr + patch.offset, patch.patch_bytes, patch.offset)) {
-			printf("[-] Failed to patch \"%s\"\n", patch.name.c_str());
+		if (!memory.patch(process.get(), patch_addr + patch.offset, patch.patch_bytes)) {
+			printf("[-] Failed to patch \"%s\"!\n", patch.name.c_str());
 			continue;
 		}
 

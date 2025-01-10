@@ -116,7 +116,7 @@ bool Memory::load_modules(HANDLE hProc) {
     return true;
 }
 
-bool Memory::patch(const HANDLE hProc, const uintptr_t patch_addr, const std::string& replace_str, int patch_offset) {
+bool Memory::patch(const HANDLE hProc, const uintptr_t patch_addr, const std::string& replace_str) {
     std::vector<BYTE> patchData = parse_pattern(replace_str);
 
     DWORD oldProtect;
