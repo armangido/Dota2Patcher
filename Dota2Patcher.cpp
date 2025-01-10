@@ -84,23 +84,23 @@ int main(int argc, char* argv[]) {
 
 	// PATCHES
 
-	Patches ptch;
+	Patches patch;
 
-	ptch.add_patch({
+	patch.add_patch({
 		"sv_cheats",
 		"engine2.dll",
 		Patches::Patterns::sv_cheats,
 		"EB"
 		});
 
-	ptch.add_patch({
+	patch.add_patch({
 		"fog_enable",
 		"engine2.dll",
 		Patches::Patterns::fog_enable,
 		"EB"
 		});
 
-	ptch.add_patch({
+	patch.add_patch({
 		"set_rendering_enabled",
 		"particles.dll",
 		Patches::Patterns::set_rendering_enabled,
@@ -108,7 +108,7 @@ int main(int argc, char* argv[]) {
 		1
 		});
 
-	for (const auto& patch : ptch.patches) {
+	for (const auto& patch : patch.patches) {
 		uintptr_t patch_addr = memory.pattern_scan(process.get(), memory.loaded_modules[patch.module], patch.pattern);
 		if (patch_addr == -1) {
 			printf("[!] Pattern for \"%s\" not found!\n", patch.name.c_str());
@@ -125,6 +125,7 @@ int main(int argc, char* argv[]) {
 		printf("[+] \"%s\" patched successfully\n", patch.name.c_str());
 	}
 
-	printf("[+] Done!\n");
+	printf("[+] Done! Will close in 5 seconds...\n");
+	Sleep(5000);
 	return 0;
 }

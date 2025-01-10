@@ -52,7 +52,7 @@ public:
         if (camera_base_address == -1)
             return false;
 
-        printf("[+] CDOTA_Camera: %p\n", reinterpret_cast<void*>(camera_base_address));
+        printf("[+] CDOTA_Camera: %p\n", (void*)camera_base_address);
         camera_base_ = camera_base_address;
         return true;
     }

@@ -4,7 +4,7 @@
 #include <iostream>
 #include <sstream>
 
-std::vector<BYTE> parse_pattern(const std::string& pattern) {
+static std::vector<BYTE> parse_pattern(const std::string& pattern) {
     std::vector<BYTE> parsed_pattern;
     std::stringstream ss(pattern);
     std::string byte_str;
@@ -19,7 +19,7 @@ std::vector<BYTE> parse_pattern(const std::string& pattern) {
     return parsed_pattern;
 }
 
-std::string WCharToString(const WCHAR* wcharStr) {
+static std::string wchar_to_string(const WCHAR* wcharStr) {
     int bufferSize = WideCharToMultiByte(CP_UTF8, 0, wcharStr, -1, nullptr, 0, nullptr, nullptr);
     if (bufferSize <= 0)
         return "";
@@ -51,8 +51,12 @@ uintptr_t Memory::pattern_scan(const HANDLE hProc, const ModuleInfo target_modul
             return target_module.start_address + first_match;
         }
 
+// Retarder visual studio
+#pragma warning(push)
+#pragma warning(disable : 6385)
         const unsigned char pattern_current = *reinterpret_cast<const unsigned char*>(pattern);
         const unsigned char memory_current = buffer[i];
+#pragma warning(pop)
 
         if (pattern_current == '\?' || memory_current == getByte(pattern)) {
             if (!first_match) {
@@ -95,7 +99,7 @@ bool Memory::load_modules(HANDLE hProc) {
                 info.start_address = reinterpret_cast<uintptr_t>(module_entry.modBaseAddr);
                 info.end_address = info.start_address + module_entry.modBaseSize;
                 info.region_size = info.end_address - info.start_address;
-                modules[WCharToString(module_entry.szModule)] = info;
+                modules[wchar_to_string(module_entry.szModule)] = info;
             } while (Module32Next(snapshot, &module_entry));
         }
 

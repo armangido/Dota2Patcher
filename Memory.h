@@ -15,7 +15,7 @@ public:
 
 	bool load_modules(HANDLE hProc);
 	uintptr_t pattern_scan(const HANDLE hProc, const ModuleInfo target_module, const std::string target_pattern);
-	bool patch(const HANDLE hProc, const uintptr_t patch_addr, const std::string& replace_str, int patch_offset = 0);
+	bool patch(const HANDLE hProc, const uintptr_t patch_addr, const std::string& replace_str, int patch_offset);
 	uintptr_t absolute_address(HANDLE hProc, uintptr_t instruction_ptr, ptrdiff_t offset, std::optional<uint32_t> size);
 	uintptr_t get_pointer(HANDLE hProc, uintptr_t base_address, uintptr_t offset);
 	

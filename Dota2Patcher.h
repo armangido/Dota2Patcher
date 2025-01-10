@@ -18,7 +18,7 @@ public:
 		std::string module;
 		std::string pattern;
 		std::string patch_bytes;
-		int offset;
+		int offset = 0;
 	};
 
 	void add_patch(const PatchInfo& patch) {
