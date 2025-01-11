@@ -3,9 +3,12 @@
  
  [![MSBuild](https://github.com/Wolf49406/Dota2Patcher/actions/workflows/msbuild.yml/badge.svg?branch=main)](https://github.com/Wolf49406/Dota2Patcher/actions/workflows/msbuild.yml)
 
+![console](https://i.ibb.co/5vx77MM/console.jpg)
+
 ## ❓ How To:
 * Download [latest release](https://github.com/Wolf49406/Dota2Patcher/releases/latest)
 * Launch Dota2Patcher.exe
+* Set your settings
 * Launch Dota 2
 	* Patcher will wait for a lobby to start
 * Wait for Patcher to do his job
@@ -19,11 +22,6 @@ Now you don't have to use ConVars (ex: `dota_camera_distance 1500; r_farz 18000`
 Dota2Patcher will do it for you. Default value is 1500 which is pretty safe to use.  
 But you still can use `dota_camera_distance` if you want to.
 
-### Set custom Camera Distance and FoW
-You can set your own values by rinning Dota2Patcher with launch arguments:  
-`Dota2Patcher.exe -camera_distance 1500 -fow_amount 100`  
-`r_farz` will be automatically set to `camera_distance * 2`
-
 ### ✨ fog_enable patch
 Disable fog (`fog_enable 0`) without ConVars!
 
@@ -31,7 +29,7 @@ Disable fog (`fog_enable 0`) without ConVars!
 Remember removed `dota_use_particle_fow` convar? So this is it but better.  
 Shows ALL hidden particles in FOW: Enemy TP's, spells, even jungle farm particles (blood splashes).  
 
-![image](https://i.ibb.co/L08kLBZ/photo-2025-01-04-23-41-17.jpg)
+![particles](https://i.ibb.co/L08kLBZ/photo-2025-01-04-23-41-17.jpg)
 
 ### ✨ sv_cheats unlock
 Allows you to use any cheat-protected commands in multiplayer (ex: `dota_camera_distance 1500`)
