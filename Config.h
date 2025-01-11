@@ -5,8 +5,6 @@
 
 class RegistryConfig {
 public:
-    RegistryConfig() = default;
-
     template<typename T>
     static T get(const std::string& valueName) {
         return static_cast<T>(Read(valueName));
