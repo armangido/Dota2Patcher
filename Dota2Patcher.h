@@ -3,6 +3,20 @@
 #include <Windows.h>
 #include <vector>
 
+static void draw_logo() {
+	const char* ascii = R"(
+  _____        _        ___  _____      _       _               
+ |  __ \      | |      |__ \|  __ \    | |     | |              
+ | |  | | ___ | |_ __ _   ) | |__) |_ _| |_ ___| |__   ___ _ __ 
+ | |  | |/ _ \| __/ _` | / /|  ___/ _` | __/ __| '_ \ / _ \ '__|
+ | |__| | (_) | || (_| |/ /_| |  | (_| | || (__| | | |  __/ |   
+ |_____/ \___/ \__\__,_|____|_|   \__,_|\__\___|_| |_|\___|_|   
+
+ [!] To open settings, launch Dota2Patcher with SHIFT pressed
+)";
+	std::cout << ascii << std::endl;
+}
+
 class Patches {
 public:
 	struct Patterns {
@@ -21,21 +35,21 @@ public:
 		int offset = 0;
 	};
 
-	void add_patch(const PatchInfo& patch) {
+	static void add_patch(const PatchInfo& patch) {
 		patches.push_back(patch);
 	}
 
-	std::vector<PatchInfo> patches;
+	static std::vector<PatchInfo> patches;
 };
 
 class Updater {
 public:
-	void check_update();
+	static void check_update();
 
 private:
-	std::string get_remote_hash();
-	std::string get_local_hash();
+	static std::string get_remote_hash();
+	static std::string get_local_hash();
 
-	const std::string remote_version_url = "https://raw.githubusercontent.com/Wolf49406/Dota2Patcher/main/MD5";
-	const std::string update_url = "https://github.com/Wolf49406/Dota2Patcher/releases/latest";
+	static inline const std::string remote_version_url = "https://raw.githubusercontent.com/Wolf49406/Dota2Patcher/main/MD5";
+	static inline const std::string update_url = "https://github.com/Wolf49406/Dota2Patcher/releases/latest";
 };

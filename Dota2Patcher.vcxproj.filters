@@ -46,6 +46,9 @@
     <ClInclude Include="CDOTAGamerules.h">
       <Filter>Headers</Filter>
     </ClInclude>
+    <ClInclude Include="Config.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="MD5">

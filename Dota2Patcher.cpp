@@ -3,113 +3,119 @@
 #include "Memory.h"
 #include "CDOTACamera.h"
 #include "CDOTAGamerules.h"
+#include "Config.h"
 
-int main(int argc, char* argv[]) {
+std::vector<Patches::PatchInfo> Patches::patches;
+
+int main() {
+	draw_logo();
+
 #ifndef _DEBUG
-	Updater updater;
-	updater.check_update();
+	Updater::check_update();
 #endif
+
+	// CONFIG
+
+	auto camera_distance = ConfigManager::Read("camera_distance"); // To open config if not set
+	bool shift_pressed = (GetAsyncKeyState(VK_SHIFT) & 0x8000) != 0; // And if SHIFT pressed
+
+	if (camera_distance == -1 || shift_pressed) {
+		printf("[~] Opening settings...\n");
+		ConfigManager::ask_for_settings();
+	}
+
+	ConfigManager::show_settings();
+
+	// GET DOTA2 PROCESS
 
 	printf("[~] Waiting for Dota2 process...\n");
 
-	DWORD processID = 0;
+	DWORD process_ID = 0;
 	do {
-		processID = ProcessHandle::GetPIDByName(L"dota2.exe");
+		process_ID = ProcessHandle::get_PID_by_name(L"dota2.exe");
 		Sleep(1000);
 	} while
-		(processID == 0);
+		(process_ID == 0);
 
-	printf("[+] Dota2 PID: %d\n", processID);
+	printf("[+] Dota2 PID: %d\n", process_ID);
 
-	ProcessHandle process(processID, PROCESS_ALL_ACCESS);
-	if (!process.isValid()) {
-		printf("[-] Failed to open process. Error: 0x%d\n", process.getLastError());
+	ProcessHandle::open_process_handle(process_ID, PROCESS_ALL_ACCESS);
+	if (!ProcessHandle::is_valid_handle()) {
+		printf("[-] Failed to open process. Error: 0x%d\n", ProcessHandle::get_last_error());
 		std::cin.get();
 		return 0;
 	}
 
-	printf("[+] Dota2 process handle: %p\n", process.get());
-
-	Memory memory;
+	printf("[+] Dota2 process handle: %p\n", ProcessHandle::get_handle());
 
 	printf("[~] Waiting for moules to load...\n");
 
-	if (!memory.load_modules(process.get())) {
+	if (!Memory::load_modules()) {
 		printf("[-] Failed to load modules, aborting...\n");
+		ProcessHandle::close_process_handle();
 		std::cin.get();
 		return 0;
 	}
 
-	printf("[+] Modules loaded: %d\n", (int)memory.loaded_modules.size());
+	printf("[+] Modules loaded: %d\n", (int)Memory::loaded_modules.size());
 
-	// GAMERULES
+	// FIND GAMERULES
 
-	CDOTAGamerules game_rules;
-
-	if (!game_rules.find_gamerules(process.get(), memory.loaded_modules["client.dll"])) {
+	if (!CDOTAGamerules::find_gamerules(Memory::loaded_modules["client.dll"])) {
 		printf("[-] Can't find C_DOTAGamerules_Proxy!\n");
+		ProcessHandle::close_process_handle();
 		std::cin.get();
 		return 0;
 	}
 
 	printf("[~] Waiting for lobby to start...\n");
-	while (!game_rules.in_lobby(process.get()))
+	while (!CDOTAGamerules::in_lobby())
 		Sleep(1000);
 
 	// CAMERA HACK
 
-	CDOTACamera camera;
-
-	if (argc >= 3) {
-		for (int i = 0; i < argc; i++) {
-			if (!strcmp(argv[i], "-camera_distance")) {
-				camera.DEFAULT_DISTANCE = (float)std::stoi(argv[i + 1]);
-				continue;
-			}
-			if (!strcmp(argv[i], "-fow_amount")) {
-				camera.DEFAULT_FOW = (float)std::stoi(argv[i + 1]);
-				continue;
-			}
-		}
-	}
-
-	if (!camera.find_camera(process.get(), memory.loaded_modules["client.dll"])) {
+	if (!CDOTACamera::find_camera(Memory::loaded_modules["client.dll"])) {
 		printf("[-] Can't find CDOTACamera! Use ConVars instead...\n");
 	}
 	else {
-		camera.set_distance(process.get(), camera.DEFAULT_DISTANCE);
-		camera.set_r_farz(process.get(), camera.DEFAULT_DISTANCE * 2);
-		camera.set_fow(process.get(), camera.DEFAULT_FOW);
+		float camera_distance = ConfigManager::get<float>("camera_distance");
+		CDOTACamera::set_distance(camera_distance);
+		CDOTACamera::set_r_farz(camera_distance * 2);
+		CDOTACamera::set_fow(ConfigManager::get<float>("fow_amount"));
 	}
 
 	// PATCHES
 
-	Patches patch;
+	if (ConfigManager::get<bool>("fog_enable")) {
+		Patches::add_patch({
+			"fog_enable",
+			"engine2.dll",
+			Patches::Patterns::fog_enable,
+			"EB"
+			});
+	}
 
-	patch.add_patch({
-		"sv_cheats",
-		"engine2.dll",
-		Patches::Patterns::sv_cheats,
-		"EB"
-		});
+	if (ConfigManager::get<bool>("sv_cheats")) {
+		Patches::add_patch({
+			"sv_cheats",
+			"engine2.dll",
+			Patches::Patterns::sv_cheats,
+			"EB"
+			});
+	}
 
-	patch.add_patch({
-		"fog_enable",
-		"engine2.dll",
-		Patches::Patterns::fog_enable,
-		"EB"
-		});
+	if (ConfigManager::get<bool>("set_rendering_enabled")) {
+		Patches::add_patch({
+			"set_rendering_enabled",
+			"particles.dll",
+			Patches::Patterns::set_rendering_enabled,
+			"85",
+			1
+			});
+	}
 
-	patch.add_patch({
-		"set_rendering_enabled",
-		"particles.dll",
-		Patches::Patterns::set_rendering_enabled,
-		"85",
-		1
-		});
-
-	for (const auto& patch : patch.patches) {
-		uintptr_t patch_addr = memory.pattern_scan(process.get(), memory.loaded_modules[patch.module], patch.pattern);
+	for (const auto& patch : Patches::patches) {
+		uintptr_t patch_addr = Memory::pattern_scan(Memory::loaded_modules[patch.module], patch.pattern);
 		if (patch_addr == -1) {
 			printf("[!] Pattern for \"%s\" not found!\n", patch.name.c_str());
 			continue;
@@ -117,7 +123,7 @@ int main(int argc, char* argv[]) {
 
 		printf("[+] \"%s\" patch addr: %p\n", patch.name.c_str(), (void*)patch_addr);
 
-		if (!memory.patch(process.get(), patch_addr + patch.offset, patch.patch_bytes)) {
+		if (!Memory::patch(patch_addr + patch.offset, patch.patch_bytes)) {
 			printf("[-] Failed to patch \"%s\"!\n", patch.name.c_str());
 			continue;
 		}
@@ -126,6 +132,7 @@ int main(int argc, char* argv[]) {
 	}
 
 	printf("[+] Done! Will close in 5 seconds...\n");
+	ProcessHandle::close_process_handle();
 	Sleep(5000);
 	return 0;
 }

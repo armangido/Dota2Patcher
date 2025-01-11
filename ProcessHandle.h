@@ -5,53 +5,13 @@
 
 class ProcessHandle {
 public:
-    ProcessHandle(DWORD processID, DWORD accessRights)
-        : hProcess(OpenProcess(accessRights, FALSE, processID)) {
-    }
-
-    ~ProcessHandle() {
-        if (hProcess) {
-            CloseHandle(hProcess);
-        }
-    }
-
-    ProcessHandle(const ProcessHandle&) = delete;
-    ProcessHandle& operator=(const ProcessHandle&) = delete;
-
-    ProcessHandle(ProcessHandle&& other) noexcept : hProcess(other.hProcess) {
-        other.hProcess = NULL;
-    }
-
-    ProcessHandle& operator=(ProcessHandle&& other) noexcept {
-        if (this != &other) {
-            if (hProcess) {
-                CloseHandle(hProcess);
-            }
-            hProcess = other.hProcess;
-            other.hProcess = NULL;
-        }
-        return *this;
-    }
-
-    bool isValid() const {
-        return hProcess != NULL;
-    }
-
-    DWORD getLastError() const {
-        return hProcess ? 0 : GetLastError();
-    }
-
-    HANDLE get() const {
-        return hProcess;
-    }
-
-    static DWORD GetPIDByName(const wchar_t* ProcName) {
+    static DWORD get_PID_by_name(const wchar_t* ProcName) {
         PROCESSENTRY32W PE32{ 0 };
         PE32.dwSize = sizeof(PE32);
 
         HANDLE hSnap = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0);
         if (hSnap == INVALID_HANDLE_VALUE) {
-            printf("[-] (ProcessHandle) CreateToolhelp32Snapshot error: 0x%d", GetLastError());
+            printf("[-] (ProcessHandle) CreateToolhelp32Snapshot error: 0x%d\n", GetLastError());
             return 0;
         }
 
@@ -70,6 +30,32 @@ public:
         return PID;
     }
 
+    static void open_process_handle(DWORD processID, DWORD accessRights) {
+        if (hProcess != NULL)
+            CloseHandle(hProcess);
+
+        hProcess = OpenProcess(accessRights, FALSE, processID);
+    }
+
+    static void close_process_handle() {
+        if (hProcess) {
+            CloseHandle(hProcess);
+            hProcess = NULL;
+        }
+    }
+
+    static bool is_valid_handle() {
+        return hProcess != NULL;
+    }
+
+    static DWORD get_last_error() {
+        return hProcess ? 0 : ::GetLastError();
+    }
+
+    static HANDLE get_handle() {
+        return hProcess;
+    }
+
 private:
-    HANDLE hProcess;
+    static inline HANDLE hProcess = NULL;
 };

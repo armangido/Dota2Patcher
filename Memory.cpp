@@ -4,6 +4,8 @@
 #include <iostream>
 #include <sstream>
 
+std::unordered_map<std::string, Memory::ModuleInfo> Memory::loaded_modules;
+
 static std::vector<BYTE> parse_pattern(const std::string& pattern) {
     std::vector<BYTE> parsed_pattern;
     std::stringstream ss(pattern);
@@ -32,11 +34,11 @@ static std::string wchar_to_string(const WCHAR* wcharStr) {
 #define getBit(x) (InRange((x & (~0x20)), 'A', 'F') ? ((x & (~0x20)) - 'A' + 0xA): (InRange(x, '0', '9') ? x - '0': 0))
 #define getByte(x) (getBit(x[0]) << 4 | getBit(x[1]))
 
-uintptr_t Memory::pattern_scan(const HANDLE hProc, const ModuleInfo target_module, const std::string target_pattern) {
+uintptr_t Memory::pattern_scan(const ModuleInfo target_module, const std::string target_pattern) {
     auto* buffer = new unsigned char[target_module.region_size];
     SIZE_T bytesRead;
 
-    if (!ReadProcessMemory(hProc, reinterpret_cast<LPCVOID>(target_module.start_address), buffer, target_module.region_size, &bytesRead)) {
+    if (!ReadProcessMemory(ProcessHandle::get_handle(), reinterpret_cast<LPCVOID>(target_module.start_address), buffer, target_module.region_size, &bytesRead)) {
         printf("[-] (PatternScan) ReadProcessMemory failed: 0x%d\n", GetLastError());
         delete[] buffer;
         return NULL;
@@ -80,14 +82,14 @@ uintptr_t Memory::pattern_scan(const HANDLE hProc, const ModuleInfo target_modul
     return -1;
 }
 
-bool Memory::load_modules(HANDLE hProc) {
+bool Memory::load_modules() {
     std::unordered_map<std::string, ModuleInfo> modules;
     MODULEENTRY32 module_entry;
     module_entry.dwSize = sizeof(MODULEENTRY32);
     HANDLE snapshot;
 
     while (true) {
-        snapshot = CreateToolhelp32Snapshot(TH32CS_SNAPMODULE | TH32CS_SNAPMODULE32, GetProcessId(hProc));
+        snapshot = CreateToolhelp32Snapshot(TH32CS_SNAPMODULE | TH32CS_SNAPMODULE32, GetProcessId(ProcessHandle::get_handle()));
         if (snapshot == INVALID_HANDLE_VALUE) {
             printf("[-] (load_modules) Failed to create snapshot: 0x%d\n", GetLastError());
             return false;
@@ -116,23 +118,23 @@ bool Memory::load_modules(HANDLE hProc) {
     return true;
 }
 
-bool Memory::patch(const HANDLE hProc, const uintptr_t patch_addr, const std::string& replace_str) {
+bool Memory::patch(const uintptr_t patch_addr, const std::string& replace_str) {
     std::vector<BYTE> patchData = parse_pattern(replace_str);
 
     DWORD oldProtect;
-    if (!VirtualProtectEx(hProc, reinterpret_cast<LPVOID>(patch_addr), patchData.size(), PAGE_EXECUTE_READWRITE, &oldProtect)) {
+    if (!VirtualProtectEx(ProcessHandle::get_handle(), reinterpret_cast<LPVOID>(patch_addr), patchData.size(), PAGE_EXECUTE_READWRITE, &oldProtect)) {
         printf("[-] (Patch) Failed to change memory protection: 0x%d\n", GetLastError());
         return false;
     }
 
     SIZE_T bytesWritten;
-    if (!WriteProcessMemory(hProc, reinterpret_cast<LPVOID>(patch_addr), patchData.data(), patchData.size(), &bytesWritten)) {
+    if (!WriteProcessMemory(ProcessHandle::get_handle(), reinterpret_cast<LPVOID>(patch_addr), patchData.data(), patchData.size(), &bytesWritten)) {
         printf("[-] (Patch) Failed to write to process memory: 0x%d\n", GetLastError());
-        VirtualProtectEx(hProc, reinterpret_cast<LPVOID>(patch_addr), patchData.size(), oldProtect, &oldProtect);
+        VirtualProtectEx(ProcessHandle::get_handle(), reinterpret_cast<LPVOID>(patch_addr), patchData.size(), oldProtect, &oldProtect);
         return false;
     }
 
-    if (!VirtualProtectEx(hProc, reinterpret_cast<LPVOID>(patch_addr), patchData.size(), oldProtect, &oldProtect)) {
+    if (!VirtualProtectEx(ProcessHandle::get_handle(), reinterpret_cast<LPVOID>(patch_addr), patchData.size(), oldProtect, &oldProtect)) {
         printf("[-] (Patch) Failed to restore memory protection: 0x%d\n", GetLastError());
         return false;
     }
@@ -140,10 +142,10 @@ bool Memory::patch(const HANDLE hProc, const uintptr_t patch_addr, const std::st
     return true;
 }
 
-uintptr_t Memory::absolute_address(HANDLE hProc, uintptr_t instruction_ptr, ptrdiff_t offset, std::optional<uint32_t> size) {
+uintptr_t Memory::absolute_address(uintptr_t instruction_ptr, ptrdiff_t offset, std::optional<uint32_t> size) {
     int32_t relative_offset = 0;
 
-    if (!ReadProcessMemory(hProc, reinterpret_cast<LPCVOID>(instruction_ptr + offset), &relative_offset, sizeof(relative_offset), nullptr)) {
+    if (!ReadProcessMemory(ProcessHandle::get_handle(), reinterpret_cast<LPCVOID>(instruction_ptr + offset), &relative_offset, sizeof(relative_offset), nullptr)) {
         printf("[-] (absolute_address) ReadProcessMemory failed: 0x%d\n", GetLastError());
         return -1;
     }
@@ -153,10 +155,10 @@ uintptr_t Memory::absolute_address(HANDLE hProc, uintptr_t instruction_ptr, ptrd
     return absolute_address;
 }
 
-uintptr_t Memory::get_pointer(HANDLE hProc, uintptr_t base_address, uintptr_t offset) {
+uintptr_t Memory::get_pointer(uintptr_t base_address, uintptr_t offset) {
     uintptr_t instance_address = 0;
 
-    if (!ReadProcessMemory(hProc, reinterpret_cast<LPCVOID>(base_address + offset), &instance_address, sizeof(instance_address), nullptr)) {
+    if (!ReadProcessMemory(ProcessHandle::get_handle(), reinterpret_cast<LPCVOID>(base_address + offset), &instance_address, sizeof(instance_address), nullptr)) {
         printf("[-] (get_pointer) ReadProcessMemory failed: 0x%d\n", GetLastError());
         return -1;
     }

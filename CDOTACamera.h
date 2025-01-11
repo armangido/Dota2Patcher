@@ -14,24 +14,19 @@ class CDOTACamera {
 public:
     CDOTACamera() = default;
 
-    float DEFAULT_DISTANCE = 1500.0f;
-    float DEFAULT_FOW = 70.0f;
-
-    void set_distance(HANDLE hProc, float distance) {
-        memory_->write_memory(hProc, camera_base_, distance);
+    static void set_distance(float distance) {
+        Memory::write_memory(camera_base_, distance);
     }
 
-    void set_fow(HANDLE hProc, float fow) {
-        memory_->write_memory(hProc, camera_base_ + 0x4, fow);
+    static void set_fow(float fow) {
+        Memory::write_memory(camera_base_ + 0x4, fow);
     }
 
-    void set_r_farz(HANDLE hProc, float r_farz) {
-        memory_->write_memory(hProc, camera_base_ + 0x14, r_farz);
+    static void set_r_farz(float r_farz) {
+        Memory::write_memory(camera_base_ + 0x14, r_farz);
     }
 
-    bool find_camera(HANDLE hProc, const Memory::ModuleInfo& module) {
-        memory_ = std::make_unique<Memory>();
-
+    static bool find_camera(const Memory::ModuleInfo& module) {
         // mov		edx, cs:TlsIndex
         // mov		rax, gs:58h
         // mov		ecx, 40h ; '@'
@@ -44,11 +39,11 @@ public:
         // pop		rbx
         // retn
 
-        const uintptr_t base = memory_->pattern_scan(hProc, module, Patches::Patterns::CDOTACamera);
+        const uintptr_t base = Memory::pattern_scan(module, Patches::Patterns::CDOTACamera);
         if (base == -1)
             return false;
 
-        const uintptr_t camera_base_address = memory_->absolute_address(hProc, base, 3, 7);
+        const uintptr_t camera_base_address = Memory::absolute_address(base, 3, 7);
         if (camera_base_address == -1)
             return false;
 
@@ -58,6 +53,5 @@ public:
     }
 
 private:
-    std::unique_ptr<Memory> memory_;
-    uintptr_t camera_base_ = static_cast<uintptr_t>(-1);
+    static inline uintptr_t camera_base_ = static_cast<uintptr_t>(-1);
 };

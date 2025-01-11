@@ -4,6 +4,7 @@
 #include <string>
 #include <unordered_map>
 #include <optional>
+#include "ProcessHandle.h"
 
 class Memory {
 public:
@@ -13,16 +14,16 @@ public:
 		size_t region_size;
 	};
 
-	bool load_modules(HANDLE hProc);
-	uintptr_t pattern_scan(const HANDLE hProc, const ModuleInfo target_module, const std::string target_pattern);
-	bool patch(const HANDLE hProc, const uintptr_t patch_addr, const std::string& replace_str);
-	uintptr_t absolute_address(HANDLE hProc, uintptr_t instruction_ptr, ptrdiff_t offset, std::optional<uint32_t> size);
-	uintptr_t get_pointer(HANDLE hProc, uintptr_t base_address, uintptr_t offset);
+	static bool load_modules();
+	static uintptr_t pattern_scan(const ModuleInfo target_module, const std::string target_pattern);
+	static bool patch(const uintptr_t patch_addr, const std::string& replace_str);
+	static uintptr_t absolute_address(uintptr_t instruction_ptr, ptrdiff_t offset, std::optional<uint32_t> size);
+	static uintptr_t get_pointer(uintptr_t base_address, uintptr_t offset);
 	
 	template<typename T>
-	bool write_memory(HANDLE hProc, uintptr_t address, const T& value) {
+	static bool write_memory(uintptr_t address, const T& value) {
 		SIZE_T bytesWritten;
-		if (!WriteProcessMemory(hProc, reinterpret_cast<LPVOID>(address), &value, sizeof(T), &bytesWritten)) {
+		if (!WriteProcessMemory(ProcessHandle::get_handle(), reinterpret_cast<LPVOID>(address), &value, sizeof(T), &bytesWritten)) {
 			printf("[-] Failed to write memory at 0x%llX: 0x%X\n", address, GetLastError());
 			return false;
 		}
@@ -36,10 +37,10 @@ public:
 	}
 
 	template<typename T>
-	std::optional<T> read_memory(HANDLE hProc, uintptr_t address) {
+	static std::optional<T> read_memory(uintptr_t address) {
 		T value{};
 		SIZE_T bytesRead;
-		if (!ReadProcessMemory(hProc, reinterpret_cast<LPCVOID>(address), &value, sizeof(T), &bytesRead)) {
+		if (!ReadProcessMemory(ProcessHandle::get_handle(), reinterpret_cast<LPCVOID>(address), &value, sizeof(T), &bytesRead)) {
 			printf("[-] Failed to read memory at 0x%llX: 0x%X\n", address, GetLastError());
 			return std::nullopt;
 		}
@@ -52,5 +53,5 @@ public:
 		return value;
 	}
 
-	std::unordered_map<std::string, ModuleInfo> loaded_modules;
+	static std::unordered_map<std::string, ModuleInfo> loaded_modules;
 };
