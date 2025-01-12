@@ -10,6 +10,11 @@
 
 class Memory {
 public:
+	enum class ASMType {
+		LEA, // 3, 7
+		CALL // 2, 6
+	};
+
 	struct ModuleInfo {
 		uintptr_t start_address;
 		uintptr_t end_address;
@@ -22,24 +27,37 @@ public:
 	static bool patch(const uintptr_t patch_addr, const std::string& replace_str);
 
 	template<typename T, typename N>
-	static std::optional<T> absolute_address(N instruction_ptr, ptrdiff_t offset, std::optional<uint32_t> size) {
+	static std::optional<T> absolute_address(N instruction_ptr, ASMType instr_type = ASMType::LEA) {
 		uintptr_t address = 0;
 
-		if constexpr (std::is_pointer_v<N>) {
+		if constexpr (std::is_pointer_v<N>)
 			address = reinterpret_cast<uintptr_t>(instruction_ptr);
-		}
-		else if constexpr (std::is_integral_v<N>) {
+		else if constexpr (std::is_integral_v<N>)
 			address = static_cast<uintptr_t>(instruction_ptr);
+
+		ptrdiff_t offset = 0;
+		uint32_t size = 0;
+		switch (instr_type) {
+		case ASMType::LEA:
+			offset = 3;
+			size = 7;
+			break;
+		case ASMType::CALL:
+			offset = 2;
+			size = 6;
+			break;
+		default:
+			printf("[-] (absolute_address) Unsupported instruction type\n");
+			return std::nullopt;
 		}
 
 		int32_t relative_offset = 0;
-
 		if (!ReadProcessMemory(ProcessHandle::get_handle(), reinterpret_cast<LPCVOID>(address + offset), &relative_offset, sizeof(relative_offset), nullptr)) {
 			printf("[-] (absolute_address) ReadProcessMemory failed: 0x%d\n", GetLastError());
 			return std::nullopt;
 		}
 
-		uintptr_t absolute_address = address + relative_offset + size.value_or(offset + sizeof(int32_t));
+		uintptr_t absolute_address = address + relative_offset + size;
 
 		return absolute_address;
 	}

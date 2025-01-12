@@ -9,7 +9,7 @@ public:
 		if (!base_ptr)
 			return std::nullopt;
 
-		const auto absolute_address = Memory::absolute_address<uintptr_t>(base_ptr.value(), 3, 7);
+		const auto absolute_address = Memory::absolute_address<uintptr_t>(base_ptr.value());
 		if (!absolute_address)
 			return std::nullopt;
 
@@ -46,7 +46,7 @@ public:
 			return false;
 		}
 
-		const auto CreateInterfacePtr = Memory::absolute_address<uintptr_t>(CreateInterface_base.value(), 3, 7);
+		const auto CreateInterfacePtr = Memory::absolute_address<uintptr_t>(CreateInterface_base.value());
 		if (!CreateInterfacePtr)
 			return false;
 
@@ -54,7 +54,7 @@ public:
 		if (!CreateInterfaceFn)
 			return false;
 
-		printf("[+] CreateInterface for %s: %p\n", module_name.c_str(), (void*)CreateInterfaceFn.value());
+		printf("[+] %s CreateInterface -> [%p]\n", module_name.c_str(), (void*)CreateInterfaceFn.value());
 
 		pCreateInterface_ = (Interfase*)CreateInterfaceFn.value();
 		return true;
@@ -70,22 +70,22 @@ public:
 
 		while (true) {
 			const auto name = iface->name();
-			if (!name)
-				return;
+			if (!name) continue;
 
-			std::cout << name.value() << std::endl;
+			const auto base = iface->base();
+			if (!base) continue;
+
+			printf("[~] %s -> [%p]\n", name.value().c_str(), (void*)base.value());
 
 			if (name.value() == interface_name) {
 				const auto base = iface->base();
-				if (!base)
-					break;
+				if (!base) break;
 
-				printf("[+] Interface %s found: %p\n", interface_name.c_str(), (void*)base.value());
+				printf("[+] Interface %s found -> [%p]\n", interface_name.c_str(), (void*)base.value());
 			}
 
 			auto next_ptr = iface->next();
-			if (!next_ptr)
-				break;
+			if (!next_ptr) break;
 
 			iface = next_ptr.value();
 		}

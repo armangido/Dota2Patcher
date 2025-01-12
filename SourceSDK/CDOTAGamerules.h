@@ -39,7 +39,7 @@ public:
         }
 
         gamerules_base_ = gamerules_ptr.value();
-        printf("[+] C_DOTAGamerules: %p\n", reinterpret_cast<void*>(gamerules_base_));
+        printf("[+] C_DOTAGamerules -> [%p]\n", reinterpret_cast<void*>(gamerules_base_));
         return true;
     }
 
@@ -49,13 +49,13 @@ public:
             return false;
         }
 
-        const auto gamerules_proxy = Memory::absolute_address<uintptr_t>(base.value(), 3, 7);
+        const auto gamerules_proxy = Memory::absolute_address<uintptr_t>(base.value());
         if (gamerules_proxy.value_or(0) == 0) {
             return false;
         }
 
         // Not really C_DOTAGamerules_Proxy but who cares
-        printf("[+] C_DOTAGamerules_Proxy: %p\n", reinterpret_cast<void*>(gamerules_proxy.value()));
+        printf("[+] C_DOTAGamerules_Proxy -> [%p]\n", reinterpret_cast<void*>(gamerules_proxy.value()));
         gamerules_proxy_ = gamerules_proxy.value();
 
         return true;

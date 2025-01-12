@@ -60,6 +60,10 @@ int main() {
 
 	printf("[+] Modules loaded: %d\n", (int)Memory::loaded_modules.size());
 
+
+	//CreateInterface iface;
+	//iface.load_interfaces("client.dll", "Source2Client002");
+
 	// FIND GAMERULES
 
 	if (!CDOTAGamerules::find_gamerules()) {
@@ -122,7 +126,7 @@ int main() {
 			continue;
 		}
 
-		printf("[+] \"%s\" patch addr: %p\n", patch.name.c_str(), (void*)patch_addr.value());
+		printf("[+] \"%s\" patch addr -> [%p]\n", patch.name.c_str(), (void*)patch_addr.value());
 
 		if (!Memory::patch(patch_addr.value() + patch.offset, patch.patch_bytes)) {
 			printf("[-] Failed to patch \"%s\"!\n", patch.name.c_str());
