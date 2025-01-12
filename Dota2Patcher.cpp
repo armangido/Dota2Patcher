@@ -1,9 +1,10 @@
 ﻿#include "Dota2Patcher.h"
 #include "ProcessHandle.h"
 #include "Memory.h"
-#include "CDOTACamera.h"
-#include "CDOTAGamerules.h"
 #include "Config.h"
+#include "SourceSDK/CDOTACamera.h"
+#include "SourceSDK/CDOTAGamerules.h"
+#include "SourceSDK/CreateInterface.h"
 
 std::vector<Patches::PatchInfo> Patches::patches;
 
@@ -61,7 +62,7 @@ int main() {
 
 	// FIND GAMERULES
 
-	if (!CDOTAGamerules::find_gamerules(Memory::loaded_modules["client.dll"])) {
+	if (!CDOTAGamerules::find_gamerules()) {
 		printf("[-] Can't find C_DOTAGamerules_Proxy!\n");
 		ProcessHandle::close_process_handle();
 		std::cin.get();
@@ -74,7 +75,7 @@ int main() {
 
 	// CAMERA HACK
 
-	if (!CDOTACamera::find_camera(Memory::loaded_modules["client.dll"])) {
+	if (!CDOTACamera::find_camera()) {
 		printf("[-] Can't find CDOTACamera! Use ConVars instead...\n");
 	}
 	else {
@@ -115,15 +116,15 @@ int main() {
 	}
 
 	for (const auto& patch : Patches::patches) {
-		uintptr_t patch_addr = Memory::pattern_scan(Memory::loaded_modules[patch.module], patch.pattern);
-		if (patch_addr == -1) {
+		const auto patch_addr = Memory::pattern_scan(patch.module, patch.pattern);
+		if (!patch_addr) {
 			printf("[!] Pattern for \"%s\" not found!\n", patch.name.c_str());
 			continue;
 		}
 
-		printf("[+] \"%s\" patch addr: %p\n", patch.name.c_str(), (void*)patch_addr);
+		printf("[+] \"%s\" patch addr: %p\n", patch.name.c_str(), (void*)patch_addr.value());
 
-		if (!Memory::patch(patch_addr + patch.offset, patch.patch_bytes)) {
+		if (!Memory::patch(patch_addr.value() + patch.offset, patch.patch_bytes)) {
 			printf("[-] Failed to patch \"%s\"!\n", patch.name.c_str());
 			continue;
 		}

@@ -12,6 +12,9 @@
     <Filter Include="Source files\Updater">
       <UniqueIdentifier>{12e332a8-c4d7-48a5-ac54-91b0129ce702}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Headers\SourceSDK">
+      <UniqueIdentifier>{d8a6ef08-9da6-4257-8c7d-67e1c527b1e9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Dota2Patcher.cpp">
@@ -25,9 +28,6 @@
     </ClCompile>
     <ClCompile Include="md5.cpp">
       <Filter>Source files\Updater</Filter>
-    </ClCompile>
-    <ClCompile Include="CDOTACamera.h">
-      <Filter>Headers</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -43,11 +43,17 @@
     <ClInclude Include="md5.h">
       <Filter>Source files\Updater</Filter>
     </ClInclude>
-    <ClInclude Include="CDOTAGamerules.h">
-      <Filter>Headers</Filter>
-    </ClInclude>
     <ClInclude Include="Config.h">
       <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="SourceSDK\CDOTACamera.h">
+      <Filter>Headers\SourceSDK</Filter>
+    </ClInclude>
+    <ClInclude Include="SourceSDK\CDOTAGamerules.h">
+      <Filter>Headers\SourceSDK</Filter>
+    </ClInclude>
+    <ClInclude Include="SourceSDK\CreateInterface.h">
+      <Filter>Headers\SourceSDK</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

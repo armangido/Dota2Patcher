@@ -1,6 +1,6 @@
 #pragma once
-#include "Dota2Patcher.h"
-#include "Memory.h"
+#include "../Dota2Patcher.h"
+#include "../Memory.h"
 
 // CDOTA_Camera 21 vfunc
 // 
@@ -12,8 +12,6 @@
 
 class CDOTACamera {
 public:
-    CDOTACamera() = default;
-
     static void set_distance(float distance) {
         Memory::write_memory(camera_base_, distance);
     }
@@ -26,7 +24,7 @@ public:
         Memory::write_memory(camera_base_ + 0x14, r_farz);
     }
 
-    static bool find_camera(const Memory::ModuleInfo& module) {
+    static bool find_camera() {
         // mov		edx, cs:TlsIndex
         // mov		rax, gs:58h
         // mov		ecx, 40h ; '@'
@@ -39,19 +37,19 @@ public:
         // pop		rbx
         // retn
 
-        const uintptr_t base = Memory::pattern_scan(module, Patches::Patterns::CDOTACamera);
-        if (base == -1)
+        const auto base = Memory::pattern_scan("client.dll", Patches::Patterns::CDOTACamera);
+        if (!base)
             return false;
 
-        const uintptr_t camera_base_address = Memory::absolute_address(base, 3, 7);
-        if (camera_base_address == -1)
+        const auto camera_base_address = Memory::absolute_address<uintptr_t>(base.value(), 3, 7);
+        if (!camera_base_address)
             return false;
 
-        printf("[+] CDOTA_Camera: %p\n", (void*)camera_base_address);
-        camera_base_ = camera_base_address;
+        printf("[+] CDOTA_Camera: %p\n", reinterpret_cast<void*>(camera_base_address.value()));
+        camera_base_ = camera_base_address.value();
         return true;
     }
 
 private:
-    static inline uintptr_t camera_base_ = static_cast<uintptr_t>(-1);
+    static inline uintptr_t camera_base_;
 };

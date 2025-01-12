@@ -34,14 +34,14 @@ static std::string wchar_to_string(const WCHAR* wcharStr) {
 #define getBit(x) (InRange((x & (~0x20)), 'A', 'F') ? ((x & (~0x20)) - 'A' + 0xA): (InRange(x, '0', '9') ? x - '0': 0))
 #define getByte(x) (getBit(x[0]) << 4 | getBit(x[1]))
 
-uintptr_t Memory::pattern_scan(const ModuleInfo target_module, const std::string target_pattern) {
-    auto* buffer = new unsigned char[target_module.region_size];
+std::optional<uintptr_t> Memory::pattern_scan(const std::string target_module, const std::string target_pattern) {
+    auto* buffer = new unsigned char[Memory::loaded_modules[target_module].region_size];
     SIZE_T bytesRead;
 
-    if (!ReadProcessMemory(ProcessHandle::get_handle(), reinterpret_cast<LPCVOID>(target_module.start_address), buffer, target_module.region_size, &bytesRead)) {
+    if (!ReadProcessMemory(ProcessHandle::get_handle(), reinterpret_cast<LPCVOID>(Memory::loaded_modules[target_module].start_address), buffer, Memory::loaded_modules[target_module].region_size, &bytesRead)) {
         printf("[-] (PatternScan) ReadProcessMemory failed: 0x%d\n", GetLastError());
         delete[] buffer;
-        return NULL;
+        return std::nullopt;
     }
 
     const char* pattern = target_pattern.c_str();
@@ -50,7 +50,7 @@ uintptr_t Memory::pattern_scan(const ModuleInfo target_module, const std::string
     for (uintptr_t i = 0; i < bytesRead; ++i) {
         if (!*pattern) {
             delete[] buffer;
-            return target_module.start_address + first_match;
+            return Memory::loaded_modules[target_module].start_address + first_match;
         }
 
 // Retarder visual studio
@@ -67,7 +67,7 @@ uintptr_t Memory::pattern_scan(const ModuleInfo target_module, const std::string
 
             if (!pattern[2]) {
                 delete[] buffer;
-                return target_module.start_address + first_match;
+                return Memory::loaded_modules[target_module].start_address + first_match;
             }
 
             pattern += pattern_current != '\?' ? 3 : 2;
@@ -79,7 +79,7 @@ uintptr_t Memory::pattern_scan(const ModuleInfo target_module, const std::string
     }
 
     delete[] buffer;
-    return -1;
+    return std::nullopt;
 }
 
 bool Memory::load_modules() {
@@ -101,6 +101,7 @@ bool Memory::load_modules() {
                 info.start_address = reinterpret_cast<uintptr_t>(module_entry.modBaseAddr);
                 info.end_address = info.start_address + module_entry.modBaseSize;
                 info.region_size = info.end_address - info.start_address;
+                info.hmodule = module_entry.hModule;
                 modules[wchar_to_string(module_entry.szModule)] = info;
             } while (Module32Next(snapshot, &module_entry));
         }
@@ -140,28 +141,4 @@ bool Memory::patch(const uintptr_t patch_addr, const std::string& replace_str) {
     }
 
     return true;
-}
-
-uintptr_t Memory::absolute_address(uintptr_t instruction_ptr, ptrdiff_t offset, std::optional<uint32_t> size) {
-    int32_t relative_offset = 0;
-
-    if (!ReadProcessMemory(ProcessHandle::get_handle(), reinterpret_cast<LPCVOID>(instruction_ptr + offset), &relative_offset, sizeof(relative_offset), nullptr)) {
-        printf("[-] (absolute_address) ReadProcessMemory failed: 0x%d\n", GetLastError());
-        return -1;
-    }
-
-    uintptr_t absolute_address = instruction_ptr + relative_offset + size.value_or(offset + sizeof(int32_t));
-
-    return absolute_address;
-}
-
-uintptr_t Memory::get_pointer(uintptr_t base_address, uintptr_t offset) {
-    uintptr_t instance_address = 0;
-
-    if (!ReadProcessMemory(ProcessHandle::get_handle(), reinterpret_cast<LPCVOID>(base_address + offset), &instance_address, sizeof(instance_address), nullptr)) {
-        printf("[-] (get_pointer) ReadProcessMemory failed: 0x%d\n", GetLastError());
-        return -1;
-    }
-
-    return instance_address;
 }

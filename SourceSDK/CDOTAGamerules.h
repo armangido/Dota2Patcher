@@ -1,6 +1,6 @@
 #pragma once
-#include "Dota2Patcher.h"
-#include "Memory.h"
+#include "../Dota2Patcher.h"
+#include "../Memory.h"
 
 enum class DOTA_GameState : int {
     INVALID = -1,
@@ -22,8 +22,6 @@ enum class DOTA_GameState : int {
 
 class CDOTAGamerules {
 public:
-    CDOTAGamerules() = default;
-
     static bool paused() {
         const auto value = Memory::read_memory<int>(gamerules_base_ + 0x38);
         return value.value_or(0) != 0;
@@ -36,7 +34,7 @@ public:
 
     static bool in_lobby() {
         const auto gamerules_ptr = Memory::read_memory<uintptr_t>(gamerules_proxy_);
-        if (!gamerules_ptr.has_value() || gamerules_ptr.value() < static_cast<uintptr_t>(DOTA_GameState::HERO_SELECTION)) {
+        if (!gamerules_ptr || gamerules_ptr.value() < static_cast<uintptr_t>(DOTA_GameState::HERO_SELECTION)) {
             return false;
         }
 
@@ -45,25 +43,25 @@ public:
         return true;
     }
 
-    static bool find_gamerules(const Memory::ModuleInfo& module) {
-        static  const uintptr_t base = Memory::pattern_scan(module, Patches::Patterns::CDOTAGamerules);
-        if (base == static_cast<uintptr_t>(-1)) {
+    static bool find_gamerules() {
+        static const auto base = Memory::pattern_scan("client.dll", Patches::Patterns::CDOTAGamerules);
+        if (!base) {
             return false;
         }
 
-        static const uintptr_t gamerules_proxy = Memory::absolute_address(base, 3, 7);
-        if (gamerules_proxy == static_cast<uintptr_t>(-1)) {
+        const auto gamerules_proxy = Memory::absolute_address<uintptr_t>(base.value(), 3, 7);
+        if (gamerules_proxy.value_or(0) == 0) {
             return false;
         }
 
         // Not really C_DOTAGamerules_Proxy but who cares
-        printf("[+] C_DOTAGamerules_Proxy: %p\n", reinterpret_cast<void*>(gamerules_proxy));
-        gamerules_proxy_ = gamerules_proxy;
+        printf("[+] C_DOTAGamerules_Proxy: %p\n", reinterpret_cast<void*>(gamerules_proxy.value()));
+        gamerules_proxy_ = gamerules_proxy.value();
 
         return true;
     }
 
 private:
-    static inline uintptr_t gamerules_base_ = static_cast<uintptr_t>(-1);
-    static inline uintptr_t gamerules_proxy_ = static_cast<uintptr_t>(-1);
+    static inline uintptr_t gamerules_base_;
+    static inline uintptr_t gamerules_proxy_;
 };
