@@ -2,7 +2,7 @@
 #include "../Dota2Patcher.h"
 #include "../Memory.h"
 
-class Interfase {
+class Interface {
 public:
 	std::optional<uintptr_t> base() {
 		const auto base_ptr = Memory::read_memory<uintptr_t>(this);
@@ -28,16 +28,16 @@ public:
 		return std::string(name.value());
 	}
 
-	std::optional<Interfase*> next() {
+	std::optional<Interface*> next() {
 		const auto next_ptr = Memory::read_memory<uintptr_t>(this + 0x10);
 		if (next_ptr.value_or(0) == 0)
 			return std::nullopt;
 
-		return (Interfase*)next_ptr.value();
+		return (Interface*)next_ptr.value();
 	}
 };
 
-class CreateInterface : public Interfase {
+class CreateInterface : public Interface {
 public:
 	bool get_create_interface(std::string module_name) {
 		const auto CreateInterface_base = Memory::pattern_scan(module_name, Patches::Patterns::CreateInterface);
@@ -56,7 +56,7 @@ public:
 
 		printf("[+] %s CreateInterface -> [%p]\n", module_name.c_str(), (void*)CreateInterfaceFn.value());
 
-		pCreateInterface_ = (Interfase*)CreateInterfaceFn.value();
+		pCreateInterface_ = (Interface*)CreateInterfaceFn.value();
 		return true;
 	}
 
@@ -66,7 +66,7 @@ public:
 			return;
 		}
 
-		Interfase* iface = pCreateInterface_;
+		Interface* iface = pCreateInterface_;
 
 		while (true) {
 			const auto name = iface->name();
@@ -94,5 +94,5 @@ public:
 	}
 
 private:
-	Interfase* pCreateInterface_ = nullptr;
+	Interface* pCreateInterface_ = nullptr;
 };
