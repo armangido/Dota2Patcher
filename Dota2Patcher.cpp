@@ -23,11 +23,13 @@ int main() {
 	if (camera_distance == -1 || shift_pressed) {
 		printf("[~] Opening settings...\n");
 		ConfigManager::ask_for_settings();
+		printf("\n");
 	}
 
 	ConfigManager::show_settings();
 
 	// GET DOTA2 PROCESS
+	printf("\n");
 
 	printf("[~] Waiting for Dota2 process...\n");
 
@@ -60,11 +62,26 @@ int main() {
 
 	printf("[+] Modules loaded: %d\n", (int)Memory::loaded_modules.size());
 
+	// INTERFACES
+	printf("\n");
 
-	//CreateInterface iface;
-	//iface.load_interfaces("client.dll", "Source2Client002");
+	std::vector<CreateInterface::ModuleInterfaces> interfaces_to_load = {
+	{ "client.dll",
+		{ "Source2Client002", }
+	},
+	{ "engine2.dll",
+		{ "Source2EngineToClient001", }
+	}
+	};
+
+	CreateInterface iface;
+
+	for (const auto& interfaces : interfaces_to_load) {
+		iface.load_interfaces(interfaces);
+	}
 
 	// FIND GAMERULES
+	printf("\n");
 
 	if (!CDOTAGamerules::find_gamerules()) {
 		printf("[-] Can't find C_DOTAGamerules_Proxy!\n");
@@ -78,6 +95,7 @@ int main() {
 		Sleep(1000);
 
 	// CAMERA HACK
+	printf("\n");
 
 	if (!CDOTACamera::find_camera()) {
 		printf("[-] Can't find CDOTACamera! Use ConVars instead...\n");
@@ -90,6 +108,7 @@ int main() {
 	}
 
 	// PATCHES
+	printf("\n");
 
 	if (ConfigManager::get<bool>("fog_enable")) {
 		Patches::add_patch({

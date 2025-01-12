@@ -39,34 +39,37 @@ public:
 
 class CreateInterface : public Interface {
 public:
-	bool get_create_interface(std::string module_name) {
-		const auto CreateInterface_base = Memory::pattern_scan(module_name, Patches::Patterns::CreateInterface);
-		if (!CreateInterface_base) {
+	struct ModuleInterfaces {
+		std::string module_name;
+		std::vector<std::string> interface_names;
+	};
+
+	std::optional<Interface*> get_first_interface(std::string module_name) {
+		const auto CreateInterfaceFn = Memory::pattern_scan(module_name, Patches::Patterns::CreateInterface);
+		if (!CreateInterfaceFn) {
 			printf("[-] Can't find CreateInterface pattern!\n");
-			return false;
+			return std::nullopt;
 		}
-
-		const auto CreateInterfacePtr = Memory::absolute_address<uintptr_t>(CreateInterface_base.value());
-		if (!CreateInterfacePtr)
-			return false;
-
-		const auto CreateInterfaceFn = Memory::read_memory<uintptr_t>(CreateInterfacePtr.value());
-		if (!CreateInterfaceFn)
-			return false;
 
 		printf("[+] %s CreateInterface -> [%p]\n", module_name.c_str(), (void*)CreateInterfaceFn.value());
 
-		pCreateInterface_ = (Interface*)CreateInterfaceFn.value();
-		return true;
+		const auto first_interface_base = Memory::absolute_address<uintptr_t>(CreateInterfaceFn.value());
+		if (!first_interface_base)
+			return std::nullopt;
+
+		const auto first_interface = Memory::read_memory<Interface*>(first_interface_base.value());
+		if (!first_interface)
+			return std::nullopt;
+
+		return first_interface.value();
 	}
 
-	void load_interfaces(std::string module_name, std::string interface_name) {
-		if (!pCreateInterface_ && !get_create_interface(module_name)) {
-			printf("[-] Can't get %s pCreateInterface!\n", module_name.c_str());
+	void load_interfaces(const ModuleInterfaces& module, bool iterate_all = false) {
+		const auto interface_ptr = get_first_interface(module.module_name);
+		if (!interface_ptr)
 			return;
-		}
 
-		Interface* iface = pCreateInterface_;
+		Interface* iface = interface_ptr.value();
 
 		while (true) {
 			const auto name = iface->name();
@@ -75,13 +78,12 @@ public:
 			const auto base = iface->base();
 			if (!base) continue;
 
-			printf("[~] %s -> [%p]\n", name.value().c_str(), (void*)base.value());
+			if (iterate_all)
+				printf("[~] [%s] -> [%p]\n", name.value().c_str(), (void*)base.value());
 
-			if (name.value() == interface_name) {
-				const auto base = iface->base();
-				if (!base) break;
-
-				printf("[+] Interface %s found -> [%p]\n", interface_name.c_str(), (void*)base.value());
+			else if (std::find(module.interface_names.begin(), module.interface_names.end(), name.value()) != module.interface_names.end()) {
+				interfaces[module.module_name][name.value()] = iface;
+				printf("[+] Interface [%s] -> [%p]\n", name.value().c_str(), (void*)iface->base().value());
 			}
 
 			auto next_ptr = iface->next();
@@ -89,10 +91,8 @@ public:
 
 			iface = next_ptr.value();
 		}
-
-		printf("[+] Interface iteration done!\n");
 	}
 
-private:
-	Interface* pCreateInterface_ = nullptr;
+
+	std::unordered_map<std::string, std::unordered_map<std::string, Interface*>> interfaces;
 };

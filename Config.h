@@ -63,7 +63,6 @@ public:
         set_rendering_enabled = ask_for_bool("[~] Show hidden particles? [y/n or 1/0]: ");
 
         write_settings();
-        printf("\n");
     }
 
     static void show_settings() {
@@ -73,8 +72,7 @@ public:
             << "[~] FOW amount: " << fow_amount << "\n"
             << "[~] sv_heats unlock: " << (sv_cheats ? "Yes" : "No") << "\n"
             << "[~] Fog disabled: " << (fog_enabled ? "Yes" : "No") << "\n"
-            << "[~] Show hidden particles: " << (set_rendering_enabled ? "Yes" : "No") << "\n"
-            << "\n\n";
+            << "[~] Show hidden particles: " << (set_rendering_enabled ? "Yes" : "No") << "\n";
     }
 
 private:
