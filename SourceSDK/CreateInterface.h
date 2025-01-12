@@ -40,7 +40,7 @@ public:
 class CreateInterface : public Interfase {
 public:
 	bool get_create_interface(std::string module_name) {
-		const auto CreateInterface_base = Memory::pattern_scan(module_name, "4C 8B ? ? ? ? ? 4C 8B ? 4C 8B ? 4D 85 ? 74 ? 49 8B ? ? 4D 8B");
+		const auto CreateInterface_base = Memory::pattern_scan(module_name, Patches::Patterns::CreateInterface);
 		if (!CreateInterface_base) {
 			printf("[-] Can't find CreateInterface pattern!\n");
 			return false;
