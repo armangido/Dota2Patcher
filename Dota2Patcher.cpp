@@ -45,7 +45,7 @@ int main() {
 	ProcessHandle::open_process_handle(process_ID, PROCESS_ALL_ACCESS);
 	if (!ProcessHandle::is_valid_handle()) {
 		printf("[-] Failed to open process. Error: 0x%d\n", ProcessHandle::get_last_error());
-		std::cin.get();
+		system("pause");
 		return 0;
 	}
 
@@ -56,7 +56,7 @@ int main() {
 	if (!Memory::load_modules()) {
 		printf("[-] Failed to load modules, aborting...\n");
 		ProcessHandle::close_process_handle();
-		std::cin.get();
+		system("pause");
 		return 0;
 	}
 
@@ -86,7 +86,7 @@ int main() {
 	if (!vmt.find_all()) {
 		printf("[-] Scanner failed! Exiting...\n");
 		ProcessHandle::close_process_handle();
-		std::cin.get();
+		system("pause");
 		return 0;
 	}
 

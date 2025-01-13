@@ -76,7 +76,7 @@ void Updater::check_update() {
 
     printf("[!] Update Required!\n");
     printf("[~] Press Enter to continue...\n");
-    std::cin.get();
+    system("pause");
 
     std::wstring w_update_url = string_to_wstring(update_url);
 
