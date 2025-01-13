@@ -2,5 +2,5 @@
 
 class CSource2Client {
 public:
-	// Nothing for now :)
+	// nothing atm :)
 };

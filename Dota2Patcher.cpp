@@ -2,6 +2,7 @@
 #include "ProcessHandle.h"
 #include "Memory.h"
 #include "Config.h"
+#include "SourceSDK/CDOTAGamerules.h"
 #include "SourceSDK/CDOTACamera.h"
 #include "SourceSDK/CreateInterface.h"
 #include "SourceSDK/interfaces.h"
@@ -94,7 +95,7 @@ int main() {
 	printf("\n");
 
 	printf("[~] Waiting for lobby to start...\n");
-	while (!vmt.engine->in_game().value())
+	while (!vmt.gamerules->in_lobby())
 		Sleep(1000);
 
 	// CAMERA HACK

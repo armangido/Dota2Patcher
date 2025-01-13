@@ -1,11 +1,13 @@
 #pragma once
+class CDOTAGamerules;  // Forward declaration
 #include "CEngineClient.h"
-#include "CDOTACamera.h"
 #include "CSource2Client.h"
+#include "CDOTACamera.h"
 
 class Scanner {
 public:
     static bool find_CDOTACamera();
+    static bool find_CDOTAGamerules();
     static bool find_all();
 };
 
@@ -17,6 +19,7 @@ public:
 
     CEngineClient* engine;
     CSource2Client* client;
+    CDOTAGamerules* gamerules;
     CDOTACamera* camera;
 } vmt;
 
@@ -56,11 +59,26 @@ bool Scanner::find_CDOTACamera() {
     return true;
 }
 
-// Expandable for future
+bool Scanner::find_CDOTAGamerules() {
+    const auto base = Memory::pattern_scan("client.dll", Patches::Patterns::CDOTAGamerules);
+    if (!base)
+        return false;
+    
+    const auto gamerules_proxy = Memory::absolute_address<uintptr_t>(base.value());
+    if (!gamerules_proxy)
+        return false;
+
+    // Not really C_DOTAGamerules_Proxy but who cares
+    printf("[+] C_DOTAGamerules_Proxy -> [%p]\n", reinterpret_cast<void*>(gamerules_proxy.value()));
+    vmt.gamerules = (CDOTAGamerules*)gamerules_proxy.value();
+    return true;
+}
+
 bool Scanner::find_all() {
     bool status = true;
 
     status &= find_CDOTACamera();
+    status &= find_CDOTAGamerules();
 
     return status;
 }
