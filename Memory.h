@@ -80,16 +80,16 @@ public:
 		return value;
 	}
 
-	template<typename T>
-	static bool write_memory(uintptr_t address, const T& value) {
+	template<typename T, typename N>
+	static bool write_memory(N address, const T& value) {
 		SIZE_T bytesWritten;
 		if (!WriteProcessMemory(ProcessHandle::get_handle(), reinterpret_cast<LPVOID>(address), &value, sizeof(T), &bytesWritten)) {
-			printf("[-] Failed to write memory at 0x%llX: 0x%X\n", address, GetLastError());
+			printf("[-] Failed to write memory at 0x%p: 0x%X\n", (void*)address, GetLastError());
 			return false;
 		}
 
 		if (bytesWritten != sizeof(T)) {
-			printf("[-] Partial write at 0x%llX\n", address);
+			printf("[-] Partial write at 0x%p\n", (void*)address);
 			return false;
 		}
 

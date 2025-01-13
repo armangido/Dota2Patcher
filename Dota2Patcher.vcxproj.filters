@@ -49,10 +49,16 @@
     <ClInclude Include="SourceSDK\CDOTACamera.h">
       <Filter>Headers\SourceSDK</Filter>
     </ClInclude>
-    <ClInclude Include="SourceSDK\CDOTAGamerules.h">
+    <ClInclude Include="SourceSDK\CreateInterface.h">
       <Filter>Headers\SourceSDK</Filter>
     </ClInclude>
-    <ClInclude Include="SourceSDK\CreateInterface.h">
+    <ClInclude Include="SourceSDK\CEngineClient.h">
+      <Filter>Headers\SourceSDK</Filter>
+    </ClInclude>
+    <ClInclude Include="SourceSDK\interfaces.h">
+      <Filter>Headers\SourceSDK</Filter>
+    </ClInclude>
+    <ClInclude Include="SourceSDK\CSource2Client.h">
       <Filter>Headers\SourceSDK</Filter>
     </ClInclude>
   </ItemGroup>

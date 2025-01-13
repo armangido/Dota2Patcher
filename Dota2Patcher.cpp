@@ -3,8 +3,8 @@
 #include "Memory.h"
 #include "Config.h"
 #include "SourceSDK/CDOTACamera.h"
-#include "SourceSDK/CDOTAGamerules.h"
 #include "SourceSDK/CreateInterface.h"
+#include "SourceSDK/interfaces.h"
 
 std::vector<Patches::PatchInfo> Patches::patches;
 
@@ -17,10 +17,10 @@ int main() {
 
 	// CONFIG
 
-	auto camera_distance = ConfigManager::Read("camera_distance"); // To open config if not set
+	auto camera_distance_test = ConfigManager::Read("camera_distance"); // To open config if not set
 	bool shift_pressed = (GetAsyncKeyState(VK_SHIFT) & 0x8000) != 0; // And if SHIFT pressed
 
-	if (camera_distance == -1 || shift_pressed) {
+	if (camera_distance_test == -1 || shift_pressed) {
 		printf("[~] Opening settings...\n");
 		ConfigManager::ask_for_settings();
 		printf("\n");
@@ -66,46 +66,43 @@ int main() {
 	printf("\n");
 
 	std::vector<CreateInterface::ModuleInterfaces> interfaces_to_load = {
-	{ "client.dll",
-		{ "Source2Client002", }
-	},
-	{ "engine2.dll",
-		{ "Source2EngineToClient001", }
-	}
+		{
+			"engine2.dll", {
+				{ "Source2EngineToClient001", [](uintptr_t base) { vmt.engine = (CEngineClient*)base; } },
+				// { Some other interface goes here }
+			}
+		},
+		{
+			"client.dll", {
+				{ "Source2Client002", [](uintptr_t base) { vmt.client = (CSource2Client*)base; } },
+			}
+		}
 	};
 
-	CreateInterface iface;
-
-	for (const auto& interfaces : interfaces_to_load) {
-		iface.load_interfaces(interfaces);
+	for (const auto& interface_ : interfaces_to_load) {
+		CreateInterface::load_interfaces(interface_);
 	}
 
-	// FIND GAMERULES
-	printf("\n");
-
-	if (!CDOTAGamerules::find_gamerules()) {
-		printf("[-] Can't find C_DOTAGamerules_Proxy!\n");
+	if (!vmt.find_all()) {
+		printf("[-] Scanner failed! Exiting...\n");
 		ProcessHandle::close_process_handle();
 		std::cin.get();
 		return 0;
 	}
 
+	// WAITING FOR LOBBY
+	printf("\n");
+
 	printf("[~] Waiting for lobby to start...\n");
-	while (!CDOTAGamerules::in_lobby())
+	while (!vmt.engine->in_game().value())
 		Sleep(1000);
 
 	// CAMERA HACK
-	printf("\n");
 
-	if (!CDOTACamera::find_camera()) {
-		printf("[-] Can't find CDOTACamera! Use ConVars instead...\n");
-	}
-	else {
-		float camera_distance = ConfigManager::get<float>("camera_distance");
-		CDOTACamera::set_distance(camera_distance);
-		CDOTACamera::set_r_farz(camera_distance * 2);
-		CDOTACamera::set_fow(ConfigManager::get<float>("fow_amount"));
-	}
+	float camera_distance = ConfigManager::get<float>("camera_distance");
+	vmt.camera->set_distance(camera_distance);
+	vmt.camera->set_r_farz(camera_distance * 2);
+	vmt.camera->set_fow(ConfigManager::get<float>("fow_amount"));
 
 	// PATCHES
 	printf("\n");
@@ -155,7 +152,7 @@ int main() {
 		printf("[+] \"%s\" patched successfully\n", patch.name.c_str());
 	}
 
-	printf("[+] Done! Will close in 5 seconds...\n");
+	printf("\n[+] Done! Will close in 5 seconds...\n");
 	ProcessHandle::close_process_handle();
 	Sleep(5000);
 	return 0;

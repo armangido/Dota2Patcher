@@ -107,8 +107,10 @@
     <ClInclude Include="Memory.h" />
     <ClInclude Include="ProcessHandle.h" />
     <ClInclude Include="SourceSDK\CDOTACamera.h" />
-    <ClInclude Include="SourceSDK\CDOTAGamerules.h" />
+    <ClInclude Include="SourceSDK\CEngineClient.h" />
     <ClInclude Include="SourceSDK\CreateInterface.h" />
+    <ClInclude Include="SourceSDK\CSource2Client.h" />
+    <ClInclude Include="SourceSDK\interfaces.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="MD5" />

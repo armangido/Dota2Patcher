@@ -1,6 +1,8 @@
 #pragma once
 #include "../Dota2Patcher.h"
 #include "../Memory.h"
+#include <unordered_set>
+#include <functional>
 
 class Interface {
 public:
@@ -41,10 +43,10 @@ class CreateInterface : public Interface {
 public:
 	struct ModuleInterfaces {
 		std::string module_name;
-		std::vector<std::string> interface_names;
+		std::unordered_map<std::string, std::function<void(uintptr_t)>> interface_handlers;
 	};
 
-	std::optional<Interface*> get_first_interface(std::string module_name) {
+	static std::optional<Interface*> get_first_interface(std::string module_name) {
 		const auto CreateInterfaceFn = Memory::pattern_scan(module_name, Patches::Patterns::CreateInterface);
 		if (!CreateInterfaceFn) {
 			printf("[-] Can't find CreateInterface pattern!\n");
@@ -64,7 +66,7 @@ public:
 		return first_interface.value();
 	}
 
-	void load_interfaces(const ModuleInterfaces& module, bool iterate_all = false) {
+	static void load_interfaces(const ModuleInterfaces& module, bool iterate_all = false) {
 		const auto interface_ptr = get_first_interface(module.module_name);
 		if (!interface_ptr)
 			return;
@@ -81,9 +83,9 @@ public:
 			if (iterate_all)
 				printf("[~] [%s] -> [%p]\n", name.value().c_str(), (void*)base.value());
 
-			else if (std::find(module.interface_names.begin(), module.interface_names.end(), name.value()) != module.interface_names.end()) {
-				interfaces[module.module_name][name.value()] = iface;
-				printf("[+] Interface [%s] -> [%p]\n", name.value().c_str(), (void*)iface->base().value());
+			else if (module.interface_handlers.find(name.value()) != module.interface_handlers.end()) {
+				printf("[+] Interface [%s] -> [%p]\n", name.value().c_str(), (void*)base.value());
+				module.interface_handlers.at(name.value())(base.value());
 			}
 
 			auto next_ptr = iface->next();
@@ -92,7 +94,4 @@ public:
 			iface = next_ptr.value();
 		}
 	}
-
-
-	std::unordered_map<std::string, std::unordered_map<std::string, Interface*>> interfaces;
 };
