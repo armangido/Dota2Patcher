@@ -25,7 +25,6 @@ public:
 
 bool Scanner::find_CDOTACamera() {
 // CDOTA_Camera 21'th vfunc (offset 0xA8):
-// 
 // sub                          rsp, 48h
 // movaps[rsp + 48h + var_18],  xmm6
 // movaps                       xmm6, xmm1
@@ -33,7 +32,6 @@ bool Scanner::find_CDOTACamera() {
 // call                         get_camera_distance <<<
 // 
 // get_camera_distance:
-// 
 // mov                          edx, cs:TlsIndex
 // mov                          rax, gs:58h
 // mov                          ecx, 40h ; '@'

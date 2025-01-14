@@ -127,8 +127,8 @@ int main() {
 			});
 	}
 
-// #STR: "Error in child list of particle system %s [%p], parent: %p, "m_Children.m_pHead: [%p]\n", "Address of m_Children.m_pHead: [%p]\n"
 // CParticleCollection 95'th vfunc (offset 0x5F)
+// #STR: "Error in child list of particle system %s [%p], parent: %p, "m_Children.m_pHead: [%p]\n", "Address of m_Children.m_pHead: [%p]\n"
 // mov		r11, rsp
 // push		rbp
 // push		rsi
@@ -144,6 +144,42 @@ int main() {
 			Patches::Patterns::set_rendering_enabled,
 			"60 01",
 			3
+			});
+
+// idk for some reason set_rendering_enabled causes to crash without this fix
+// C_SceneEntity almost the last vfunc
+// #STR: "C_SceneEntity::SetupClientOnlyScene:  Couldn't determine d, "!self", "couldn't load scene file %s\n", "Failed to find soundevent '%s' when falling back from miss
+// In the middle there will be #STR: "blank"
+// xor		edx, edx
+// lea		rcx, [rsp+180h+var_120]
+// call		cs:?Purge@CBufferString@@QEAAXH@Z ; CBufferString::Purge(int)
+// mov		rdi, [rsi+598h]
+// lea		rdx, [rbp+80h+arg_18]
+// mov		rcx, r15
+// call		sub_1802CFE30
+// mov		r8, rax
+// mov		[rbp+80h+arg_0], rbx
+// lea		rdx, [rbp+80h+arg_0]
+// mov		rcx, rdi
+// call		sub_1829D6BD0 ; #STR: "blank" <<<<
+// jmp		loc_1814170EA
+//
+// sub_1829D6BD0:
+// mov		r13, [rax]
+// mov[rsp + 88h + arg_0],	r13
+// test		r13, r13
+// jz		loc_1829D6ED8 <<<<
+// mov		rbx, [rbx]
+// test		rbx, rbx
+// jz		short loc_1829D6C42
+// mov		rbx, [rbx]
+// loc_1829D6C42: ; CODE XREF: sub_1829D6BD0+6D↑j
+		Patches::add_patch({
+			"set_rendering_enabled_fix",
+			"client.dll",
+			Patches::Patterns::set_rendering_enabled_fix,
+			"85",
+			1
 			});
 	}
 
