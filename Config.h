@@ -75,13 +75,6 @@ public:
             << "[~] Show hidden particles: " << (set_rendering_enabled ? "Yes" : "No") << "\n";
     }
 
-private:
-    static inline int camera_distance = 1500;
-    static inline int fow_amount = 70;
-    static inline bool sv_cheats = true;
-    static inline bool fog_enabled = true;
-    static inline bool set_rendering_enabled = true;
-
     static void write_settings() {
         RegistryConfig::set("camera_distance", camera_distance);
         RegistryConfig::set("fow_amount", fow_amount);
@@ -90,6 +83,21 @@ private:
         RegistryConfig::set("set_rendering_enabled", set_rendering_enabled);
     }
 
+    static void read_settings() {
+        camera_distance = RegistryConfig::get<int>("camera_distance");
+        fow_amount = RegistryConfig::get<int>("fow_amount");
+        sv_cheats = RegistryConfig::get<bool>("sv_cheats");
+        fog_enabled = RegistryConfig::get<bool>("fog_enabled");
+        set_rendering_enabled = RegistryConfig::get<bool>("set_rendering_enabled");
+    }
+
+    static inline int camera_distance = 1500;
+    static inline int fow_amount = 70;
+    static inline bool sv_cheats = true;
+    static inline bool fog_enabled = true;
+    static inline bool set_rendering_enabled = true;
+
+private:
     static int ask_for_int(const std::string& prompt) {
         int value;
         while (true) {

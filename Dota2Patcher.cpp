@@ -27,6 +27,7 @@ int main() {
 		printf("\n");
 	}
 
+	ConfigManager::read_settings();
 	ConfigManager::show_settings();
 
 	// GET DOTA2 PROCESS
@@ -100,15 +101,15 @@ int main() {
 
 	// CAMERA HACK
 
-	float camera_distance = ConfigManager::get<float>("camera_distance");
+	int camera_distance = ConfigManager::camera_distance;
 	vmt.camera->set_distance(camera_distance);
 	vmt.camera->set_r_farz(camera_distance * 2);
-	vmt.camera->set_fow(ConfigManager::get<float>("fow_amount"));
+	vmt.camera->set_fow(ConfigManager::fow_amount);
 
 	// PATCHES
 	printf("\n");
 
-	if (ConfigManager::get<bool>("fog_enable")) {
+	if (ConfigManager::fog_enabled) {
 		Patches::add_patch({
 			"fog_enable",
 			"engine2.dll",
@@ -117,7 +118,7 @@ int main() {
 			});
 	}
 
-	if (ConfigManager::get<bool>("sv_cheats")) {
+	if (ConfigManager::sv_cheats) {
 		Patches::add_patch({
 			"sv_cheats",
 			"engine2.dll",
@@ -126,7 +127,7 @@ int main() {
 			});
 	}
 
-	if (ConfigManager::get<bool>("set_rendering_enabled")) {
+	if (ConfigManager::set_rendering_enabled) {
 		Patches::add_patch({
 			"set_rendering_enabled",
 			"particles.dll",
