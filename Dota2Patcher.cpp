@@ -131,8 +131,8 @@ int main() {
 			"set_rendering_enabled",
 			"particles.dll",
 			Patches::Patterns::set_rendering_enabled,
-			"E9 AE 03 00 00 90", //"85",
-			//1
+			"85",
+			1
 			});
 	}
 
