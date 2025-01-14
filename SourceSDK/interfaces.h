@@ -24,7 +24,7 @@ public:
 } vmt;
 
 bool Scanner::find_CDOTACamera() {
-// CDOTA_Camera 21 vfunc:
+// CDOTA_Camera 21'th vfunc (offset 0xA8):
 // 
 // sub                          rsp, 48h
 // movaps[rsp + 48h + var_18],  xmm6

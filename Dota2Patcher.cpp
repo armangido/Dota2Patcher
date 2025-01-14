@@ -127,13 +127,23 @@ int main() {
 			});
 	}
 
+// #STR: "Error in child list of particle system %s [%p], parent: %p, "m_Children.m_pHead: [%p]\n", "Address of m_Children.m_pHead: [%p]\n"
+// CParticleCollection 95'th vfunc (offset 0x5F)
+// mov		r11, rsp
+// push		rbp
+// push		rsi
+// push		r12
+// push		r13
+// sub		rsp, 118h
+// movzx	eax, byte ptr [rcx+0A64h] <<<< CParticleCollection + 0xA64 -> 0x160. 
+// On 0xA64 is 1 if set_rendering_enabled is true. But on 0x160 is always 1 :)
 	if (ConfigManager::set_rendering_enabled) {
 		Patches::add_patch({
 			"set_rendering_enabled",
 			"particles.dll",
 			Patches::Patterns::set_rendering_enabled,
-			"85",
-			1
+			"60 01",
+			3
 			});
 	}
 
