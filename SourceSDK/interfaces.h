@@ -24,7 +24,7 @@ public:
 } vmt;
 
 bool Scanner::find_CDOTACamera() {
-// CDOTA_Camera 21'th vfunc (offset 0xA8):
+// CDOTA_Camera 20'th vfunc (offset 0xA0):
 // sub                          rsp, 48h
 // movaps[rsp + 48h + var_18],  xmm6
 // movaps                       xmm6, xmm1
@@ -45,7 +45,7 @@ bool Scanner::find_CDOTACamera() {
 // retn
 
     const auto base = Memory::pattern_scan("client.dll", Patches::Patterns::CDOTACamera);
-    if (!base)
+    if (!base) 
         return false;
 
     const auto camera_base_address = Memory::absolute_address<uintptr_t>(base.value());
