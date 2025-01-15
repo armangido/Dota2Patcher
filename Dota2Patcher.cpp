@@ -135,15 +135,22 @@ int main() {
 // push		r12
 // push		r13
 // sub		rsp, 118h
-// movzx	eax, byte ptr [rcx+0A64h] <<<< CParticleCollection + 0xA64 -> 0x160. 
-// On 0xA64 is 1 if set_rendering_enabled is true. But on 0x160 is always 1 :)
+// movzx	eax, byte ptr [rcx+0A64h]
+// xor		r13d, r13d
+// shr		al, 7
+// movzx	r12d, dl
+// mov		[rsp+138h+arg_8], r13d
+// mov		rsi, rcx
+// mov		ebp, r13d
+// cmp		dl, al
+// jz		loc_18003A334 <<<<
 	if (ConfigManager::set_rendering_enabled) {
 		Patches::add_patch({
 			"set_rendering_enabled",
 			"particles.dll",
 			Patches::Patterns::set_rendering_enabled,
-			"60 01",
-			3
+			"85",
+			1
 			});
 
 // idk for some reason set_rendering_enabled causes to crash without this fix
