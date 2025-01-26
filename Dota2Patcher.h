@@ -22,7 +22,7 @@ public:
 	struct Patterns {
 		static inline const std::string CDOTAGamerules = "48 8B ? ? ? ? ? 48 85 ? 74 ? 48 8B ? 45 33 ? 66 0F";
 		static inline const std::string CreateInterface = "4C 8B ? ? ? ? ? 4C 8B ? 4C 8B ? 4D 85 ? 74 ? 49 8B ? ? 4D 8B";
-		static inline const std::string CDOTACamera = "48 8D ? ? ? ? ? 48 83 C4 ? 5B C3 48 8D ? ? ? ? ? E8 ? ? ? ? 83 3D E6 79 99 03";
+		static inline const std::string CDOTACamera = "48 8D 0D ? ? ? ? 48 8D 05 ? ? ? ? 48 89 05 ? ? ? ? E9";
 		static inline const std::string sv_cheats = "75 ? 48 8B 56 ? 48 8D 0D";
 		static inline const std::string fog_enable = "74 ? B0 ? EB ? 32 C0 88 85";
 		static inline const std::string set_rendering_enabled = "0F 84 ? ? ? ? 4D 89 73";

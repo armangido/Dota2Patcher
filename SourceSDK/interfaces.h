@@ -52,8 +52,8 @@ bool Scanner::find_CDOTACamera() {
     if (!camera_base_address)
         return false;
 
-    printf("[+] CDOTA_Camera -> [%p]\n", reinterpret_cast<void*>(camera_base_address.value()));
-    vmt.camera = (CDOTACamera*)camera_base_address.value();
+    printf("[+] CDOTA_Camera -> [%p]\n", reinterpret_cast<void*>(camera_base_address.value()-0x40));
+    vmt.camera = (CDOTACamera*)camera_base_address.value() - 0x40;
     return true;
 }
 
