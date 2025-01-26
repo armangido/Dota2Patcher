@@ -45,14 +45,14 @@ bool Scanner::find_CDOTACamera() {
 // retn
 
     const auto base = Memory::pattern_scan("client.dll", Patches::Patterns::CDOTACamera);
-    if (!base) 
+    if (!base)
         return false;
 
     const auto camera_base_address = Memory::absolute_address<uintptr_t>(base.value());
     if (!camera_base_address)
         return false;
 
-    printf("[+] CDOTA_Camera -> [%p]\n", reinterpret_cast<void*>(camera_base_address.value()-0x40));
+    printf("[+] CDOTA_Camera -> [%p]\n", reinterpret_cast<void*>(camera_base_address.value() - 0x40));
     vmt.camera = (CDOTACamera*)camera_base_address.value() - 0x40;
     return true;
 }
