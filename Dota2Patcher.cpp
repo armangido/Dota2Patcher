@@ -118,6 +118,20 @@ int main() {
 			});
 	}
 
+// #STR: "SV: Convar '%s' is cheat protected, change ignored"
+// jnz		short loc_1801AA477 <<<<
+// mov		rax, cs:LOG_CONSOLE
+// mov		edx, 3
+// mov		ecx, [rax]
+// call		cs:LoggingSystem_IsChannelEnabled
+// test		al, al
+// jz		short loc_1801AA469
+// cmp		[r15+438h], r13d
+// jle		short loc_1801AA44B
+// mov		rax, [r15+440h]
+// mov		rdi, [rax]
+// mov		rax, cs:LOG_CONSOLE
+// lea		r8, aSvConvarSIsChe ; "SV: Convar '%s' is cheat protected, cha"...
 	if (ConfigManager::sv_cheats) {
 		Patches::add_patch({
 			"sv_cheats",
