@@ -31,7 +31,7 @@ public:
 	}
 
 	std::optional<CEntityIdentity*> m_pNext() const {
-		const auto next_ident = Memory::read_memory<CEntityIdentity*>(this + 0x58);
+		const auto next_ident = Memory::read_memory<CEntityIdentity*>(this + 0x60);
 		return next_ident;
 	}
 };
