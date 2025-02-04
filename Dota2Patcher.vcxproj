@@ -109,6 +109,7 @@
     <ClInclude Include="SourceSDK\CDOTACamera.h" />
     <ClInclude Include="SourceSDK\CDOTAGamerules.h" />
     <ClInclude Include="SourceSDK\CEngineClient.h" />
+    <ClInclude Include="SourceSDK\CGameEntitySystem.h" />
     <ClInclude Include="SourceSDK\CreateInterface.h" />
     <ClInclude Include="SourceSDK\CSource2Client.h" />
     <ClInclude Include="SourceSDK\interfaces.h" />

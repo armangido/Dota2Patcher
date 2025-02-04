@@ -64,6 +64,9 @@
     <ClInclude Include="SourceSDK\CDOTAGamerules.h">
       <Filter>Headers\SourceSDK</Filter>
     </ClInclude>
+    <ClInclude Include="SourceSDK\CGameEntitySystem.h">
+      <Filter>Headers\SourceSDK</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="MD5">

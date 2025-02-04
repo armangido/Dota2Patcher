@@ -3,11 +3,13 @@ class CDOTAGamerules;  // Forward declaration
 #include "CEngineClient.h"
 #include "CSource2Client.h"
 #include "CDOTACamera.h"
+#include "CGameEntitySystem.h"
 
 class Scanner {
 public:
     static bool find_CDOTACamera();
     static bool find_CDOTAGamerules();
+    static bool find_CGameEntitySystem();
     static bool find_all();
 };
 
@@ -21,6 +23,7 @@ public:
     CSource2Client* client;
     CDOTAGamerules* gamerules;
     CDOTACamera* camera;
+    CGameEntitySystem* entity_system;
 } vmt;
 
 bool Scanner::find_CDOTACamera() {
@@ -72,11 +75,30 @@ bool Scanner::find_CDOTAGamerules() {
     return true;
 }
 
+bool Scanner::find_CGameEntitySystem() {
+    const auto base = Memory::virtual_function<uintptr_t>(vmt.client, 30);
+    if (!base)
+        return false;
+
+    const auto absolute_address_ptr = Memory::absolute_address<uintptr_t>(base.value());
+    if (!absolute_address_ptr)
+        return false;
+
+    const auto CGameEntitySystem_ptr = Memory::read_memory<uintptr_t>(absolute_address_ptr.value());
+    if (!CGameEntitySystem_ptr)
+        return false;
+
+    printf("[+] CGameEntitySystem -> [%p]\n", reinterpret_cast<void*>(CGameEntitySystem_ptr.value()));
+    vmt.entity_system = (CGameEntitySystem*)CGameEntitySystem_ptr.value();
+    return true;
+}
+
 bool Scanner::find_all() {
     bool status = true;
 
     status &= find_CDOTACamera();
     status &= find_CDOTAGamerules();
+    status &= find_CGameEntitySystem();
 
     return status;
 }

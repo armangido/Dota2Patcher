@@ -81,6 +81,28 @@ public:
 	}
 
 	template<typename T, typename N>
+	static std::optional<T> virtual_function(N vmt, int function_index) {
+		uintptr_t address = 0;
+
+		if constexpr (std::is_pointer_v<N>)
+			address = reinterpret_cast<uintptr_t>(vmt);
+		else if constexpr (std::is_integral_v<N>)
+			address = static_cast<uintptr_t>(vmt);
+
+		const auto base_ptr = Memory::read_memory<uintptr_t>(address);
+		if (!base_ptr)
+			return std::nullopt;
+
+		int actual_index = (function_index - 1) * 8;
+
+		const auto instruction_ptr = Memory::read_memory<uintptr_t>(base_ptr.value() + actual_index);
+		if (!instruction_ptr)
+			return std::nullopt;
+
+		return instruction_ptr;
+	}
+
+	template<typename T, typename N>
 	static bool write_memory(N address, const T& value) {
 		SIZE_T bytesWritten;
 		if (!WriteProcessMemory(ProcessHandle::get_handle(), reinterpret_cast<LPVOID>(address), &value, sizeof(T), &bytesWritten)) {
