@@ -85,12 +85,21 @@ int main() {
 		CreateInterface::load_interfaces(interface_);
 	}
 
+	// SCANNER
+	printf("\n");
+
 	if (!vmt.find_all()) {
 		printf("[-] Scanner failed! Exiting...\n");
 		ProcessHandle::close_process_handle();
 		system("pause");
 		return 0;
 	}
+
+	// WAITING FOR A LOBBY
+	printf("\n[~] Waiting for a lobby to start...\n");
+
+	while (!Scanner::find_CDOTAGamerules())
+		Sleep(1000);
 
 	// CAMERA HACK
 

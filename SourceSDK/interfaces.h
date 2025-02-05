@@ -32,7 +32,6 @@ bool Scanner::find_all() {
 
     status &= find_CGameEntitySystem();
     status &= find_CDOTACamera();
-    status &= find_CDOTAGamerules();
 
     return status;
 }
@@ -90,18 +89,12 @@ bool Scanner::find_CDOTACamera() {
 }
 
 bool Scanner::find_CDOTAGamerules() {
-    printf("\n[~] Waiting for a lobby to start...\n");
-    C_DOTAGamerulesProxy* dota_gamerules_proxy = nullptr;
+    const auto dota_gamerules_proxy_ptr = vmt.entity_system->find_by_name("dota_gamerules");
+    if (!dota_gamerules_proxy_ptr)
+        return false;
 
-    while (!dota_gamerules_proxy) {
-        const auto dota_gamerules_proxy_ptr = vmt.entity_system->find_by_name("dota_gamerules");
-        if (dota_gamerules_proxy_ptr) {    
-            dota_gamerules_proxy = reinterpret_cast<C_DOTAGamerulesProxy*>(dota_gamerules_proxy_ptr.value());
-            printf("[+] C_DOTAGamerules_Proxy -> [%p]\n", (void*)dota_gamerules_proxy_ptr.value());
-            break;
-        }
-        Sleep(1000);
-    }
+    C_DOTAGamerulesProxy* dota_gamerules_proxy = reinterpret_cast<C_DOTAGamerulesProxy*>(dota_gamerules_proxy_ptr.value());
+    printf("[+] C_DOTAGamerules_Proxy -> [%p]\n", (void*)dota_gamerules_proxy_ptr.value());
 
     const auto dota_gamerules_ptr = dota_gamerules_proxy->gamerules();
     if (!dota_gamerules_ptr)
