@@ -123,10 +123,12 @@ public:
 		std::vector<char> buffer(maxLength, 0);
 		SIZE_T bytesRead;
 
-		if (!ReadProcessMemory(ProcessHandle::get_handle(), reinterpret_cast<LPCVOID>(static_cast<uintptr_t>(address)), buffer.data(), buffer.size(), &bytesRead) && bytesRead == buffer.size())
+		if (!ReadProcessMemory(ProcessHandle::get_handle(), reinterpret_cast<LPCVOID>(static_cast<uintptr_t>(address)), buffer.data(), maxLength, &bytesRead) || bytesRead == 0)
 			return std::nullopt;
 
-		return std::string(buffer.data());
+		std::string result(buffer.data(), strnlen(buffer.data(), bytesRead));
+
+		return result.empty() ? std::nullopt : std::optional<std::string>(std::move(result));
 	}
 
 	static std::unordered_map<std::string, ModuleInfo> loaded_modules;

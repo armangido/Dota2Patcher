@@ -20,17 +20,16 @@ public:
 		if (!name_ptr)
 			return std::nullopt;
 
-		const auto name = Memory::read_string(name_ptr.value());
-		return name;
+		return Memory::read_string(name_ptr.value());
 	}
+
 
 	std::optional<std::string> entity_name() const {
 		const auto name_ptr = Memory::read_memory<uintptr_t>(this + 0x28);
 		if (!name_ptr)
 			return std::nullopt;
 
-		const auto name = Memory::read_string(name_ptr.value());
-		return name;
+		return Memory::read_string(name_ptr.value());
 	}
 
 	std::optional<CEntityIdentity*> m_pPrev() const {
@@ -65,7 +64,7 @@ public:
 			CEntityIdentity* ident = entity.value();
 
 			auto internal_name = ident->internal_name();
-			if (!internal_name || internal_name.value().empty())
+			if (!internal_name)
 				continue;
 
 			printf("%s -> [%p]\n", internal_name.value().c_str(), (void*)ident->base_entity().value());
