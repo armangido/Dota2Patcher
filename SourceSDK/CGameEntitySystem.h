@@ -64,6 +64,27 @@ public:
 		}
 	}
 
+	std::optional<CBaseEntity*> find_by_name(std::string entity_name) {
+		for (int i = 0; i < this->highest_entity_index().value(); i++) {
+			auto entity = this->get_base_entity(i);
+			if (!entity)
+				continue;
+
+			CEntityIdentity* ident = entity.value();
+
+			auto internal_name = ident->internal_name();
+			if (!internal_name)
+				continue;
+
+			if (internal_name.value() != entity_name)
+				continue;
+
+			return ident->base_entity();
+		}
+
+		return std::nullopt;
+	}
+
 	std::optional<CEntityIdentity*> get_base_entity(int index) {
 		const auto chunk = get_identity_chunk();
 		if (!chunk)

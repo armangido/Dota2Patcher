@@ -92,13 +92,6 @@ int main() {
 		return 0;
 	}
 
-	// WAITING FOR LOBBY
-	printf("\n");
-
-	printf("[~] Waiting for lobby to start...\n");
-	while (!vmt.gamerules->in_lobby())
-		Sleep(1000);
-
 	// CAMERA HACK
 
 	int camera_distance = ConfigManager::camera_distance;
@@ -220,8 +213,6 @@ int main() {
 
 		printf("[+] \"%s\" patched successfully\n", patch.name.c_str());
 	}
-
-	//vmt.entity_system->iterate_entities();
 
 	printf("\n[+] Done! Will close in 5 seconds...\n");
 	ProcessHandle::close_process_handle();

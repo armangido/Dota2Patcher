@@ -20,7 +20,6 @@ static void draw_logo() {
 class Patches {
 public:
 	struct Patterns {
-		static inline const std::string CDOTAGamerules = "48 8B ? ? ? ? ? 48 85 ? 74 ? 48 8B ? 45 33 ? 66 0F";
 		static inline const std::string CreateInterface = "4C 8B ? ? ? ? ? 4C 8B ? 4C 8B ? 4D 85 ? 74 ? 49 8B ? ? 4D 8B";
 		static inline const std::string CDOTACamera = "48 8D 0D ? ? ? ? 48 8D 05 ? ? ? ? 48 89 05 ? ? ? ? E9";
 

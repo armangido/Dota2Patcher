@@ -1,5 +1,4 @@
 #pragma once
-#include "interfaces.h"
 
 enum class DOTA_GameState : int {
     INVALID = -1,
@@ -30,15 +29,15 @@ public:
         const auto game_state = Memory::read_memory<int>(this + 0x74);
         return game_state.has_value() ? static_cast<DOTA_GameState>(game_state.value()) : DOTA_GameState::INVALID;
     }
+};
 
-    bool in_lobby() {
-        const auto gamerules_ptr = Memory::read_memory<uintptr_t>(this);
-        if (gamerules_ptr.value_or(0) == 0)
-            return false;
+class C_DOTAGamerulesProxy {
+public:
+    std::optional<CDOTAGamerules*> gamerules() {
+        const auto gamerules_ptr = Memory::read_memory<uintptr_t>(this + 0x560);
+        if (!gamerules_ptr)
+            return std::nullopt;
 
-        vmt.gamerules = (CDOTAGamerules*)gamerules_ptr.value();
-        printf("[+] C_DOTAGamerules -> [%p]\n", reinterpret_cast<void*>(gamerules_ptr.value()));
-
-        return true;
+        return reinterpret_cast<CDOTAGamerules*>(gamerules_ptr.value());
     }
 };

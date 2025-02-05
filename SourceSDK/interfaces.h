@@ -1,15 +1,15 @@
 #pragma once
-class CDOTAGamerules;  // Forward declaration
 #include "CEngineClient.h"
 #include "CSource2Client.h"
+#include "CDOTAGamerules.h"
 #include "CDOTACamera.h"
 #include "CGameEntitySystem.h"
 
 class Scanner {
 public:
+    static bool find_CGameEntitySystem();
     static bool find_CDOTACamera();
     static bool find_CDOTAGamerules();
-    static bool find_CGameEntitySystem();
     static bool find_all();
 };
 
@@ -25,6 +25,35 @@ public:
     CDOTACamera* camera;
     CGameEntitySystem* entity_system;
 } vmt;
+
+
+bool Scanner::find_all() {
+    bool status = true;
+
+    status &= find_CGameEntitySystem();
+    status &= find_CDOTACamera();
+    status &= find_CDOTAGamerules();
+
+    return status;
+}
+
+bool Scanner::find_CGameEntitySystem() {
+    const auto base = Memory::virtual_function<uintptr_t>(vmt.client, 30);
+    if (!base)
+        return false;
+
+    const auto absolute_address_ptr = Memory::absolute_address<uintptr_t>(base.value());
+    if (!absolute_address_ptr)
+        return false;
+
+    const auto CGameEntitySystem_ptr = Memory::read_memory<uintptr_t>(absolute_address_ptr.value());
+    if (!CGameEntitySystem_ptr)
+        return false;
+
+    vmt.entity_system = reinterpret_cast<CGameEntitySystem*>(CGameEntitySystem_ptr.value());
+    printf("[+] CGameEntitySystem -> [%p]\n", (void*)vmt.entity_system);
+    return true;
+}
 
 bool Scanner::find_CDOTACamera() {
 // CDOTA_Camera 20'th vfunc (offset 0xA0):
@@ -55,50 +84,30 @@ bool Scanner::find_CDOTACamera() {
     if (!camera_base_address)
         return false;
 
-    printf("[+] CDOTA_Camera -> [%p]\n", reinterpret_cast<void*>(camera_base_address.value() - 0x40));
-    vmt.camera = (CDOTACamera*)camera_base_address.value() - 0x40;
+    vmt.camera = reinterpret_cast<CDOTACamera*>(camera_base_address.value() - 0x40);
+    printf("[+] CDOTA_Camera -> [%p]\n", (void*)vmt.camera);
     return true;
 }
 
 bool Scanner::find_CDOTAGamerules() {
-    const auto base = Memory::pattern_scan("client.dll", Patches::Patterns::CDOTAGamerules);
-    if (!base)
-        return false;
-    
-    const auto gamerules_proxy = Memory::absolute_address<uintptr_t>(base.value());
-    if (!gamerules_proxy)
+    printf("\n[~] Waiting for a lobby to start...\n");
+    C_DOTAGamerulesProxy* dota_gamerules_proxy = nullptr;
+
+    while (!dota_gamerules_proxy) {
+        const auto dota_gamerules_proxy_ptr = vmt.entity_system->find_by_name("dota_gamerules");
+        if (dota_gamerules_proxy_ptr) {    
+            dota_gamerules_proxy = reinterpret_cast<C_DOTAGamerulesProxy*>(dota_gamerules_proxy_ptr.value());
+            printf("[+] C_DOTAGamerules_Proxy -> [%p]\n", (void*)dota_gamerules_proxy_ptr.value());
+            break;
+        }
+        Sleep(1000);
+    }
+
+    const auto dota_gamerules_ptr = dota_gamerules_proxy->gamerules();
+    if (!dota_gamerules_ptr)
         return false;
 
-    // Not really C_DOTAGamerules_Proxy but who cares
-    printf("[+] C_DOTAGamerules_Proxy -> [%p]\n", reinterpret_cast<void*>(gamerules_proxy.value()));
-    vmt.gamerules = (CDOTAGamerules*)gamerules_proxy.value();
+    vmt.gamerules = reinterpret_cast<CDOTAGamerules*>(dota_gamerules_ptr.value());
+    printf("[+] CDOTAGamerules -> [%p]\n", (void*)vmt.gamerules);
     return true;
-}
-
-bool Scanner::find_CGameEntitySystem() {
-    const auto base = Memory::virtual_function<uintptr_t>(vmt.client, 30);
-    if (!base)
-        return false;
-
-    const auto absolute_address_ptr = Memory::absolute_address<uintptr_t>(base.value());
-    if (!absolute_address_ptr)
-        return false;
-
-    const auto CGameEntitySystem_ptr = Memory::read_memory<uintptr_t>(absolute_address_ptr.value());
-    if (!CGameEntitySystem_ptr)
-        return false;
-
-    printf("[+] CGameEntitySystem -> [%p]\n", reinterpret_cast<void*>(CGameEntitySystem_ptr.value()));
-    vmt.entity_system = (CGameEntitySystem*)CGameEntitySystem_ptr.value();
-    return true;
-}
-
-bool Scanner::find_all() {
-    bool status = true;
-
-    status &= find_CDOTACamera();
-    status &= find_CDOTAGamerules();
-    status &= find_CGameEntitySystem();
-
-    return status;
 }
