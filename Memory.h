@@ -119,7 +119,7 @@ public:
 	}
 
 	template<typename T>
-	static std::optional<std::string> read_string(const T address, size_t maxLength = 512) {
+	static std::optional<std::string> read_string(T address, size_t maxLength = 512) {
 		std::vector<char> buffer(maxLength, 0);
 		SIZE_T bytesRead;
 

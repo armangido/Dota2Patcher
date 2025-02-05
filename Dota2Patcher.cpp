@@ -221,6 +221,8 @@ int main() {
 		printf("[+] \"%s\" patched successfully\n", patch.name.c_str());
 	}
 
+	//vmt.entity_system->iterate_entities();
+
 	printf("\n[+] Done! Will close in 5 seconds...\n");
 	ProcessHandle::close_process_handle();
 	Sleep(5000);

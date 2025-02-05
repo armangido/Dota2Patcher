@@ -16,13 +16,21 @@ public:
 	}
 
 	std::optional<std::string> internal_name() const {
-		const auto internal_name = Memory::read_memory<const char*>(this + 0x20);
-		return internal_name;
+		const auto name_ptr = Memory::read_memory<uintptr_t>(this + 0x20);
+		if (!name_ptr)
+			return std::nullopt;
+
+		const auto name = Memory::read_string(name_ptr.value());
+		return name;
 	}
 
 	std::optional<std::string> entity_name() const {
-		const auto entity_name = Memory::read_memory<const char*>(this + 0x28);
-		return entity_name;
+		const auto name_ptr = Memory::read_memory<uintptr_t>(this + 0x28);
+		if (!name_ptr)
+			return std::nullopt;
+
+		const auto name = Memory::read_string(name_ptr.value());
+		return name;
 	}
 
 	std::optional<CEntityIdentity*> m_pPrev() const {
@@ -48,15 +56,30 @@ public:
 
 class CGameEntitySystem {
 public:
-	std::optional<CBaseEntity*> get_base_entity(int index) {
+	void iterate_entities() { // for testing purposes
+		for (int i = 0; i < this->highest_entity_index().value(); i++) {
+			auto entity = this->get_base_entity(i);
+			if (!entity)
+				continue;
+
+			CEntityIdentity* ident = entity.value();
+
+			auto internal_name = ident->internal_name();
+			if (!internal_name || internal_name.value().empty())
+				continue;
+
+			printf("%s -> [%p]\n", internal_name.value().c_str(), (void*)ident->base_entity().value());
+		}
+	}
+
+	std::optional<CEntityIdentity*> get_base_entity(int index) {
 		const auto chunk = get_identity_chunk();
 		if (!chunk)
 			return std::nullopt;
 
 		uintptr_t identityPtr = reinterpret_cast<uintptr_t>(chunk.value()) + (index % MAX_ENTITIES_IN_LIST) * ENTITY_IDENTITY_SIZE;
 
-		const auto base_entity = Memory::read_memory<CBaseEntity*>(identityPtr);
-		return base_entity;
+		return reinterpret_cast<CEntityIdentity*>(identityPtr);
 	}
 
 	std::optional<CEntityIdentities*> get_identity_chunk() {
