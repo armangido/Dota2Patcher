@@ -17,19 +17,12 @@ public:
 
 	std::optional<std::string> internal_name() const {
 		const auto name_ptr = Memory::read_memory<uintptr_t>(this + 0x20);
-		if (!name_ptr)
-			return std::nullopt;
-
-		return Memory::read_string(name_ptr.value());
+		return !name_ptr ? std::nullopt : Memory::read_string(name_ptr.value());
 	}
-
 
 	std::optional<std::string> entity_name() const {
 		const auto name_ptr = Memory::read_memory<uintptr_t>(this + 0x28);
-		if (!name_ptr)
-			return std::nullopt;
-
-		return Memory::read_string(name_ptr.value());
+		return !name_ptr ? std::nullopt : Memory::read_string(name_ptr.value());
 	}
 
 	std::optional<CEntityIdentity*> m_pPrev() const {
