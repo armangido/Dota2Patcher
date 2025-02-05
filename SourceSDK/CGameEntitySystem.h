@@ -65,7 +65,7 @@ public:
 	}
 
 	std::optional<int> highest_entity_index() {
-		const auto index = Memory::read_memory<int>(this + 0x1670);
+		const auto index = Memory::read_memory<int>(this + 0x2100);
 		return index;
 	}
 };
