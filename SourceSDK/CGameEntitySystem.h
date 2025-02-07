@@ -116,12 +116,7 @@ public:
 
 	std::optional<CBaseEntity*> find_by_name(std::string name_to_find) {
 		auto first_ent = this->get_first_entity();
-		if (!first_ent) {
-			printf("[!] (CGameEntitySystem) Can't find first entity in list!\n");
-			return std::nullopt;
-		}
-
-		if (first_ent.value() == nullptr)
+		if (!first_ent || first_ent.value() == nullptr) 
 			return std::nullopt;
 
 		CEntityIdentity* ident = first_ent.value();
