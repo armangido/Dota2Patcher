@@ -90,10 +90,8 @@ bool Memory::load_modules() {
 
     while (true) {
         snapshot = CreateToolhelp32Snapshot(TH32CS_SNAPMODULE | TH32CS_SNAPMODULE32, GetProcessId(ProcessHandle::get_handle()));
-        if (snapshot == INVALID_HANDLE_VALUE) {
-            printf("[-] (load_modules) Failed to create snapshot: 0x%d\n", GetLastError());
-            return false;
-        }
+        if (snapshot == INVALID_HANDLE_VALUE)
+            continue;
 
         if (Module32First(snapshot, &module_entry)) {
             do {
@@ -110,7 +108,7 @@ bool Memory::load_modules() {
             break;
 
         modules.clear();
-        Sleep(2000);
+        Sleep(1000);
     }
 
 

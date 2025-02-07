@@ -121,6 +121,9 @@ public:
 			return std::nullopt;
 		}
 
+		if (first_ent.value() == nullptr)
+			return std::nullopt;
+
 		CEntityIdentity* ident = first_ent.value();
 
 		while (ident->m_pNext().value()) {

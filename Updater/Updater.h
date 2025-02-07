@@ -58,7 +58,7 @@ public:
     void check_update();
 
 private:
-    const SemVer local_version = { 2, 6, 0 };
+    const SemVer local_version = { 2, 6, 1 };
 
     std::optional<std::string> web_request();
     SemVer get_latest_version(const std::vector<WebVer>& versions) const;
