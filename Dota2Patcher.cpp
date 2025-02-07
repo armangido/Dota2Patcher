@@ -6,6 +6,7 @@
 #include "SourceSDK/CDOTACamera.h"
 #include "SourceSDK/CreateInterface.h"
 #include "SourceSDK/interfaces.h"
+#include "Updater/Updater.h"
 
 std::vector<Patches::PatchInfo> Patches::patches;
 
@@ -13,10 +14,12 @@ int main() {
 	draw_logo();
 
 #ifndef _DEBUG
-	Updater::check_update();
+	Updater updater;
+	updater.check_update();
 #endif
 
 	// CONFIG
+	printf("\n");
 
 	auto camera_distance_test = ConfigManager::Read("camera_distance"); // To open config if not set
 	bool shift_pressed = (GetAsyncKeyState(VK_SHIFT) & 0x8000) != 0; // And if SHIFT pressed
@@ -28,6 +31,7 @@ int main() {
 	}
 
 	ConfigManager::read_settings();
+	ConfigManager::write_settings();
 	ConfigManager::show_settings();
 
 	// GET DOTA2 PROCESS
@@ -222,6 +226,8 @@ int main() {
 
 		printf("[+] \"%s\" patched successfully\n", patch.name.c_str());
 	}
+
+	//vmt.entity_system->iterate_entities();
 
 	printf("\n[+] Done! Will close in 5 seconds...\n");
 	ProcessHandle::close_process_handle();

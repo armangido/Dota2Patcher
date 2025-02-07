@@ -43,15 +43,3 @@ public:
 
 	static std::vector<PatchInfo> patches;
 };
-
-class Updater {
-public:
-	static void check_update();
-
-private:
-	static std::string get_remote_hash();
-	static std::string get_local_hash();
-
-	static inline const std::string remote_version_url = "https://raw.githubusercontent.com/Wolf49406/Dota2Patcher/main/MD5";
-	static inline const std::string update_url = "https://github.com/Wolf49406/Dota2Patcher/releases/latest";
-};

@@ -1,7 +1,30 @@
 #pragma once
 #include "memory.h"
+#include <iostream>
+#include <fstream>
 
 class CBaseEntity;
+
+class SchemaName {
+public:
+	std::optional<std::string> name() const {
+		const auto name_ptr = Memory::read_memory<uintptr_t>(this + 0x8);
+		return !name_ptr ? std::nullopt : Memory::read_string(name_ptr.value());
+	}
+};
+
+class CSchemaClassBinding {
+public:
+	std::optional<std::string> binary_name() const { // C_DOTA_Unit_Hero_AntiMage
+		std::optional base = Memory::read_memory<SchemaName*>(this + 0x30);
+		return !base ? std::nullopt : base.value()->name();
+	}
+
+	std::optional<std::string> class_name() const { // C_DOTA_BaseNPC_Hero
+		std::optional base = Memory::read_memory<SchemaName*>(this + 0x38);
+		return !base ? std::nullopt : base.value()->name();
+	}
+};
 
 class CEntityIdentity {
 public:
@@ -10,18 +33,23 @@ public:
 		return entity;
 	}
 
+	std::optional<CSchemaClassBinding*> schema_class_binding() const {
+		const auto schema_ptr = Memory::read_memory<CSchemaClassBinding*>(this + 0x8);
+		return schema_ptr;
+	}
+
 	std::optional<uint32_t> handle() const {
 		const auto handle = Memory::read_memory<uint32_t>(this + 0x10);
 		return handle;
 	}
 
-	std::optional<std::string> internal_name() const {
-		const auto name_ptr = Memory::read_memory<uintptr_t>(this + 0x20);
+	std::optional<std::string> internal_name() const { // npc_dota_hero_antimage
+		const auto name_ptr = Memory::read_memory<uintptr_t>(this + 0x18);
 		return !name_ptr ? std::nullopt : Memory::read_string(name_ptr.value());
 	}
 
-	std::optional<std::string> entity_name() const {
-		const auto name_ptr = Memory::read_memory<uintptr_t>(this + 0x28);
+	std::optional<std::string> entity_name() const { // npc_dota_hero_antimage
+		const auto name_ptr = Memory::read_memory<uintptr_t>(this + 0x20);
 		return !name_ptr ? std::nullopt : Memory::read_string(name_ptr.value());
 	}
 
@@ -49,40 +77,86 @@ public:
 class CGameEntitySystem {
 public:
 	void iterate_entities() { // for testing purposes
-		for (int i = 0; i < this->highest_entity_index().value(); i++) {
-			auto entity = this->get_base_entity(i);
-			if (!entity)
-				continue;
+		std::ofstream dump_file;
+		dump_file.open("C:\\entity_dump.txt");
+		int ents_count = 0;
 
-			CEntityIdentity* ident = entity.value();
+		auto first_ent = this->get_first_entity();
+		if (!first_ent)
+			return;
 
+		CEntityIdentity* ident = first_ent.value();
+
+		while (ident->m_pNext().value()) {
+			auto next_ent = ident->m_pNext();
+			if (!next_ent)
+				break;
+
+			ident = next_ent.value();
+
+			auto schema = ident->schema_class_binding();
 			auto internal_name = ident->internal_name();
-			if (!internal_name)
-				continue;
+			auto entity_name = ident->entity_name();
+			auto binary_name = schema.value()->binary_name();
+			auto class_name = schema.value()->class_name();
 
-			printf("%s -> [%p]\n", internal_name.value().c_str(), (void*)ident->base_entity().value());
+			dump_file
+				<< "internal_name: " << internal_name.value_or("empty") 
+				<< " | entity_name: " << entity_name.value_or("empty") 
+				<< " | binary_name: " << binary_name.value_or("empty") 
+				<< " | class_name: " << class_name.value_or("empty")
+				<< " -> [" << (void*)ident->base_entity().value() << "]\n";
+
+			ents_count++;
 		}
+		
+		dump_file.close();
+		printf("\n[+] iterate_entities: done. Total: %d\n", ents_count);
 	}
 
-	std::optional<CBaseEntity*> find_by_name(std::string entity_name) {
-		for (int i = 0; i < this->highest_entity_index().value(); i++) {
-			auto entity = this->get_base_entity(i);
-			if (!entity)
-				continue;
+	std::optional<CBaseEntity*> find_by_name(std::string name_to_find) {
+		auto first_ent = this->get_first_entity();
+		if (!first_ent) {
+			printf("[!] (CGameEntitySystem) Can't find first entity in list!\n");
+			return std::nullopt;
+		}
 
-			CEntityIdentity* ident = entity.value();
+		CEntityIdentity* ident = first_ent.value();
+
+		while (ident->m_pNext().value()) {
+			auto next_ent = ident->m_pNext();
+			if (!next_ent)
+				break;
+
+			ident = next_ent.value();
 
 			auto internal_name = ident->internal_name();
-			if (!internal_name)
+			if (internal_name && internal_name.value() == name_to_find)
+				return ident->base_entity();
+
+			auto entity_name = ident->entity_name();
+			if (entity_name && entity_name.value() == name_to_find)
+				return ident->base_entity();
+			
+			auto schema = ident->schema_class_binding();
+			if (!schema)
 				continue;
 
-			if (internal_name.value() != entity_name)
-				continue;
-
-			return ident->base_entity();
+			auto binary_name = schema.value()->binary_name();
+			if (binary_name && binary_name.value() == name_to_find)
+				return ident->base_entity();
+			
+			auto class_name = schema.value()->class_name();
+			if (class_name && class_name.value() == name_to_find)
+				return ident->base_entity();
 		}
 
 		return std::nullopt;
+	}
+
+	std::optional<CEntityIdentity*> get_first_entity() {
+		const auto first_prt = Memory::read_memory<CEntityIdentity*>(this + 0x210);
+		return first_prt;
 	}
 
 	std::optional<CEntityIdentity*> get_base_entity(int index) {
@@ -98,10 +172,5 @@ public:
 	std::optional<CEntityIdentities*> get_identity_chunk() {
 		const auto identity_chunks_address = Memory::read_memory<CEntityIdentities*>(this + 0x10);
 		return identity_chunks_address;
-	}
-
-	std::optional<int> highest_entity_index() {
-		const auto index = Memory::read_memory<int>(this + 0x2100);
-		return index;
 	}
 };

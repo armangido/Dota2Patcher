@@ -9,11 +9,11 @@
       <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
       <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
     </Filter>
-    <Filter Include="Source files\Updater">
-      <UniqueIdentifier>{12e332a8-c4d7-48a5-ac54-91b0129ce702}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Headers\SourceSDK">
       <UniqueIdentifier>{d8a6ef08-9da6-4257-8c7d-67e1c527b1e9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Updater">
+      <UniqueIdentifier>{12e332a8-c4d7-48a5-ac54-91b0129ce702}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -23,11 +23,8 @@
     <ClCompile Include="Memory.cpp">
       <Filter>Source files</Filter>
     </ClCompile>
-    <ClCompile Include="Updater.cpp">
-      <Filter>Source files\Updater</Filter>
-    </ClCompile>
-    <ClCompile Include="md5.cpp">
-      <Filter>Source files\Updater</Filter>
+    <ClCompile Include="Updater\Updater.cpp">
+      <Filter>Updater</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -39,9 +36,6 @@
     </ClInclude>
     <ClInclude Include="Memory.h">
       <Filter>Headers</Filter>
-    </ClInclude>
-    <ClInclude Include="md5.h">
-      <Filter>Source files\Updater</Filter>
     </ClInclude>
     <ClInclude Include="Config.h">
       <Filter>Headers</Filter>
@@ -67,10 +61,8 @@
     <ClInclude Include="SourceSDK\CGameEntitySystem.h">
       <Filter>Headers\SourceSDK</Filter>
     </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <Text Include="MD5">
-      <Filter>Source files\Updater</Filter>
-    </Text>
+    <ClInclude Include="Updater\Updater.h">
+      <Filter>Updater</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

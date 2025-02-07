@@ -1,0 +1,109 @@
+#include "Updater.h"
+#include "../Config.h"
+#include <nlohmann/json.hpp>
+#include <curl/curl.h>
+using json = nlohmann::json;
+
+static size_t curl_callback(void* contents, size_t size, size_t nmemb, void* userp) {
+    ((std::string*)userp)->append((char*)contents, size * nmemb);
+    return size * nmemb;
+}
+
+static std::wstring string_to_wstring(const std::string& str) {
+    int size_needed = MultiByteToWideChar(CP_UTF8, 0, str.c_str(), -1, NULL, 0);
+    std::wstring wstr(size_needed, 0);
+    MultiByteToWideChar(CP_UTF8, 0, str.c_str(), -1, &wstr[0], size_needed);
+    return wstr;
+}
+
+static void open_url(std::string url) {
+    if (ShellExecuteW(0, L"open", string_to_wstring(url).c_str(), 0, 0, SW_SHOWNORMAL) <= (HINSTANCE)32)
+        printf("[-] Failed to open the browser. Please visit %s.\n", url.c_str());
+}
+
+std::optional<std::string> Updater::web_request() {
+    CURL* curl;
+    CURLcode res;
+    std::string read_buffer;
+
+    curl = curl_easy_init();
+    if (curl) {
+        curl_easy_setopt(curl, CURLOPT_URL, Updater::update_url.c_str());
+        curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, curl_callback);
+        curl_easy_setopt(curl, CURLOPT_WRITEDATA, &read_buffer);
+        curl_easy_setopt(curl, CURLOPT_USERAGENT, "Dota2Patcher");
+        res = curl_easy_perform(curl);
+        curl_easy_cleanup(curl);
+        if (res != CURLE_OK) {
+            printf("[!] Can't check update. CURL Error: %s", curl_easy_strerror(res));
+            return std::nullopt;
+        }
+    }
+
+    return read_buffer;
+}
+
+SemVer Updater::get_latest_version(const std::vector<WebVer>& web_versions) const {
+    SemVer latest_release = local_version;
+    SemVer latest_RC = local_version;
+
+    for (const auto& web_ver : web_versions) {
+        SemVer parsed = SemVer::from_string(web_ver.tag_name);
+
+        if (web_ver.prerelease) {
+            if (parsed > latest_RC) {
+                latest_RC = parsed;
+                latest_RC.update_url = web_ver.html_url;
+            }
+        }
+        else {
+            if (parsed > latest_release) {
+                latest_release = parsed;
+                latest_release.update_url = web_ver.html_url;
+            }
+        }
+    }
+
+    if (ConfigManager::allow_rc_update)
+        return (latest_RC > latest_release) ? latest_RC : latest_release;
+
+    return latest_release;
+}
+
+void Updater::check_update() {
+    printf("[~] Current version: %s\n", Updater::local_version.to_string().c_str());
+
+    auto web_resp = web_request();
+    if (!web_resp)
+        return;
+
+    std::vector<WebVer> web_versions;
+
+    try {
+        json parsed_json = json::parse(web_resp.value());
+
+        for (int i = 0; i < 5; i++) {
+            std::string tag_name = parsed_json[i]["tag_name"];
+            bool prerelease = parsed_json[i]["prerelease"];
+            std::string html_url = parsed_json[i]["html_url"];
+
+            web_versions.push_back({ tag_name, prerelease, html_url });
+        }
+    }
+    catch (const json::parse_error& e) {
+        printf("[!] (Updater) JSON parse error: %s\n", e.what());
+        return;
+    }
+    catch (const std::exception& e) {
+        printf("[!] (Updater) Error: %s\n", e.what());
+        return;
+    }
+
+    SemVer latest_version = Updater::get_latest_version(web_versions);
+    if (Updater::local_version < latest_version) {
+        printf("[!] Update Required! New version: %s\n", latest_version.to_string().c_str());
+        printf("[~] Press Enter to continue...\n");
+        system("pause");
+        latest_version.update_url ? open_url(latest_version.update_url.value()) : open_url(download_url);
+    }
+}

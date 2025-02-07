@@ -61,6 +61,7 @@ public:
         sv_cheats = ask_for_bool("[~] Unlock sv_cheats? [y/n or 1/0]: ");
         fog_enabled = ask_for_bool("[~] Disable fog? [y/n or 1/0]: ");
         set_rendering_enabled = ask_for_bool("[~] Show hidden particles? [y/n or 1/0]: ");
+        allow_rc_update = ask_for_bool("[~] Check for BETA release? [y/n or 1/0]: ");
 
         write_settings();
     }
@@ -72,7 +73,8 @@ public:
             << "[~] FOW amount: " << fow_amount << "\n"
             << "[~] sv_heats unlock: " << (sv_cheats ? "Yes" : "No") << "\n"
             << "[~] Fog disabled: " << (fog_enabled ? "Yes" : "No") << "\n"
-            << "[~] Show hidden particles: " << (set_rendering_enabled ? "Yes" : "No") << "\n";
+            << "[~] Show hidden particles: " << (set_rendering_enabled ? "Yes" : "No") << "\n"
+            << "[~] Check for BETA release: " << (allow_rc_update ? "Yes" : "No") << "\n";
     }
 
     static void write_settings() {
@@ -81,6 +83,7 @@ public:
         RegistryConfig::set("sv_cheats", sv_cheats);
         RegistryConfig::set("fog_enabled", fog_enabled);
         RegistryConfig::set("set_rendering_enabled", set_rendering_enabled);
+        RegistryConfig::set("allow_rc_update", allow_rc_update);
     }
 
     static void read_settings() {
@@ -89,6 +92,7 @@ public:
         sv_cheats = RegistryConfig::get<bool>("sv_cheats");
         fog_enabled = RegistryConfig::get<bool>("fog_enabled");
         set_rendering_enabled = RegistryConfig::get<bool>("set_rendering_enabled");
+        allow_rc_update = RegistryConfig::get<bool>("allow_rc_update");
     }
 
     static inline int camera_distance = 1500;
@@ -96,6 +100,7 @@ public:
     static inline bool sv_cheats = true;
     static inline bool fog_enabled = true;
     static inline bool set_rendering_enabled = true;
+    static inline bool allow_rc_update = false;
 
 private:
     static int ask_for_int(const std::string& prompt) {
