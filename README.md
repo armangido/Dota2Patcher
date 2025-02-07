@@ -32,12 +32,9 @@ Shows ALL hidden particles in FOW: Enemy TP's, spells, even jungle farm particle
 ![particles](https://i.ibb.co/L08kLBZ/photo-2025-01-04-23-41-17.jpg)
 
 ### ✨ sv_cheats unlock
-Allows you to use any cheat-protected commands in multiplayer (ex: `dota_camera_distance 1500`)
+Allows you to use any cheat-protected commands in multiplayer (ex: `dota_camera_distance 1500`) WITHOUT `sv_cheats`
 
 ### Popular convars (cheat commands):
-* `sv_cheats`: default `0`
-	* `1` - Unlock convars thats have cheat flag (use it first!)
-		* ex. `sv_cheats 1`
 * `fog_enable`: default `1`
 	* `0` - Remove fog
 		* ex. `fog_enable 0`
