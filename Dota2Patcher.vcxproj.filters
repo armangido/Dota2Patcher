@@ -70,7 +70,7 @@
     <ClInclude Include="Updater\Updater.h">
       <Filter>Updater</Filter>
     </ClInclude>
-    <ClInclude Include="SourceSDK\SchemaSystem.h">
+    <ClInclude Include="SourceSDK\CSchemaSystem.h">
       <Filter>Headers\SourceSDK</Filter>
     </ClInclude>
     <ClInclude Include="pch.h">

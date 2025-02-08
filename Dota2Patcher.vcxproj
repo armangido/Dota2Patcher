@@ -122,7 +122,7 @@
     <ClInclude Include="SourceSDK\CreateInterface.h" />
     <ClInclude Include="SourceSDK\CSource2Client.h" />
     <ClInclude Include="SourceSDK\interfaces.h" />
-    <ClInclude Include="SourceSDK\SchemaSystem.h" />
+    <ClInclude Include="SourceSDK\CSchemaSystem.h" />
     <ClInclude Include="SourceSDK\utlthash.h" />
     <ClInclude Include="Updater\Updater.h" />
   </ItemGroup>

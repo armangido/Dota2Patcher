@@ -4,7 +4,7 @@
 #include "CDOTAGamerules.h"
 #include "CDOTACamera.h"
 #include "CGameEntitySystem.h"
-#include "SchemaSystem.h"
+#include "CSchemaSystem.h"
 
 class Scanner {
 public:
