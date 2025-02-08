@@ -64,12 +64,12 @@ public:
 		SIZE_T bytesRead;
 
 		if (!ReadProcessMemory(ProcessHandle::get_handle(), reinterpret_cast<LPCVOID>(address), &value, sizeof(T), &bytesRead)) {
-			LOG::ERR("Failed to read memory: 0x%X", GetLastError());
+			LOG::ERR("(read_memory) Failed to read memory: 0x%X", GetLastError());
 			return nullopt;
 		}
 
 		if (bytesRead != sizeof(T)) {
-			LOG::ERR("Partial read at 0x%p", (void*)address);
+			LOG::ERR("(read_memory) Partial read at 0x%p", (void*)address);
 			return nullopt;
 		}
 
@@ -102,12 +102,12 @@ public:
 	static bool write_memory(N address, const T& value) {
 		SIZE_T bytesWritten;
 		if (!WriteProcessMemory(ProcessHandle::get_handle(), reinterpret_cast<LPVOID>(address), &value, sizeof(T), &bytesWritten)) {
-			LOG::ERR("Failed to write memory at 0x%p: 0x%X", (void*)address, GetLastError());
+			LOG::ERR("(write_memory) Failed to write memory at 0x%p: 0x%X", (void*)address, GetLastError());
 			return false;
 		}
 
 		if (bytesWritten != sizeof(T)) {
-			LOG::ERR("Partial write at 0x%p", (void*)address);
+			LOG::ERR("(write_memory) Partial write at 0x%p", (void*)address);
 			return false;
 		}
 
