@@ -3,16 +3,16 @@
 class RegistryConfig {
 public:
     template<typename T>
-    static T get(const std::string& valueName) {
+    static T get(const string& valueName) {
         return static_cast<T>(Read(valueName));
     }
 
     template<typename T>
-    static void set(const std::string& valueName, const T& value) {
+    static void set(const string& valueName, const T& value) {
         Write(valueName, value);
     }
 
-    static int Read(const std::string& valueName) {
+    static int Read(const string& valueName) {
         HKEY hKey;
         LONG result = RegOpenKeyExW(HKEY_CURRENT_USER, L"Software\\Dota2Patcher", 0, KEY_READ, &hKey);
 
@@ -32,7 +32,7 @@ public:
     }
 
     template<typename T>
-    static void Write(const std::string& valueName, const T& value) {
+    static void Write(const string& valueName, const T& value) {
         HKEY hKey;
         LONG result = RegCreateKeyExW(HKEY_CURRENT_USER, L"Software\\Dota2Patcher", 0, NULL, 0, KEY_WRITE, NULL, &hKey, NULL);
 
@@ -64,7 +64,7 @@ public:
     }
 
     static void show_settings() {
-        std::cout
+        cout
             << "[~] Current settings:\n"
             << "[~] Camera distance: " << camera_distance << "\n"
             << "[~] FOW amount: " << fow_amount << "\n"
@@ -100,10 +100,10 @@ public:
     static inline bool allow_rc_update = false;
 
 private:
-    static int ask_for_int(const std::string& prompt) {
+    static int ask_for_int(const string& prompt) {
         int value;
         while (true) {
-            std::cout << prompt;
+            cout << prompt;
             std::cin >> value;
 
             if (std::cin.fail()) {
@@ -118,11 +118,11 @@ private:
         return value;
     }
 
-    static bool ask_for_bool(const std::string& prompt) {
+    static bool ask_for_bool(const string& prompt) {
         bool value;
         while (true) {
-            std::cout << prompt;
-            std::string input;
+            cout << prompt;
+            string input;
             std::cin >> input;
 
             if (input == "y" || input == "1") {

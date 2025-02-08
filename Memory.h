@@ -19,11 +19,11 @@ public:
 	};
 
 	static bool load_modules();
-	static std::optional<uintptr_t> pattern_scan(const std::string target_module, const std::string target_pattern);
-	static bool patch(const uintptr_t patch_addr, const std::string& replace_str);
+	static optional<uintptr_t> pattern_scan(const string target_module, const string target_pattern);
+	static bool patch(const uintptr_t patch_addr, const string& replace_str);
 
 	template<typename T, typename N>
-	static std::optional<T> absolute_address(N instruction_ptr, ASMType instr_type = ASMType::LEA) {
+	static optional<T> absolute_address(N instruction_ptr, ASMType instr_type = ASMType::LEA) {
 		uintptr_t address = 0;
 
 		if constexpr (std::is_pointer_v<N>)
@@ -44,13 +44,13 @@ public:
 			break;
 		default:
 			LOG::ERR("(absolute_address) Unsupported instruction type");
-			return std::nullopt;
+			return nullopt;
 		}
 
 		int32_t relative_offset = 0;
 		if (!ReadProcessMemory(ProcessHandle::get_handle(), reinterpret_cast<LPCVOID>(address + offset), &relative_offset, sizeof(relative_offset), nullptr)) {
 			LOG::ERR("(absolute_address) ReadProcessMemory failed: 0x%d", GetLastError());
-			return std::nullopt;
+			return nullopt;
 		}
 
 		uintptr_t absolute_address = address + relative_offset + size;
@@ -59,25 +59,25 @@ public:
 	}
 
 	template<typename T, typename N>
-	static std::optional<T> read_memory(N address) {
+	static optional<T> read_memory(N address) {
 		T value{};
 		SIZE_T bytesRead;
 
 		if (!ReadProcessMemory(ProcessHandle::get_handle(), reinterpret_cast<LPCVOID>(address), &value, sizeof(T), &bytesRead)) {
 			LOG::ERR("Failed to read memory: 0x%X", GetLastError());
-			return std::nullopt;
+			return nullopt;
 		}
 
 		if (bytesRead != sizeof(T)) {
 			LOG::ERR("Partial read at 0x%p", (void*)address);
-			return std::nullopt;
+			return nullopt;
 		}
 
 		return value;
 	}
 
 	template<typename T, typename N>
-	static std::optional<T> virtual_function(N vmt, int function_index) {
+	static optional<T> virtual_function(N vmt, int function_index) {
 		uintptr_t address = 0;
 
 		if constexpr (std::is_pointer_v<N>)
@@ -87,13 +87,13 @@ public:
 
 		const auto base_ptr = Memory::read_memory<uintptr_t>(address);
 		if (!base_ptr)
-			return std::nullopt;
+			return nullopt;
 
 		int actual_index = (function_index - 1) * 8;
 
 		const auto instruction_ptr = Memory::read_memory<uintptr_t>(base_ptr.value() + actual_index);
 		if (!instruction_ptr)
-			return std::nullopt;
+			return nullopt;
 
 		return instruction_ptr;
 	}
@@ -115,17 +115,19 @@ public:
 	}
 
 	template<typename T>
-	static std::optional<std::string> read_string(T address, size_t maxLength = 512) {
+	static optional<string> read_string(T address, size_t maxLength = 512) {
 		std::vector<char> buffer(maxLength, 0);
 		SIZE_T bytesRead;
 
-		if (!ReadProcessMemory(ProcessHandle::get_handle(), reinterpret_cast<LPCVOID>(static_cast<uintptr_t>(address)), buffer.data(), maxLength, &bytesRead) || bytesRead == 0)
-			return std::nullopt;
+		LPCVOID address_casted = reinterpret_cast<LPCVOID>(address);
 
-		std::string result(buffer.data(), strnlen(buffer.data(), bytesRead));
+		if (!ReadProcessMemory(ProcessHandle::get_handle(), address_casted, buffer.data(), maxLength, &bytesRead) || bytesRead == 0)
+			return nullopt;
 
-		return result.empty() ? std::nullopt : std::optional<std::string>(std::move(result));
+		string result(buffer.data(), strnlen(buffer.data(), bytesRead));
+
+		return result.empty() ? nullopt : optional<string>(std::move(result));
 	}
 
-	static std::unordered_map<std::string, ModuleInfo> loaded_modules;
+	static std::unordered_map<string, ModuleInfo> loaded_modules;
 };

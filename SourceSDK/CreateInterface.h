@@ -6,34 +6,34 @@
 
 class Interface {
 public:
-	std::optional<uintptr_t> base() {
+	optional<uintptr_t> base() {
 		const auto base_ptr = Memory::read_memory<uintptr_t>(this);
 		if (!base_ptr)
-			return std::nullopt;
+			return nullopt;
 
 		const auto absolute_address = Memory::absolute_address<uintptr_t>(base_ptr.value());
 		if (!absolute_address)
-			return std::nullopt;
+			return nullopt;
 
 		return absolute_address;
 	}
 
-	std::optional<std::string> name() {
+	optional<string> name() {
 		const auto name_ptr = Memory::read_memory<uintptr_t>(this + 0x8);
 		if (!name_ptr)
-			return std::nullopt;
+			return nullopt;
 
 		const auto name = Memory::read_string(name_ptr.value());
 		if (!name)
-			return std::nullopt;
+			return nullopt;
 
-		return std::string(name.value());
+		return string(name.value());
 	}
 
-	std::optional<Interface*> next() {
+	optional<Interface*> next() {
 		const auto next_ptr = Memory::read_memory<uintptr_t>(this + 0x10);
 		if (next_ptr.value_or(0) == 0)
-			return std::nullopt;
+			return nullopt;
 
 		return (Interface*)next_ptr.value();
 	}
@@ -42,26 +42,26 @@ public:
 class CreateInterface : public Interface {
 public:
 	struct ModuleInterfaces {
-		std::string module_name;
-		std::unordered_map<std::string, std::function<void(uintptr_t)>> interface_handlers;
+		string module_name;
+		std::unordered_map<string, std::function<void(uintptr_t)>> interface_handlers;
 	};
 
-	static std::optional<Interface*> get_first_interface(std::string module_name) {
+	static optional<Interface*> get_first_interface(string module_name) {
 		const auto CreateInterfaceFn = Memory::pattern_scan(module_name, Patches::Patterns::CreateInterface);
 		if (!CreateInterfaceFn) {
 			LOG::CRITICAL("Can't find CreateInterface pattern!");
-			return std::nullopt;
+			return nullopt;
 		}
 
 		LOG::INFO("%s CreateInterface -> [%p]", module_name.c_str(), (void*)CreateInterfaceFn.value());
 
 		const auto first_interface_base = Memory::absolute_address<uintptr_t>(CreateInterfaceFn.value());
 		if (!first_interface_base)
-			return std::nullopt;
+			return nullopt;
 
 		const auto first_interface = Memory::read_memory<Interface*>(first_interface_base.value());
 		if (!first_interface)
-			return std::nullopt;
+			return nullopt;
 
 		return first_interface.value();
 	}

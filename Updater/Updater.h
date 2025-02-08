@@ -2,18 +2,18 @@
 #include <format>
 
 struct WebVer {
-    std::string tag_name;
+    string tag_name;
     bool prerelease;
-    std::string html_url;
+    string html_url;
 };
 
 struct SemVer {
     int major, minor, patch;
-    std::optional<int> rc_ver;
-    std::optional<std::string> update_url;
+    optional<int> rc_ver;
+    optional<string> update_url;
 
-    static SemVer from_string(const std::string& version_str) {
-        SemVer ver{ 0, 0, 0, std::nullopt };
+    static SemVer from_string(const string& version_str) {
+        SemVer ver{ 0, 0, 0, nullopt };
 
         // Parse major.minor.patch
         int matched = sscanf(version_str.c_str(), "%d.%d.%d", &ver.major, &ver.minor, &ver.patch);
@@ -22,7 +22,7 @@ struct SemVer {
 
         // Search for -rc and parse it
         size_t rc_pos = version_str.find("-rc");
-        if (rc_pos != std::string::npos) {
+        if (rc_pos != string::npos) {
             if (rc_pos + 3 == version_str.size()) // -rc
                 ver.rc_ver = 0;
             else if (version_str[rc_pos + 3] == '.') { // -rc.X
@@ -38,7 +38,7 @@ struct SemVer {
         return ver;
     }
 
-    std::string to_string() const {
+    string to_string() const {
         if (rc_ver.has_value()) {
             if (rc_ver.value() == 0)
                 return std::format("{}.{}.{}-rc", major, minor, patch);
@@ -57,7 +57,7 @@ public:
 private:
     static constexpr SemVer local_version = { 2, 6, 2 };
 
-    static std::optional<std::string> web_request();
+    static optional<string> web_request();
     static SemVer get_latest_version(const std::vector<WebVer>& versions);
     static constexpr std::string_view update_url = "https://api.github.com/repos/Wolf49406/Dota2Patcher/releases";
     static constexpr std::string_view download_url = "https://github.com/Wolf49406/Dota2Patcher/releases/latest";

@@ -14,7 +14,7 @@
 #include <optional>
 #include <Windows.h>
 
-using std::string, std::cin, std::cout;
+using std::string, std::cout, std::endl, std::optional, std::nullopt;
 
 #include <logger.h>
 

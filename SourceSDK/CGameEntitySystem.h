@@ -5,58 +5,58 @@ class CBaseEntity;
 
 class SchemaName {
 public:
-	std::optional<std::string> name() const {
+	optional<string> name() const {
 		const auto name_ptr = Memory::read_memory<uintptr_t>(this + 0x8);
-		return !name_ptr ? std::nullopt : Memory::read_string(name_ptr.value());
+		return !name_ptr ? nullopt : Memory::read_string(name_ptr.value());
 	}
 };
 
 class CSchemaClassBinding {
 public:
-	std::optional<std::string> binary_name() const { // C_DOTA_Unit_Hero_AntiMage
-		std::optional base = Memory::read_memory<SchemaName*>(this + 0x30);
-		return !base ? std::nullopt : base.value()->name();
+	optional<string> binary_name() const { // C_DOTA_Unit_Hero_AntiMage
+		optional base = Memory::read_memory<SchemaName*>(this + 0x30);
+		return !base ? nullopt : base.value()->name();
 	}
 
-	std::optional<std::string> class_name() const { // C_DOTA_BaseNPC_Hero
-		std::optional base = Memory::read_memory<SchemaName*>(this + 0x38);
-		return !base ? std::nullopt : base.value()->name();
+	optional<string> class_name() const { // C_DOTA_BaseNPC_Hero
+		optional base = Memory::read_memory<SchemaName*>(this + 0x38);
+		return !base ? nullopt : base.value()->name();
 	}
 };
 
 class CEntityIdentity {
 public:
-	std::optional<CBaseEntity*> base_entity() const {
+	optional<CBaseEntity*> base_entity() const {
 		const auto entity = Memory::read_memory<CBaseEntity*>(this);
 		return entity;
 	}
 
-	std::optional<CSchemaClassBinding*> schema_class_binding() const {
+	optional<CSchemaClassBinding*> schema_class_binding() const {
 		const auto schema_ptr = Memory::read_memory<CSchemaClassBinding*>(this + 0x8);
 		return schema_ptr;
 	}
 
-	std::optional<uint32_t> handle() const {
+	optional<uint32_t> handle() const {
 		const auto handle = Memory::read_memory<uint32_t>(this + 0x10);
 		return handle;
 	}
 
-	std::optional<std::string> internal_name() const { // npc_dota_hero_antimage
+	optional<string> internal_name() const { // npc_dota_hero_antimage
 		const auto name_ptr = Memory::read_memory<uintptr_t>(this + 0x18);
-		return !name_ptr ? std::nullopt : Memory::read_string(name_ptr.value());
+		return !name_ptr ? nullopt : Memory::read_string(name_ptr.value());
 	}
 
-	std::optional<std::string> entity_name() const { // npc_dota_hero_antimage
+	optional<string> entity_name() const { // npc_dota_hero_antimage
 		const auto name_ptr = Memory::read_memory<uintptr_t>(this + 0x20);
-		return !name_ptr ? std::nullopt : Memory::read_string(name_ptr.value());
+		return !name_ptr ? nullopt : Memory::read_string(name_ptr.value());
 	}
 
-	std::optional<CEntityIdentity*> m_pPrev() const {
+	optional<CEntityIdentity*> m_pPrev() const {
 		const auto prev_ident = Memory::read_memory<CEntityIdentity*>(this + 0x58);
 		return prev_ident;
 	}
 
-	std::optional<CEntityIdentity*> m_pNext() const {
+	optional<CEntityIdentity*> m_pNext() const {
 		const auto next_ident = Memory::read_memory<CEntityIdentity*>(this + 0x60);
 		return next_ident;
 	}
@@ -113,10 +113,10 @@ public:
 		LOG::INFO("iterate_entities: done. Total: %d", ents_count);
 	}
 
-	std::optional<CBaseEntity*> find_by_name(std::string name_to_find) {
+	optional<CBaseEntity*> find_by_name(string name_to_find) {
 		auto first_ent = this->get_first_entity();
 		if (!first_ent || first_ent.value() == nullptr) 
-			return std::nullopt;
+			return nullopt;
 
 		CEntityIdentity* ident = first_ent.value();
 
@@ -148,25 +148,25 @@ public:
 				return ident->base_entity();
 		}
 
-		return std::nullopt;
+		return nullopt;
 	}
 
-	std::optional<CEntityIdentity*> get_first_entity() {
+	optional<CEntityIdentity*> get_first_entity() {
 		const auto first_prt = Memory::read_memory<CEntityIdentity*>(this + 0x210);
 		return first_prt;
 	}
 
-	std::optional<CEntityIdentity*> get_base_entity(int index) {
+	optional<CEntityIdentity*> get_base_entity(int index) {
 		const auto chunk = get_identity_chunk();
 		if (!chunk)
-			return std::nullopt;
+			return nullopt;
 
 		uintptr_t identityPtr = reinterpret_cast<uintptr_t>(chunk.value()) + (index % MAX_ENTITIES_IN_LIST) * ENTITY_IDENTITY_SIZE;
 
 		return reinterpret_cast<CEntityIdentity*>(identityPtr);
 	}
 
-	std::optional<CEntityIdentities*> get_identity_chunk() {
+	optional<CEntityIdentities*> get_identity_chunk() {
 		const auto identity_chunks_address = Memory::read_memory<CEntityIdentities*>(this + 0x10);
 		return identity_chunks_address;
 	}

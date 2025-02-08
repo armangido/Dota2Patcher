@@ -6,26 +6,26 @@
 using json = nlohmann::json;
 
 static size_t curl_callback(void* contents, size_t size, size_t nmemb, void* userp) {
-    ((std::string*)userp)->append((char*)contents, size * nmemb);
+    ((string*)userp)->append((char*)contents, size * nmemb);
     return size * nmemb;
 }
 
-static std::wstring string_to_wstring(const std::string& str) {
+static std::wstring string_to_wstring(const string& str) {
     int size_needed = MultiByteToWideChar(CP_UTF8, 0, str.c_str(), -1, NULL, 0);
     std::wstring wstr(size_needed, 0);
     MultiByteToWideChar(CP_UTF8, 0, str.c_str(), -1, &wstr[0], size_needed);
     return wstr;
 }
 
-static void open_url(std::string url) {
+static void open_url(string url) {
     if (ShellExecuteW(0, L"open", string_to_wstring(url).c_str(), 0, 0, SW_SHOWNORMAL) <= (HINSTANCE)32)
         LOG::ERR("Failed to open the browser. Please visit %s", url.c_str());
 }
 
-std::optional<std::string> Updater::web_request() {
+optional<string> Updater::web_request() {
     CURL* curl;
     CURLcode res;
-    std::string read_buffer;
+    string read_buffer;
 
     curl = curl_easy_init();
     if (curl) {
@@ -37,7 +37,7 @@ std::optional<std::string> Updater::web_request() {
         curl_easy_cleanup(curl);
         if (res != CURLE_OK) {
             LOG::CRITICAL("Can't check update. CURL Error: %s", curl_easy_strerror(res));
-            return std::nullopt;
+            return nullopt;
         }
     }
 
@@ -84,9 +84,9 @@ void Updater::check_update() {
         json parsed_json = json::parse(web_resp.value());
 
         for (int i = 0; i < 5; i++) {
-            std::string tag_name = parsed_json[i]["tag_name"];
+            string tag_name = parsed_json[i]["tag_name"];
             bool prerelease = parsed_json[i]["prerelease"];
-            std::string html_url = parsed_json[i]["html_url"];
+            string html_url = parsed_json[i]["html_url"];
 
             web_versions.push_back({ tag_name, prerelease, html_url });
         }

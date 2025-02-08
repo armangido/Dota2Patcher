@@ -2,12 +2,12 @@
 #include <tlhelp32.h>
 #include <psapi.h>
 
-std::unordered_map<std::string, Memory::ModuleInfo> Memory::loaded_modules;
+std::unordered_map<string, Memory::ModuleInfo> Memory::loaded_modules;
 
-static std::vector<BYTE> parse_pattern(const std::string& pattern) {
+static std::vector<BYTE> parse_pattern(const string& pattern) {
     std::vector<BYTE> parsed_pattern;
     std::stringstream ss(pattern);
-    std::string byte_str;
+    string byte_str;
     while (ss >> byte_str) {
         if (byte_str == "?") {
             parsed_pattern.push_back(0xFF);
@@ -19,11 +19,11 @@ static std::vector<BYTE> parse_pattern(const std::string& pattern) {
     return parsed_pattern;
 }
 
-static std::string wchar_to_string(const WCHAR* wcharStr) {
+static string wchar_to_string(const WCHAR* wcharStr) {
     int bufferSize = WideCharToMultiByte(CP_UTF8, 0, wcharStr, -1, nullptr, 0, nullptr, nullptr);
     if (bufferSize <= 0)
         return "";
-    std::string utf8Str(bufferSize - 1, '\0');
+    string utf8Str(bufferSize - 1, '\0');
     WideCharToMultiByte(CP_UTF8, 0, wcharStr, -1, utf8Str.data(), bufferSize, nullptr, nullptr);
     return utf8Str;
 }
@@ -32,14 +32,14 @@ static std::string wchar_to_string(const WCHAR* wcharStr) {
 #define getBit(x) (InRange((x & (~0x20)), 'A', 'F') ? ((x & (~0x20)) - 'A' + 0xA): (InRange(x, '0', '9') ? x - '0': 0))
 #define getByte(x) (getBit(x[0]) << 4 | getBit(x[1]))
 
-std::optional<uintptr_t> Memory::pattern_scan(const std::string target_module, const std::string target_pattern) {
+optional<uintptr_t> Memory::pattern_scan(const string target_module, const string target_pattern) {
     auto* buffer = new unsigned char[Memory::loaded_modules[target_module].region_size];
     SIZE_T bytesRead;
 
     if (!ReadProcessMemory(ProcessHandle::get_handle(), reinterpret_cast<LPCVOID>(Memory::loaded_modules[target_module].start_address), buffer, Memory::loaded_modules[target_module].region_size, &bytesRead)) {
         LOG::ERR("(PatternScan) ReadProcessMemory failed: 0x%d", GetLastError());
         delete[] buffer;
-        return std::nullopt;
+        return nullopt;
     }
 
     const char* pattern = target_pattern.c_str();
@@ -77,11 +77,11 @@ std::optional<uintptr_t> Memory::pattern_scan(const std::string target_module, c
     }
 
     delete[] buffer;
-    return std::nullopt;
+    return nullopt;
 }
 
 bool Memory::load_modules() {
-    std::unordered_map<std::string, ModuleInfo> modules;
+    std::unordered_map<string, ModuleInfo> modules;
     MODULEENTRY32 module_entry{};
     module_entry.dwSize = sizeof(MODULEENTRY32);
     HANDLE snapshot;
@@ -116,7 +116,7 @@ bool Memory::load_modules() {
     return true;
 }
 
-bool Memory::patch(const uintptr_t patch_addr, const std::string& replace_str) {
+bool Memory::patch(const uintptr_t patch_addr, const string& replace_str) {
     std::vector<BYTE> patchData = parse_pattern(replace_str);
 
     DWORD oldProtect;
