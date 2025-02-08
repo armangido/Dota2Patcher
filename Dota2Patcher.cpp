@@ -11,7 +11,6 @@
 std::vector<Patches::PatchInfo> Patches::patches;
 
 int main() {
-	LOG::Initialize();
 	draw_logo();
 	Updater::check_update();
 

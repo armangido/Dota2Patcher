@@ -26,10 +26,6 @@ enum class ConBackgroundColor {
 
 class LOG {
 public:
-    static void Initialize() {
-        hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
-    }
-
     static void DEBUG(const char* format, ...) {
         va_list arglist;
         va_start(arglist, format);
@@ -62,6 +58,8 @@ private:
     static HANDLE hConsole;
 
     static void SetConsoleColor(ConColor textColor, ConBackgroundColor bgColor) {
+        if (!hConsole)
+            hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
         SetConsoleTextAttribute(hConsole, static_cast<int>(textColor) | static_cast<int>(bgColor));
     }
 
