@@ -15,17 +15,15 @@ struct SemVer {
     static SemVer from_string(const string& version_str) {
         SemVer ver{ 0, 0, 0, nullopt };
 
-        // Parse major.minor.patch
         int matched = sscanf(version_str.c_str(), "%d.%d.%d", &ver.major, &ver.minor, &ver.patch);
         if (matched < 3)
             throw std::invalid_argument("[-] (Updater) Invalid version format: " + version_str);
 
-        // Search for -rc and parse it
         size_t rc_pos = version_str.find("-rc");
         if (rc_pos != string::npos) {
-            if (rc_pos + 3 == version_str.size()) // -rc
+            if (rc_pos + 3 == version_str.size())
                 ver.rc_ver = 0;
-            else if (version_str[rc_pos + 3] == '.') { // -rc.X
+            else if (version_str[rc_pos + 3] == '.') {
                 int rc_num;
                 if (sscanf(version_str.c_str() + rc_pos, "-rc.%d", &rc_num) == 1)
                     ver.rc_ver = rc_num;
@@ -52,10 +50,10 @@ struct SemVer {
 
 class Updater {
 public:
-    static void check_update();
+    static bool check_update();
 
 private:
-    static constexpr SemVer local_version = { 2, 6, 2 };
+    static constexpr SemVer local_version = { 2, 6, 3 };
 
     static optional<string> web_request();
     static SemVer get_latest_version(const std::vector<WebVer>& versions);

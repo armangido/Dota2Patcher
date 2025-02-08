@@ -12,7 +12,8 @@ std::vector<Patches::PatchInfo> Patches::patches;
 
 int main() {
 	draw_logo();
-	Updater::check_update();
+	if (Updater::check_update())
+		return 0;
 
 	// CONFIG
 	printf("\n");

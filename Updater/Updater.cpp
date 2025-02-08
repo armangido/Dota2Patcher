@@ -71,12 +71,12 @@ SemVer Updater::get_latest_version(const std::vector<WebVer>& web_versions) {
     return latest_release;
 }
 
-void Updater::check_update() {
+bool Updater::check_update() {
     LOG::INFO("Current version: %s", Updater::local_version.to_string().c_str());
 
     auto web_resp = web_request();
     if (!web_resp)
-        return;
+        return false;
 
     std::vector<WebVer> web_versions;
 
@@ -93,18 +93,23 @@ void Updater::check_update() {
     }
     catch (const json::parse_error& e) {
         LOG::CRITICAL("(Updater) JSON parse error: %s", e.what());
-        return;
+        return false;
     }
     catch (const std::exception& e) {
         LOG::CRITICAL("(Updater) Error: %s", e.what());
-        return;
+        return false;
     }
 
     SemVer latest_version = Updater::get_latest_version(web_versions);
     if (Updater::local_version < latest_version) {
         LOG::ERR("Update Required! New version: %s", latest_version.to_string().c_str());
         LOG::INFO("Press Enter to continue...");
+
         system("pause");
         latest_version.update_url ? open_url(latest_version.update_url.value()) : open_url(download_url.data());
+
+        return true;
     }
+
+    return false;
 }
