@@ -64,15 +64,22 @@ private:
     }
 
     static void LogMessage(ConColor textColor, ConBackgroundColor bgColor, const char* prefix, const char* format, va_list args) {
-        char buf[2048];
-        std::vsnprintf(buf, sizeof(buf), format, args);
-        char finalMessage[2048];
-        snprintf(finalMessage, sizeof(finalMessage), "%s %s", prefix, buf);
+        va_list args_copy;
+        va_copy(args_copy, args);
+        int size = std::vsnprintf(nullptr, 0, format, args_copy);
+        va_end(args_copy);
+
+        if (size < 0) 
+            return;
+
+        string buf(size, '\0');
+        std::vsnprintf(buf.data(), buf.size() + 1, format, args);
+        string finalMessage = string(prefix) + " " + buf;
+
         SetConsoleColor(textColor, bgColor);
-        std::cout << finalMessage << std::endl;
+        cout << finalMessage << endl;
         SetConsoleColor(ConColor::WHITE, ConBackgroundColor::BLACK);
     }
-
 };
 
 inline HANDLE LOG::hConsole = nullptr;
