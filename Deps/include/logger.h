@@ -6,22 +6,22 @@
 #include <Windows.h>
 
 enum class ConColor {
+    BLACK = 0,
+    CYAN = 3,
     GREEN = 10,
     BLUE = 11,
     RED = 12,
     WHITE = 15,
-    BLACK = 0,
-    CYAN = 3
 };
 
 enum class ConBackgroundColor {
     BLACK = 0x0,
-    RED = 0x40,
-    GREEN = 0x20,
     BLUE = 0x10,
+    GREEN = 0x20,
+    CYAN = 0x30,
+    RED = 0x40,
     YELLOW = 0x60,
     WHITE = 0xF0,
-    CYAN = 0x30
 };
 
 class LOG {
