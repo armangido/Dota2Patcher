@@ -119,9 +119,7 @@ public:
 		std::vector<char> buffer(maxLength, 0);
 		SIZE_T bytesRead;
 
-		LPCVOID address_casted = reinterpret_cast<LPCVOID>(address);
-
-		if (!ReadProcessMemory(ProcessHandle::get_handle(), address_casted, buffer.data(), maxLength, &bytesRead) || bytesRead == 0)
+		if (!ReadProcessMemory(ProcessHandle::get_handle(), reinterpret_cast<LPCVOID>(address), buffer.data(), maxLength, &bytesRead) || bytesRead == 0)
 			return nullopt;
 
 		string result(buffer.data(), strnlen(buffer.data(), bytesRead));
