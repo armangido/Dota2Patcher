@@ -1,6 +1,3 @@
-#include <iostream>
-#include <vector>
-#include <optional>
 #include <compare>
 #include <format>
 
@@ -55,13 +52,13 @@ struct SemVer {
 
 class Updater {
 public:
-    void check_update();
+    static void check_update();
 
 private:
-    const SemVer local_version = { 2, 6, 1 };
+    static constexpr SemVer local_version = { 2, 6, 2 };
 
-    std::optional<std::string> web_request();
-    SemVer get_latest_version(const std::vector<WebVer>& versions) const;
-    const std::string update_url = "https://api.github.com/repos/Wolf49406/Dota2Patcher/releases";
-    const std::string download_url = "https://github.com/Wolf49406/Dota2Patcher/releases/latest";
+    static std::optional<std::string> web_request();
+    static SemVer get_latest_version(const std::vector<WebVer>& versions);
+    static constexpr std::string_view update_url = "https://api.github.com/repos/Wolf49406/Dota2Patcher/releases";
+    static constexpr std::string_view download_url = "https://github.com/Wolf49406/Dota2Patcher/releases/latest";
 };

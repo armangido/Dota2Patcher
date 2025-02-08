@@ -2,6 +2,7 @@
 #include "../Config.h"
 #include <nlohmann/json.hpp>
 #include <curl/curl.h>
+#include <shellapi.h>
 using json = nlohmann::json;
 
 static size_t curl_callback(void* contents, size_t size, size_t nmemb, void* userp) {
@@ -18,7 +19,7 @@ static std::wstring string_to_wstring(const std::string& str) {
 
 static void open_url(std::string url) {
     if (ShellExecuteW(0, L"open", string_to_wstring(url).c_str(), 0, 0, SW_SHOWNORMAL) <= (HINSTANCE)32)
-        printf("[-] Failed to open the browser. Please visit %s.\n", url.c_str());
+        LOG::ERR("Failed to open the browser. Please visit %s", url.c_str());
 }
 
 std::optional<std::string> Updater::web_request() {
@@ -28,14 +29,14 @@ std::optional<std::string> Updater::web_request() {
 
     curl = curl_easy_init();
     if (curl) {
-        curl_easy_setopt(curl, CURLOPT_URL, Updater::update_url.c_str());
+        curl_easy_setopt(curl, CURLOPT_URL, Updater::update_url.data());
         curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, curl_callback);
         curl_easy_setopt(curl, CURLOPT_WRITEDATA, &read_buffer);
         curl_easy_setopt(curl, CURLOPT_USERAGENT, "Dota2Patcher");
         res = curl_easy_perform(curl);
         curl_easy_cleanup(curl);
         if (res != CURLE_OK) {
-            printf("[!] Can't check update. CURL Error: %s", curl_easy_strerror(res));
+            LOG::CRITICAL("Can't check update. CURL Error: %s", curl_easy_strerror(res));
             return std::nullopt;
         }
     }
@@ -43,7 +44,7 @@ std::optional<std::string> Updater::web_request() {
     return read_buffer;
 }
 
-SemVer Updater::get_latest_version(const std::vector<WebVer>& web_versions) const {
+SemVer Updater::get_latest_version(const std::vector<WebVer>& web_versions) {
     SemVer latest_release = local_version;
     SemVer latest_RC = local_version;
 
@@ -71,7 +72,7 @@ SemVer Updater::get_latest_version(const std::vector<WebVer>& web_versions) cons
 }
 
 void Updater::check_update() {
-    printf("[~] Current version: %s\n", Updater::local_version.to_string().c_str());
+    LOG::INFO("Current version: %s", Updater::local_version.to_string().c_str());
 
     auto web_resp = web_request();
     if (!web_resp)
@@ -91,19 +92,19 @@ void Updater::check_update() {
         }
     }
     catch (const json::parse_error& e) {
-        printf("[!] (Updater) JSON parse error: %s\n", e.what());
+        LOG::CRITICAL("(Updater) JSON parse error: %s", e.what());
         return;
     }
     catch (const std::exception& e) {
-        printf("[!] (Updater) Error: %s\n", e.what());
+        LOG::CRITICAL("(Updater) Error: %s", e.what());
         return;
     }
 
     SemVer latest_version = Updater::get_latest_version(web_versions);
     if (Updater::local_version < latest_version) {
-        printf("[!] Update Required! New version: %s\n", latest_version.to_string().c_str());
-        printf("[~] Press Enter to continue...\n");
+        LOG::ERR("Update Required! New version: %s", latest_version.to_string().c_str());
+        LOG::INFO("Press Enter to continue...");
         system("pause");
-        latest_version.update_url ? open_url(latest_version.update_url.value()) : open_url(download_url);
+        latest_version.update_url ? open_url(latest_version.update_url.value()) : open_url(download_url.data());
     }
 }

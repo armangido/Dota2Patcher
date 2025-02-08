@@ -1,7 +1,5 @@
 #pragma once
 #include "memory.h"
-#include <iostream>
-#include <fstream>
 
 class CBaseEntity;
 
@@ -111,7 +109,8 @@ public:
 		}
 		
 		dump_file.close();
-		printf("\n[+] iterate_entities: done. Total: %d\n", ents_count);
+		printf("\n");
+		LOG::INFO("iterate_entities: done. Total: %d", ents_count);
 	}
 
 	std::optional<CBaseEntity*> find_by_name(std::string name_to_find) {

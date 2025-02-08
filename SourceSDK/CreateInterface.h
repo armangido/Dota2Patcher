@@ -49,11 +49,11 @@ public:
 	static std::optional<Interface*> get_first_interface(std::string module_name) {
 		const auto CreateInterfaceFn = Memory::pattern_scan(module_name, Patches::Patterns::CreateInterface);
 		if (!CreateInterfaceFn) {
-			printf("[-] Can't find CreateInterface pattern!\n");
+			LOG::CRITICAL("Can't find CreateInterface pattern!");
 			return std::nullopt;
 		}
 
-		printf("[+] %s CreateInterface -> [%p]\n", module_name.c_str(), (void*)CreateInterfaceFn.value());
+		LOG::INFO("%s CreateInterface -> [%p]", module_name.c_str(), (void*)CreateInterfaceFn.value());
 
 		const auto first_interface_base = Memory::absolute_address<uintptr_t>(CreateInterfaceFn.value());
 		if (!first_interface_base)
@@ -81,10 +81,10 @@ public:
 			if (!base) continue;
 
 			if (iterate_all)
-				printf("[~] [%s] -> [%p]\n", name.value().c_str(), (void*)base.value());
+				LOG::INFO("[%s] -> [%p]", name.value().c_str(), (void*)base.value());
 
 			else if (module.interface_handlers.find(name.value()) != module.interface_handlers.end()) {
-				printf("[+] Interface [%s] -> [%p]\n", name.value().c_str(), (void*)base.value());
+				LOG::INFO("Interface [%s] -> [%p]", name.value().c_str(), (void*)base.value());
 				module.interface_handlers.at(name.value())(base.value());
 			}
 

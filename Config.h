@@ -1,6 +1,3 @@
-#include <windows.h>
-#include <iostream>
-#include <string>
 #include <limits>
 
 class RegistryConfig {
@@ -40,14 +37,14 @@ public:
         LONG result = RegCreateKeyExW(HKEY_CURRENT_USER, L"Software\\Dota2Patcher", 0, NULL, 0, KEY_WRITE, NULL, &hKey, NULL);
 
         if (result != ERROR_SUCCESS) {
-            printf("[!] (Config) RegCreateKeyExW error for %s\n", valueName.c_str());
+            LOG::ERR("(Config) RegCreateKeyExW error for %s\n", valueName.c_str());
             return;
         }
 
         int int_value = static_cast<int>(value);
         result = RegSetValueExW(hKey, std::wstring(valueName.begin(), valueName.end()).c_str(), 0, REG_DWORD, reinterpret_cast<const BYTE*>(&int_value), sizeof(int_value));
         if (result != ERROR_SUCCESS)
-            printf("[!] (Config) RegSetValueExW error for %s\n", valueName.c_str());
+            LOG::ERR("(Config) RegSetValueExW error for %s\n", valueName.c_str());
 
         RegCloseKey(hKey);
     }
@@ -112,7 +109,7 @@ private:
             if (std::cin.fail()) {
                 std::cin.clear();
                 std::cin.ignore(10000, '\n');
-                printf("[!] Invalid input!\n");
+                LOG::ERR("Invalid input!\n");
             }
             else {
                 break;
@@ -137,7 +134,7 @@ private:
                 break;
             }
             else {
-                printf("[!] Invalid input!\n");
+                LOG::ERR("Invalid input!\n");
             }
         }
         return value;

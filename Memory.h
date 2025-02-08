@@ -1,9 +1,5 @@
 #pragma once
-#include <windows.h>
-#include <vector>
-#include <string>
 #include <unordered_map>
-#include <optional>
 #include <cstdint>
 #include <type_traits>
 #include "ProcessHandle.h"
@@ -47,13 +43,13 @@ public:
 			size = 6;
 			break;
 		default:
-			printf("[-] (absolute_address) Unsupported instruction type\n");
+			LOG::ERR("(absolute_address) Unsupported instruction type");
 			return std::nullopt;
 		}
 
 		int32_t relative_offset = 0;
 		if (!ReadProcessMemory(ProcessHandle::get_handle(), reinterpret_cast<LPCVOID>(address + offset), &relative_offset, sizeof(relative_offset), nullptr)) {
-			printf("[-] (absolute_address) ReadProcessMemory failed: 0x%d\n", GetLastError());
+			LOG::ERR("(absolute_address) ReadProcessMemory failed: 0x%d", GetLastError());
 			return std::nullopt;
 		}
 
@@ -68,12 +64,12 @@ public:
 		SIZE_T bytesRead;
 
 		if (!ReadProcessMemory(ProcessHandle::get_handle(), reinterpret_cast<LPCVOID>(address), &value, sizeof(T), &bytesRead)) {
-			printf("[-] Failed to read memory: 0x%X\n", GetLastError());
+			LOG::ERR("Failed to read memory: 0x%X", GetLastError());
 			return std::nullopt;
 		}
 
 		if (bytesRead != sizeof(T)) {
-			printf("[-] Partial read at 0x%p\n", (void*)address);
+			LOG::ERR("Partial read at 0x%p", (void*)address);
 			return std::nullopt;
 		}
 
@@ -106,12 +102,12 @@ public:
 	static bool write_memory(N address, const T& value) {
 		SIZE_T bytesWritten;
 		if (!WriteProcessMemory(ProcessHandle::get_handle(), reinterpret_cast<LPVOID>(address), &value, sizeof(T), &bytesWritten)) {
-			printf("[-] Failed to write memory at 0x%p: 0x%X\n", (void*)address, GetLastError());
+			LOG::ERR("Failed to write memory at 0x%p: 0x%X", (void*)address, GetLastError());
 			return false;
 		}
 
 		if (bytesWritten != sizeof(T)) {
-			printf("[-] Partial write at 0x%p\n", (void*)address);
+			LOG::ERR("Partial write at 0x%p", (void*)address);
 			return false;
 		}
 

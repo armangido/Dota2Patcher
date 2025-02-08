@@ -1,7 +1,4 @@
 #pragma once
-#include <iostream>
-#include <Windows.h>
-#include <vector>
 
 static void draw_logo() {
 	const char* ascii = R"(

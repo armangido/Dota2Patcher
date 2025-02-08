@@ -15,6 +15,9 @@
     <Filter Include="Updater">
       <UniqueIdentifier>{12e332a8-c4d7-48a5-ac54-91b0129ce702}</UniqueIdentifier>
     </Filter>
+    <Filter Include="PCH">
+      <UniqueIdentifier>{229a1279-d74c-4b1b-a60e-364adbded177}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Dota2Patcher.cpp">
@@ -25,6 +28,9 @@
     </ClCompile>
     <ClCompile Include="Updater\Updater.cpp">
       <Filter>Updater</Filter>
+    </ClCompile>
+    <ClCompile Include="pch.cpp">
+      <Filter>PCH</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -63,6 +69,12 @@
     </ClInclude>
     <ClInclude Include="Updater\Updater.h">
       <Filter>Updater</Filter>
+    </ClInclude>
+    <ClInclude Include="SourceSDK\SchemaSystem.h">
+      <Filter>Headers\SourceSDK</Filter>
+    </ClInclude>
+    <ClInclude Include="pch.h">
+      <Filter>PCH</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

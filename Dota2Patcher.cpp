@@ -11,12 +11,9 @@
 std::vector<Patches::PatchInfo> Patches::patches;
 
 int main() {
+	LOG::Initialize();
 	draw_logo();
-
-#ifndef _DEBUG
-	Updater updater;
-	updater.check_update();
-#endif
+	Updater::check_update();
 
 	// CONFIG
 	printf("\n");
@@ -25,7 +22,7 @@ int main() {
 	bool shift_pressed = (GetAsyncKeyState(VK_SHIFT) & 0x8000) != 0; // And if SHIFT pressed
 
 	if (camera_distance_test == -1 || shift_pressed) {
-		printf("[~] Opening settings...\n");
+		LOG::DEBUG("Opening settings...");
 		ConfigManager::ask_for_settings();
 		printf("\n");
 	}
@@ -37,7 +34,7 @@ int main() {
 	// GET DOTA2 PROCESS
 	printf("\n");
 
-	printf("[~] Waiting for Dota2 process...\n");
+	LOG::DEBUG("Waiting for Dota2 process...");
 
 	DWORD process_ID = 0;
 	do {
@@ -46,27 +43,27 @@ int main() {
 	} while
 		(process_ID == 0);
 
-	printf("[+] Dota2 PID: %d\n", process_ID);
+	LOG::INFO("Dota2 PID: %d", process_ID);
 
 	ProcessHandle::open_process_handle(process_ID, PROCESS_ALL_ACCESS);
 	if (!ProcessHandle::is_valid_handle()) {
-		printf("[-] Failed to open process. Error: 0x%d\n", ProcessHandle::get_last_error());
+		LOG::CRITICAL("Failed to open process. Error: 0x%d", ProcessHandle::get_last_error());
 		system("pause");
 		return 0;
 	}
 
-	printf("[+] Dota2 process handle: %p\n", ProcessHandle::get_handle());
+	LOG::INFO("Dota2 process handle: %p", ProcessHandle::get_handle());
 
-	printf("[~] Waiting for moules to load...\n");
+	LOG::DEBUG("Waiting for moules to load...");
 
 	if (!Memory::load_modules()) {
-		printf("[-] Failed to load modules, aborting...\n");
+		LOG::CRITICAL("Failed to load modules, aborting...");
 		ProcessHandle::close_process_handle();
 		system("pause");
 		return 0;
 	}
 
-	printf("[+] Modules loaded: %d\n", (int)Memory::loaded_modules.size());
+	LOG::INFO("Modules loaded: %d", (int)Memory::loaded_modules.size());
 
 	// INTERFACES
 	printf("\n");
@@ -75,14 +72,18 @@ int main() {
 		{
 			"engine2.dll", {
 				{ "Source2EngineToClient001", [](uintptr_t base) { vmt.engine = (CEngineClient*)base; } },
-				// { Some other interface goes here }
 			}
 		},
 		{
 			"client.dll", {
 				{ "Source2Client002", [](uintptr_t base) { vmt.client = (CSource2Client*)base; } },
 			}
-		}
+		},
+		{
+			"schemasystem.dll", {
+				{ "SchemaSystem_001", [](uintptr_t base) { vmt.schema_system = (CSchemaSystem*)base; } },
+			}
+		},
 	};
 
 	for (const auto& interface_ : interfaces_to_load) {
@@ -93,14 +94,15 @@ int main() {
 	printf("\n");
 
 	if (!vmt.find_all()) {
-		printf("[-] Scanner failed! Exiting...\n");
+		LOG::CRITICAL("Scanner failed! Exiting...");
 		ProcessHandle::close_process_handle();
 		system("pause");
 		return 0;
 	}
 
 	// WAITING FOR A LOBBY
-	printf("\n[~] Waiting for a lobby to start...\n");
+	printf("\n");
+	LOG::DEBUG("Waiting for a lobby to start...");
 
 	while (!Scanner::find_CDOTAGamerules())
 		Sleep(1000);
@@ -213,23 +215,24 @@ int main() {
 	for (const auto& patch : Patches::patches) {
 		const auto patch_addr = Memory::pattern_scan(patch.module, patch.pattern);
 		if (!patch_addr) {
-			printf("[!] Pattern for \"%s\" not found!\n", patch.name.c_str());
+			LOG::ERR("Pattern for \"%s\" not found!", patch.name.c_str());
 			continue;
 		}
 
-		printf("[+] \"%s\" patch addr -> [%p]\n", patch.name.c_str(), (void*)patch_addr.value());
+		LOG::INFO("\"%s\" patch addr -> [%p]", patch.name.c_str(), (void*)patch_addr.value());
 
 		if (!Memory::patch(patch_addr.value() + patch.offset, patch.patch_bytes)) {
-			printf("[-] Failed to patch \"%s\"!\n", patch.name.c_str());
+			LOG::ERR("Failed to patch \"%s\"!", patch.name.c_str());
 			continue;
 		}
 
-		printf("[+] \"%s\" patched successfully\n", patch.name.c_str());
+		LOG::INFO("\"%s\" patched successfully", patch.name.c_str());
 	}
 
 	//vmt.entity_system->iterate_entities();
 
-	printf("\n[+] Done! Will close in 5 seconds...\n");
+	printf("\n");
+	LOG::INFO("Done! Will close in 5 seconds...");
 	ProcessHandle::close_process_handle();
 	Sleep(5000);
 	return 0;

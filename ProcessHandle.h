@@ -1,7 +1,6 @@
 #pragma once
 #include "Dota2Patcher.h"
 #include <tlhelp32.h>
-#include <string>
 
 class ProcessHandle {
 public:
@@ -11,7 +10,7 @@ public:
 
         HANDLE hSnap = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0);
         if (hSnap == INVALID_HANDLE_VALUE) {
-            printf("[-] (ProcessHandle) CreateToolhelp32Snapshot error: 0x%d\n", GetLastError());
+            LOG::CRITICAL("(ProcessHandle) CreateToolhelp32Snapshot error: 0x%d", GetLastError());
             return 0;
         }
 

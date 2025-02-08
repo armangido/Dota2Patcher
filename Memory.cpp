@@ -1,8 +1,6 @@
 #include "Memory.h"
 #include <tlhelp32.h>
 #include <psapi.h>
-#include <iostream>
-#include <sstream>
 
 std::unordered_map<std::string, Memory::ModuleInfo> Memory::loaded_modules;
 
@@ -39,7 +37,7 @@ std::optional<uintptr_t> Memory::pattern_scan(const std::string target_module, c
     SIZE_T bytesRead;
 
     if (!ReadProcessMemory(ProcessHandle::get_handle(), reinterpret_cast<LPCVOID>(Memory::loaded_modules[target_module].start_address), buffer, Memory::loaded_modules[target_module].region_size, &bytesRead)) {
-        printf("[-] (PatternScan) ReadProcessMemory failed: 0x%d\n", GetLastError());
+        LOG::ERR("(PatternScan) ReadProcessMemory failed: 0x%d", GetLastError());
         delete[] buffer;
         return std::nullopt;
     }
@@ -84,7 +82,7 @@ std::optional<uintptr_t> Memory::pattern_scan(const std::string target_module, c
 
 bool Memory::load_modules() {
     std::unordered_map<std::string, ModuleInfo> modules;
-    MODULEENTRY32 module_entry;
+    MODULEENTRY32 module_entry{};
     module_entry.dwSize = sizeof(MODULEENTRY32);
     HANDLE snapshot;
 
@@ -113,7 +111,8 @@ bool Memory::load_modules() {
 
 
     loaded_modules = modules;
-    CloseHandle(snapshot);
+    if (snapshot)
+        CloseHandle(snapshot);
     return true;
 }
 
@@ -122,19 +121,19 @@ bool Memory::patch(const uintptr_t patch_addr, const std::string& replace_str) {
 
     DWORD oldProtect;
     if (!VirtualProtectEx(ProcessHandle::get_handle(), reinterpret_cast<LPVOID>(patch_addr), patchData.size(), PAGE_EXECUTE_READWRITE, &oldProtect)) {
-        printf("[-] (Patch) Failed to change memory protection: 0x%d\n", GetLastError());
+        LOG::ERR("(Patch) Failed to change memory protection: 0x%d", GetLastError());
         return false;
     }
 
     SIZE_T bytesWritten;
     if (!WriteProcessMemory(ProcessHandle::get_handle(), reinterpret_cast<LPVOID>(patch_addr), patchData.data(), patchData.size(), &bytesWritten)) {
-        printf("[-] (Patch) Failed to write to process memory: 0x%d\n", GetLastError());
+        LOG::ERR("(Patch) Failed to write to process memory: 0x%d", GetLastError());
         VirtualProtectEx(ProcessHandle::get_handle(), reinterpret_cast<LPVOID>(patch_addr), patchData.size(), oldProtect, &oldProtect);
         return false;
     }
 
     if (!VirtualProtectEx(ProcessHandle::get_handle(), reinterpret_cast<LPVOID>(patch_addr), patchData.size(), oldProtect, &oldProtect)) {
-        printf("[-] (Patch) Failed to restore memory protection: 0x%d\n", GetLastError());
+        LOG::ERR("(Patch) Failed to restore memory protection: 0x%d", GetLastError());
         return false;
     }
 
