@@ -1,12 +1,12 @@
 ﻿#include "Dota2Patcher.h"
-#include "ProcessHandle.h"
-#include "Memory.h"
-#include "Config.h"
+#include "Utils/ProcessHandle.h"
+#include "Utils/Memory.h"
+#include "Utils/Config.h"
+#include "Utils/Updater.h"
 #include "SourceSDK/CDOTAGamerules.h"
 #include "SourceSDK/CDOTACamera.h"
 #include "SourceSDK/CreateInterface.h"
 #include "SourceSDK/interfaces.h"
-#include "Updater/Updater.h"
 
 std::vector<Patches::PatchInfo> Patches::patches;
 

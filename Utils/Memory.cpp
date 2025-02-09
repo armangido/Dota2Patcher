@@ -1,6 +1,7 @@
-#include "Memory.h"
 #include <tlhelp32.h>
 #include <psapi.h>
+#include "ProcessHandle.h"
+#include "Memory.h"
 
 std::unordered_map<string, Memory::ModuleInfo> Memory::loaded_modules;
 

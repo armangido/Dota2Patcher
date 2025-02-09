@@ -1,5 +1,5 @@
 #pragma once
-#include "../Memory.h"
+#include "Utils/Memory.h"
 
 class CDOTACamera {
 public:

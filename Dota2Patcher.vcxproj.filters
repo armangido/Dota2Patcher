@@ -12,38 +12,29 @@
     <Filter Include="Headers\SourceSDK">
       <UniqueIdentifier>{d8a6ef08-9da6-4257-8c7d-67e1c527b1e9}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Updater">
-      <UniqueIdentifier>{12e332a8-c4d7-48a5-ac54-91b0129ce702}</UniqueIdentifier>
-    </Filter>
     <Filter Include="PCH">
       <UniqueIdentifier>{229a1279-d74c-4b1b-a60e-364adbded177}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Utils">
+      <UniqueIdentifier>{f22df01b-e06c-41cb-8c79-c619f9134726}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Dota2Patcher.cpp">
       <Filter>Source files</Filter>
     </ClCompile>
-    <ClCompile Include="Memory.cpp">
-      <Filter>Source files</Filter>
-    </ClCompile>
-    <ClCompile Include="Updater\Updater.cpp">
-      <Filter>Updater</Filter>
-    </ClCompile>
     <ClCompile Include="pch.cpp">
       <Filter>PCH</Filter>
+    </ClCompile>
+    <ClCompile Include="Utils\Memory.cpp">
+      <Filter>Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="Utils\Updater.cpp">
+      <Filter>Utils</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Dota2Patcher.h">
-      <Filter>Headers</Filter>
-    </ClInclude>
-    <ClInclude Include="ProcessHandle.h">
-      <Filter>Headers</Filter>
-    </ClInclude>
-    <ClInclude Include="Memory.h">
-      <Filter>Headers</Filter>
-    </ClInclude>
-    <ClInclude Include="Config.h">
       <Filter>Headers</Filter>
     </ClInclude>
     <ClInclude Include="SourceSDK\CDOTACamera.h">
@@ -67,9 +58,6 @@
     <ClInclude Include="SourceSDK\CGameEntitySystem.h">
       <Filter>Headers\SourceSDK</Filter>
     </ClInclude>
-    <ClInclude Include="Updater\Updater.h">
-      <Filter>Updater</Filter>
-    </ClInclude>
     <ClInclude Include="SourceSDK\CSchemaSystem.h">
       <Filter>Headers\SourceSDK</Filter>
     </ClInclude>
@@ -78,6 +66,18 @@
     </ClInclude>
     <ClInclude Include="SourceSDK\utlthash.h">
       <Filter>Headers\SourceSDK</Filter>
+    </ClInclude>
+    <ClInclude Include="Utils\Config.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Utils\Memory.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Utils\ProcessHandle.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Utils\Updater.h">
+      <Filter>Utils</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

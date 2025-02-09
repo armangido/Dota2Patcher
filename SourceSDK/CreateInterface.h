@@ -1,8 +1,8 @@
 #pragma once
-#include "../Dota2Patcher.h"
-#include "../Memory.h"
 #include <unordered_set>
 #include <functional>
+#include "../Dota2Patcher.h"
+#include "Utils/Memory.h"
 
 class Interface {
 public:

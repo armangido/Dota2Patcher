@@ -1,5 +1,4 @@
 #pragma once
-#include "Dota2Patcher.h"
 #include <tlhelp32.h>
 
 class ProcessHandle {

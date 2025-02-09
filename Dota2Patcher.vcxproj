@@ -102,19 +102,16 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Dota2Patcher.cpp" />
-    <ClCompile Include="Memory.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="Updater\Updater.cpp" />
+    <ClCompile Include="Utils\Memory.cpp" />
+    <ClCompile Include="Utils\Updater.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Config.h" />
     <ClInclude Include="Dota2Patcher.h" />
-    <ClInclude Include="Memory.h" />
     <ClInclude Include="pch.h" />
-    <ClInclude Include="ProcessHandle.h" />
     <ClInclude Include="SourceSDK\CDOTACamera.h" />
     <ClInclude Include="SourceSDK\CDOTAGamerules.h" />
     <ClInclude Include="SourceSDK\CEngineClient.h" />
@@ -124,7 +121,10 @@
     <ClInclude Include="SourceSDK\interfaces.h" />
     <ClInclude Include="SourceSDK\CSchemaSystem.h" />
     <ClInclude Include="SourceSDK\utlthash.h" />
-    <ClInclude Include="Updater\Updater.h" />
+    <ClInclude Include="Utils\Config.h" />
+    <ClInclude Include="Utils\Memory.h" />
+    <ClInclude Include="Utils\ProcessHandle.h" />
+    <ClInclude Include="Utils\Updater.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

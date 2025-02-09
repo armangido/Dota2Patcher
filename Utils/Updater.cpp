@@ -1,8 +1,8 @@
-#include "Updater.h"
-#include "../Config.h"
 #include <nlohmann/json.hpp>
 #include <curl/curl.h>
 #include <shellapi.h>
+#include "Updater.h"
+#include "Config.h"
 using json = nlohmann::json;
 
 static size_t curl_callback(void* contents, size_t size, size_t nmemb, void* userp) {
