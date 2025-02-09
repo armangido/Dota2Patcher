@@ -102,11 +102,11 @@ bool Memory::load_modules() {
             } while (Module32Next(snapshot, &module_entry));
         }
 
-        if (modules.size() > 150)
+        if (modules.size() > 100)
             break;
 
         modules.clear();
-        Sleep(1000);
+        Sleep(500);
     }
 
 

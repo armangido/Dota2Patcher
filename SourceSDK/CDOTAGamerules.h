@@ -34,10 +34,6 @@ public:
 class C_DOTAGamerulesProxy {
 public:
     optional<CDOTAGamerules*> gamerules() {
-        const auto gamerules_ptr = Memory::read_memory<uintptr_t>(this + 0x560);
-        if (!gamerules_ptr)
-            return nullopt;
-
-        return reinterpret_cast<CDOTAGamerules*>(gamerules_ptr.value());
+        return Memory::read_memory<CDOTAGamerules*>(this + 0x560);
     }
 };

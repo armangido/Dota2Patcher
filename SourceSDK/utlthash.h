@@ -137,11 +137,13 @@ private:
 		tData m_Data;
 
 		tData GetData() {
-			return Memory::read_memory<tData>(this + 0x10);
+			auto result = Memory::read_memory<tData>(this + 0x10);
+			return result.value();
 		}
 
 		HashFixedDataInternal_t< tData >* GetNext() {
-			return Memory::read_memory<HashFixedDataInternal_t<tData>*>(this + 0x20);
+			auto result = Memory::read_memory<HashFixedDataInternal_t<tData>*>(this + 0x20);
+			return result.value();
 		}
 	};
 

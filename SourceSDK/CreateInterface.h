@@ -11,11 +11,7 @@ public:
 		if (!base_ptr)
 			return nullopt;
 
-		const auto absolute_address = Memory::absolute_address<uintptr_t>(base_ptr.value());
-		if (!absolute_address)
-			return nullopt;
-
-		return absolute_address;
+		return Memory::absolute_address<uintptr_t>(base_ptr.value());;
 	}
 
 	optional<string> name() {
@@ -23,19 +19,15 @@ public:
 		if (!name_ptr)
 			return nullopt;
 
-		const auto name = Memory::read_string(name_ptr.value());
-		if (!name)
-			return nullopt;
-
-		return string(name.value());
+		return Memory::read_string(name_ptr.value());
 	}
 
 	optional<Interface*> next() {
-		const auto next_ptr = Memory::read_memory<uintptr_t>(this + 0x10);
-		if (next_ptr.value_or(0) == 0)
+		const auto next_ptr = Memory::read_memory<Interface*>(this + 0x10);
+		if (next_ptr.value_or(nullptr) == nullptr)
 			return nullopt;
 
-		return (Interface*)next_ptr.value();
+		return next_ptr;
 	}
 };
 
@@ -59,11 +51,7 @@ public:
 		if (!first_interface_base)
 			return nullopt;
 
-		const auto first_interface = Memory::read_memory<Interface*>(first_interface_base.value());
-		if (!first_interface)
-			return nullopt;
-
-		return first_interface.value();
+		return Memory::read_memory<Interface*>(first_interface_base.value());
 	}
 
 	static void load_interfaces(const ModuleInterfaces& module, bool iterate_all = false) {
@@ -72,13 +60,15 @@ public:
 			return;
 
 		Interface* iface = interface_ptr.value();
-
+		
 		while (true) {
 			const auto name = iface->name();
-			if (!name) continue;
+			if (!name)
+				continue;
 
 			const auto base = iface->base();
-			if (!base) continue;
+			if (!base)
+				continue;
 
 			if (iterate_all)
 				LOG::INFO("[%s] -> [%p]", name.value().c_str(), (void*)base.value());
@@ -89,7 +79,8 @@ public:
 			}
 
 			auto next_ptr = iface->next();
-			if (!next_ptr) break;
+			if (!next_ptr) 
+				break;
 
 			iface = next_ptr.value();
 		}

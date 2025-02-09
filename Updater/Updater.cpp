@@ -71,8 +71,12 @@ SemVer Updater::get_latest_version(const std::vector<WebVer>& web_versions) {
     return latest_release;
 }
 
-bool Updater::check_update() {
+bool Updater::update_required() {
     LOG::INFO("Current version: %s", Updater::local_version.to_string().c_str());
+
+#ifdef _DEBUG
+    return false;
+#endif
 
     auto web_resp = web_request();
     if (!web_resp)

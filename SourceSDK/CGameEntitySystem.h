@@ -27,18 +27,15 @@ public:
 class CEntityIdentity {
 public:
 	optional<CBaseEntity*> base_entity() const {
-		const auto entity = Memory::read_memory<CBaseEntity*>(this);
-		return entity;
+		return Memory::read_memory<CBaseEntity*>(this);
 	}
 
 	optional<CSchemaClassBinding*> schema_class_binding() const {
-		const auto schema_ptr = Memory::read_memory<CSchemaClassBinding*>(this + 0x8);
-		return schema_ptr;
+		return Memory::read_memory<CSchemaClassBinding*>(this + 0x8);
 	}
 
 	optional<uint32_t> handle() const {
-		const auto handle = Memory::read_memory<uint32_t>(this + 0x10);
-		return handle;
+		return Memory::read_memory<uint32_t>(this + 0x10);
 	}
 
 	optional<string> internal_name() const { // npc_dota_hero_antimage
@@ -52,13 +49,11 @@ public:
 	}
 
 	optional<CEntityIdentity*> m_pPrev() const {
-		const auto prev_ident = Memory::read_memory<CEntityIdentity*>(this + 0x58);
-		return prev_ident;
+		return Memory::read_memory<CEntityIdentity*>(this + 0x58);
 	}
 
 	optional<CEntityIdentity*> m_pNext() const {
-		const auto next_ident = Memory::read_memory<CEntityIdentity*>(this + 0x60);
-		return next_ident;
+		return Memory::read_memory<CEntityIdentity*>(this + 0x60);
 	}
 };
 
@@ -152,11 +147,10 @@ public:
 	}
 
 	optional<CEntityIdentity*> get_first_entity() {
-		const auto first_prt = Memory::read_memory<CEntityIdentity*>(this + 0x210);
-		return first_prt;
+		return Memory::read_memory<CEntityIdentity*>(this + 0x210);
 	}
 
-	optional<CEntityIdentity*> get_base_entity(int index) {
+	optional<CEntityIdentity*> get_base_entity(size_t index) {
 		const auto chunk = get_identity_chunk();
 		if (!chunk)
 			return nullopt;
@@ -167,7 +161,6 @@ public:
 	}
 
 	optional<CEntityIdentities*> get_identity_chunk() {
-		const auto identity_chunks_address = Memory::read_memory<CEntityIdentities*>(this + 0x10);
-		return identity_chunks_address;
+		return Memory::read_memory<CEntityIdentities*>(this + 0x10);
 	}
 };

@@ -50,10 +50,10 @@ struct SemVer {
 
 class Updater {
 public:
-    static bool check_update();
+    static bool update_required();
 
 private:
-    static constexpr SemVer local_version = { 2, 6, 3 };
+    static constexpr SemVer local_version = { 2, 6, 4 };
 
     static optional<string> web_request();
     static SemVer get_latest_version(const std::vector<WebVer>& versions);

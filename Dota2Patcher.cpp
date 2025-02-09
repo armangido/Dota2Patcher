@@ -11,24 +11,20 @@
 std::vector<Patches::PatchInfo> Patches::patches;
 
 int main() {
+	bool open_settings = GetAsyncKeyState(VK_SHIFT) & 1;
 	draw_logo();
-	if (Updater::check_update())
+	if (Updater::update_required())
 		return 0;
 
 	// CONFIG
 	printf("\n");
 
-	auto camera_distance_test = ConfigManager::Read("camera_distance"); // To open config if not set
-	bool shift_pressed = (GetAsyncKeyState(VK_SHIFT) & 0x8000) != 0; // And if SHIFT pressed
-
-	if (camera_distance_test == -1 || shift_pressed) {
+	if (!ConfigManager::read_settings() || open_settings) {
 		LOG::DEBUG("Opening settings...");
 		ConfigManager::ask_for_settings();
 		printf("\n");
 	}
 
-	ConfigManager::read_settings();
-	ConfigManager::write_settings();
 	ConfigManager::show_settings();
 
 	// GET DOTA2 PROCESS
@@ -126,20 +122,20 @@ int main() {
 			});
 	}
 
-// #STR: "SV: Convar '%s' is cheat protected, change ignored"
-// jnz		short loc_1801AA477 <<<<
-// mov		rax, cs:LOG_CONSOLE
-// mov		edx, 3
-// mov		ecx, [rax]
-// call		cs:LoggingSystem_IsChannelEnabled
-// test		al, al
-// jz		short loc_1801AA469
-// cmp		[r15+438h], r13d
-// jle		short loc_1801AA44B
-// mov		rax, [r15+440h]
-// mov		rdi, [rax]
-// mov		rax, cs:LOG_CONSOLE
-// lea		r8, aSvConvarSIsChe ; "SV: Convar '%s' is cheat protected, cha"...
+	// #STR: "SV: Convar '%s' is cheat protected, change ignored"
+	// jnz		short loc_1801AA477 <<<<
+	// mov		rax, cs:LOG_CONSOLE
+	// mov		edx, 3
+	// mov		ecx, [rax]
+	// call		cs:LoggingSystem_IsChannelEnabled
+	// test		al, al
+	// jz		short loc_1801AA469
+	// cmp		[r15+438h], r13d
+	// jle		short loc_1801AA44B
+	// mov		rax, [r15+440h]
+	// mov		rdi, [rax]
+	// mov		rax, cs:LOG_CONSOLE
+	// lea		r8, aSvConvarSIsChe ; "SV: Convar '%s' is cheat protected, cha"...
 	if (ConfigManager::sv_cheats) {
 		Patches::add_patch({
 			"sv_cheats",
@@ -149,23 +145,23 @@ int main() {
 			});
 	}
 
-// CParticleCollection 95'th vfunc (offset 0x5F)
-// #STR: "Error in child list of particle system %s [%p], parent: %p, "m_Children.m_pHead: [%p]\n", "Address of m_Children.m_pHead: [%p]\n"
-// mov		r11, rsp
-// push		rbp
-// push		rsi
-// push		r12
-// push		r13
-// sub		rsp, 118h
-// movzx	eax, byte ptr [rcx+0A64h]
-// xor		r13d, r13d
-// shr		al, 7
-// movzx	r12d, dl
-// mov		[rsp+138h+arg_8], r13d
-// mov		rsi, rcx
-// mov		ebp, r13d
-// cmp		dl, al
-// jz		loc_18003A334 <<<<
+	// CParticleCollection 95'th vfunc (offset 0x5F)
+	// #STR: "Error in child list of particle system %s [%p], parent: %p, "m_Children.m_pHead: [%p]\n", "Address of m_Children.m_pHead: [%p]\n"
+	// mov		r11, rsp
+	// push		rbp
+	// push		rsi
+	// push		r12
+	// push		r13
+	// sub		rsp, 118h
+	// movzx	eax, byte ptr [rcx+0A64h]
+	// xor		r13d, r13d
+	// shr		al, 7
+	// movzx	r12d, dl
+	// mov		[rsp+138h+arg_8], r13d
+	// mov		rsi, rcx
+	// mov		ebp, r13d
+	// cmp		dl, al
+	// jz		loc_18003A334 <<<<
 	if (ConfigManager::set_rendering_enabled) {
 		Patches::add_patch({
 			"set_rendering_enabled",
@@ -175,34 +171,34 @@ int main() {
 			1
 			});
 
-// idk for some reason set_rendering_enabled causes to crash without this fix
-// C_SceneEntity almost the last vfunc
-// #STR: "C_SceneEntity::SetupClientOnlyScene:  Couldn't determine d, "!self", "couldn't load scene file %s\n", "Failed to find soundevent '%s' when falling back from miss
-// In the middle there will be #STR: "blank"
-// xor		edx, edx
-// lea		rcx, [rsp+180h+var_120]
-// call		cs:?Purge@CBufferString@@QEAAXH@Z ; CBufferString::Purge(int)
-// mov		rdi, [rsi+598h]
-// lea		rdx, [rbp+80h+arg_18]
-// mov		rcx, r15
-// call		sub_1802CFE30
-// mov		r8, rax
-// mov		[rbp+80h+arg_0], rbx
-// lea		rdx, [rbp+80h+arg_0]
-// mov		rcx, rdi
-// call		sub_1829D6BD0 ; #STR: "blank" <<<<
-// jmp		loc_1814170EA
-//
-// sub_1829D6BD0:
-// mov		r13, [rax]
-// mov[rsp + 88h + arg_0],	r13
-// test		r13, r13
-// jz		loc_1829D6ED8 <<<<
-// mov		rbx, [rbx]
-// test		rbx, rbx
-// jz		short loc_1829D6C42
-// mov		rbx, [rbx]
-// loc_1829D6C42: ; CODE XREF: sub_1829D6BD0+6D↑j
+		// idk for some reason set_rendering_enabled causes to crash without this fix
+		// C_SceneEntity almost the last vfunc
+		// #STR: "C_SceneEntity::SetupClientOnlyScene:  Couldn't determine d, "!self", "couldn't load scene file %s\n", "Failed to find soundevent '%s' when falling back from miss
+		// In the middle there will be #STR: "blank"
+		// xor		edx, edx
+		// lea		rcx, [rsp+180h+var_120]
+		// call		cs:?Purge@CBufferString@@QEAAXH@Z ; CBufferString::Purge(int)
+		// mov		rdi, [rsi+598h]
+		// lea		rdx, [rbp+80h+arg_18]
+		// mov		rcx, r15
+		// call		sub_1802CFE30
+		// mov		r8, rax
+		// mov		[rbp+80h+arg_0], rbx
+		// lea		rdx, [rbp+80h+arg_0]
+		// mov		rcx, rdi
+		// call		sub_1829D6BD0 ; #STR: "blank" <<<<
+		// jmp		loc_1814170EA
+		//
+		// sub_1829D6BD0:
+		// mov		r13, [rax]
+		// mov[rsp + 88h + arg_0],	r13
+		// test		r13, r13
+		// jz		loc_1829D6ED8 <<<<
+		// mov		rbx, [rbx]
+		// test		rbx, rbx
+		// jz		short loc_1829D6C42
+		// mov		rbx, [rbx]
+		// loc_1829D6C42: ; CODE XREF: sub_1829D6BD0+6D↑j
 		Patches::add_patch({
 			"set_rendering_enabled_fix",
 			"client.dll",

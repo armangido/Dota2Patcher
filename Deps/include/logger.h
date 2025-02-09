@@ -69,7 +69,7 @@ private:
         int size = std::vsnprintf(nullptr, 0, format, args_copy);
         va_end(args_copy);
 
-        if (size < 0) 
+        if (size < 0)
             return;
 
         string buf(size, '\0');
