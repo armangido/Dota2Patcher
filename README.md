@@ -1,9 +1,9 @@
 # Dota2Patcher
  The return of legendary Dota2Patcher  
  
- [![MSBuild](https://github.com/Wolf49406/Dota2Patcher/actions/workflows/msbuild.yml/badge.svg?branch=main)](https://github.com/Wolf49406/Dota2Patcher/actions/workflows/msbuild.yml)
+[![MSBuild](https://github.com/Wolf49406/Dota2Patcher/actions/workflows/msbuild.yml/badge.svg?branch=main)](https://github.com/Wolf49406/Dota2Patcher/actions/workflows/msbuild.yml)
 
-![image](https://github.com/user-attachments/assets/4307ed62-3041-4d37-9fdb-a488529213d6)
+![image](https://github.com/user-attachments/assets/fc327061-ccaa-44e7-a417-e288b351bfd5)
 
 ## ❓ How To:
 * Download [latest release](https://github.com/Wolf49406/Dota2Patcher/releases/latest)
