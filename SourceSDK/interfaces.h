@@ -39,6 +39,9 @@ bool Scanner::find_all() {
 }
 
 bool Scanner::find_CGameEntitySystem() {
+    if (vmt.entity_system)
+        return true;
+
     const auto base = Memory::virtual_function<uintptr_t>(vmt.client, 30);
     if (!base)
         return false;
@@ -48,7 +51,7 @@ bool Scanner::find_CGameEntitySystem() {
         return false;
 
     const auto CGameEntitySystem_ptr = Memory::read_memory<uintptr_t>(absolute_address_ptr.value());
-    if (!CGameEntitySystem_ptr)
+    if (!CGameEntitySystem_ptr || CGameEntitySystem_ptr.value_or(0) == 0)
         return false;
 
     vmt.entity_system = reinterpret_cast<CGameEntitySystem*>(CGameEntitySystem_ptr.value());
@@ -76,13 +79,15 @@ bool Scanner::find_CDOTACamera() {
 // add                          rsp, 20h
 // pop                          rbx
 // retn
+    if (vmt.camera)
+        return true;
 
     const auto base = Memory::pattern_scan("client.dll", Patches::Patterns::CDOTACamera);
     if (!base)
         return false;
 
     const auto camera_base_address = Memory::absolute_address<uintptr_t>(base.value());
-    if (!camera_base_address)
+    if (!camera_base_address || camera_base_address.value_or(0) == 0)
         return false;
 
     vmt.camera = reinterpret_cast<CDOTACamera*>(camera_base_address.value() - 0x40);
@@ -91,6 +96,9 @@ bool Scanner::find_CDOTACamera() {
 }
 
 bool Scanner::find_CDOTAGamerules() {
+    if (vmt.gamerules)
+        return true;
+
     const auto dota_gamerules_proxy_ptr = vmt.entity_system->find_by_name("dota_gamerules");
     if (!dota_gamerules_proxy_ptr)
         return false;

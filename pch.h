@@ -12,10 +12,12 @@
 #include <cstdio>
 #include <vector>
 #include <optional>
+#include <thread>
 #include <Windows.h>
 
 using std::string, std::cout, std::endl, std::optional, std::nullopt;
 
 #include <logger.h>
+#include "Utils/Utils.h"
 
 #endif

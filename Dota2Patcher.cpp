@@ -35,7 +35,7 @@ int main() {
 	DWORD process_ID = 0;
 	do {
 		process_ID = ProcessHandle::get_PID_by_name(L"dota2.exe");
-		Sleep(1000);
+		std::this_thread::sleep_for(std::chrono::seconds(1));
 	} while
 		(process_ID == 0);
 
@@ -50,16 +50,11 @@ int main() {
 
 	LOG::INFO("Dota2 process handle: %p", ProcessHandle::get_handle());
 
+	// LOADING MODULES
 	LOG::DEBUG("Waiting for moules to load...");
 
-	if (!Memory::load_modules()) {
-		LOG::CRITICAL("Failed to load modules, aborting...");
-		ProcessHandle::close_process_handle();
-		system("pause");
-		return 0;
-	}
-
-	LOG::INFO("Modules loaded: %d", (int)Memory::loaded_modules.size());
+	while (!Memory::load_modules(process_ID))
+		std::this_thread::sleep_for(std::chrono::seconds(1));
 
 	// INTERFACES
 	printf("\n");
@@ -89,19 +84,15 @@ int main() {
 	// SCANNER
 	printf("\n");
 
-	if (!vmt.find_all()) {
-		LOG::CRITICAL("Scanner failed! Exiting...");
-		ProcessHandle::close_process_handle();
-		system("pause");
-		return 0;
-	}
+	while (!vmt.find_all())
+		std::this_thread::sleep_for(std::chrono::seconds(1));
 
 	// WAITING FOR A LOBBY
 	printf("\n");
 	LOG::DEBUG("Waiting for a lobby to start...");
 
 	while (!Scanner::find_CDOTAGamerules())
-		Sleep(1000);
+		std::this_thread::sleep_for(std::chrono::seconds(1));
 
 	// CAMERA HACK
 
@@ -112,13 +103,33 @@ int main() {
 
 	// PATCHES
 	printf("\n");
-
+	
+	// CRenderingWorldSession 15' vfunc with #STR: "backColorBuffer", "ClearLayer", "MainView"
+	// lea		rdx, [rbp+490h+var_510]
+	// mov		[rbp+490h+var_508], eax
+	// mov		rcx, rbx
+	// call		sub_180219A30 <<<< #STR: "(Texture)", "Player %d%s", "output_color_texture", "output_depth_texture", "output_color_back_buffer"...
+	//
+	// sub_180219A30:
+	// cmp		[rbp+1200h+var_1014], 0
+	// jz		short loc_18021A42B
+	// mov		edx, 0FFFFFFFFh
+	// lea		rcx, unk_180619270
+	// call		sub_1803A4AB0
+	// test		rax, rax
+	// jnz		short loc_18021A422
+	// mov		rax, cs:qword_180619278
+	// mov		rax, [rax+8]
+	// cmp		byte ptr [rax], 0
+	// jz		short loc_18021A42B <<<<
+	// mov		al, 1
+	// jmp		short loc_18021A42D
 	if (ConfigManager::fog_enabled) {
 		Patches::add_patch({
 			"fog_enable",
 			"engine2.dll",
 			Patches::Patterns::fog_enable,
-			"EB"
+			Patches::JumpType::JMP
 			});
 	}
 
@@ -141,7 +152,7 @@ int main() {
 			"sv_cheats",
 			"engine2.dll",
 			Patches::Patterns::sv_cheats,
-			"EB"
+			Patches::JumpType::JMP
 			});
 	}
 
@@ -167,7 +178,7 @@ int main() {
 			"set_rendering_enabled",
 			"particles.dll",
 			Patches::Patterns::set_rendering_enabled,
-			"85",
+			Patches::JumpType::TEST,
 			1
 			});
 
@@ -203,7 +214,7 @@ int main() {
 			"set_rendering_enabled_fix",
 			"client.dll",
 			Patches::Patterns::set_rendering_enabled_fix,
-			"85",
+			Patches::JumpType::TEST,
 			1
 			});
 	}
@@ -217,7 +228,7 @@ int main() {
 
 		LOG::INFO("\"%s\" patch addr -> [%p]", patch.name.c_str(), (void*)patch_addr.value());
 
-		if (!Memory::patch(patch_addr.value() + patch.offset, patch.patch_bytes)) {
+		if (!Memory::patch(patch_addr.value() + patch.offset, patch.jump_type)) {
 			LOG::ERR("Failed to patch \"%s\"!", patch.name.c_str());
 			continue;
 		}
@@ -225,11 +236,9 @@ int main() {
 		LOG::INFO("\"%s\" patched successfully", patch.name.c_str());
 	}
 
-	//vmt.entity_system->iterate_entities();
-
 	printf("\n");
 	LOG::INFO("Done! Will close in 5 seconds...");
 	ProcessHandle::close_process_handle();
-	Sleep(5000);
+	std::this_thread::sleep_for(std::chrono::seconds(5));
 	return 0;
 }

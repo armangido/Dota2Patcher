@@ -10,15 +10,8 @@ static size_t curl_callback(void* contents, size_t size, size_t nmemb, void* use
     return size * nmemb;
 }
 
-static std::wstring string_to_wstring(const string& str) {
-    int size_needed = MultiByteToWideChar(CP_UTF8, 0, str.c_str(), -1, NULL, 0);
-    std::wstring wstr(size_needed, 0);
-    MultiByteToWideChar(CP_UTF8, 0, str.c_str(), -1, &wstr[0], size_needed);
-    return wstr;
-}
-
 static void open_url(string url) {
-    if (ShellExecuteW(0, L"open", string_to_wstring(url).c_str(), 0, 0, SW_SHOWNORMAL) <= (HINSTANCE)32)
+    if (ShellExecuteW(0, L"open", Utils::string_to_wstring(url).c_str(), 0, 0, SW_SHOWNORMAL) <= (HINSTANCE)32)
         LOG::ERR("Failed to open the browser. Please visit %s", url.c_str());
 }
 

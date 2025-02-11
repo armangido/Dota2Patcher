@@ -5,30 +5,6 @@
 
 std::unordered_map<string, Memory::ModuleInfo> Memory::loaded_modules;
 
-static std::vector<BYTE> parse_pattern(const string& pattern) {
-    std::vector<BYTE> parsed_pattern;
-    std::stringstream ss(pattern);
-    string byte_str;
-    while (ss >> byte_str) {
-        if (byte_str == "?") {
-            parsed_pattern.push_back(0xFF);
-        }
-        else {
-            parsed_pattern.push_back(static_cast<BYTE>(std::stoi(byte_str, nullptr, 16)));
-        }
-    }
-    return parsed_pattern;
-}
-
-static string wchar_to_string(const WCHAR* wcharStr) {
-    int bufferSize = WideCharToMultiByte(CP_UTF8, 0, wcharStr, -1, nullptr, 0, nullptr, nullptr);
-    if (bufferSize <= 0)
-        return "";
-    string utf8Str(bufferSize - 1, '\0');
-    WideCharToMultiByte(CP_UTF8, 0, wcharStr, -1, utf8Str.data(), bufferSize, nullptr, nullptr);
-    return utf8Str;
-}
-
 #define InRange(x, a, b) (x >= a && x <= b)
 #define getBit(x) (InRange((x & (~0x20)), 'A', 'F') ? ((x & (~0x20)) - 'A' + 0xA): (InRange(x, '0', '9') ? x - '0': 0))
 #define getByte(x) (getBit(x[0]) << 4 | getBit(x[1]))
@@ -81,44 +57,60 @@ optional<uintptr_t> Memory::pattern_scan(const string target_module, const strin
     return nullopt;
 }
 
-bool Memory::load_modules() {
-    std::unordered_map<string, ModuleInfo> modules;
-    MODULEENTRY32 module_entry{};
-    module_entry.dwSize = sizeof(MODULEENTRY32);
-    HANDLE snapshot;
+bool Memory::load_modules(DWORD process_ID) {
+    const char* Modules[] {
+        "client.dll",
+        "engine2.dll",
+        "schemasystem.dll",
+        "particles.dll",
+    };
+
+    std::unordered_map<string, ModuleInfo> found_modules;
+    std::vector<string> needed_modules(std::begin(Modules), std::end(Modules));
 
     while (true) {
-        snapshot = CreateToolhelp32Snapshot(TH32CS_SNAPMODULE | TH32CS_SNAPMODULE32, GetProcessId(ProcessHandle::get_handle()));
-        if (snapshot == INVALID_HANDLE_VALUE)
-            continue;
+        HANDLE hSnapshot = CreateToolhelp32Snapshot(TH32CS_SNAPMODULE, process_ID);
+        if (hSnapshot == INVALID_HANDLE_VALUE)
+            return false;
 
-        if (Module32First(snapshot, &module_entry)) {
+        MODULEENTRY32W me32{};
+        me32.dwSize = sizeof(MODULEENTRY32W);
+
+        if (Module32FirstW(hSnapshot, &me32)) {
             do {
-                ModuleInfo info{ 0 };
-                info.start_address = reinterpret_cast<uintptr_t>(module_entry.modBaseAddr);
-                info.end_address = info.start_address + module_entry.modBaseSize;
-                info.region_size = info.end_address - info.start_address;
-                info.hmodule = module_entry.hModule;
-                modules[wchar_to_string(module_entry.szModule)] = info;
-            } while (Module32Next(snapshot, &module_entry));
+                string module_name = Utils::wchar_to_string(me32.szModule).value();
+                auto it = std::find(needed_modules.begin(), needed_modules.end(), module_name);
+                if (it != needed_modules.end()) {
+                    ModuleInfo modInfo = {
+                        reinterpret_cast<uintptr_t>(me32.modBaseAddr),
+                        reinterpret_cast<uintptr_t>(me32.modBaseAddr) + me32.modBaseSize,
+                        static_cast<size_t>(me32.modBaseSize),
+                        me32.hModule
+                    };
+
+                    found_modules[module_name] = modInfo;
+                    needed_modules.erase(it);
+                }
+            }
+            while (Module32NextW(hSnapshot, &me32) && !needed_modules.empty());
         }
 
-        if (modules.size() > 100)
-            break;
+        CloseHandle(hSnapshot);
 
-        modules.clear();
-        Sleep(500);
+        if (needed_modules.empty()) {
+            loaded_modules = std::move(found_modules);
+            return true;
+        }
+
+        std::this_thread::sleep_for(std::chrono::seconds(1));
     }
 
-
-    loaded_modules = modules;
-    if (snapshot)
-        CloseHandle(snapshot);
-    return true;
+    return false;
 }
 
-bool Memory::patch(const uintptr_t patch_addr, const string& replace_str) {
-    std::vector<BYTE> patchData = parse_pattern(replace_str);
+bool Memory::patch(const uintptr_t patch_addr, const Patches::JumpType jump_type) {
+    std::vector<BYTE> patchData;
+    patchData.push_back((BYTE)jump_type);
 
     DWORD oldProtect;
     if (!VirtualProtectEx(ProcessHandle::get_handle(), reinterpret_cast<LPVOID>(patch_addr), patchData.size(), PAGE_EXECUTE_READWRITE, &oldProtect)) {

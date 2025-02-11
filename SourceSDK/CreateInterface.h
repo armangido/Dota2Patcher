@@ -41,7 +41,7 @@ public:
 	static optional<Interface*> get_first_interface(string module_name) {
 		const auto CreateInterfaceFn = Memory::pattern_scan(module_name, Patches::Patterns::CreateInterface);
 		if (!CreateInterfaceFn) {
-			LOG::CRITICAL("Can't find CreateInterface pattern!");
+			LOG::CRITICAL("Can't find [%s] CreateInterface pattern!", module_name.c_str());
 			return nullopt;
 		}
 
@@ -60,15 +60,22 @@ public:
 			return;
 
 		Interface* iface = interface_ptr.value();
-		
-		while (true) {
+		std::unordered_set<std::string> seen_interfaces;
+
+		while (iface) {
 			const auto name = iface->name();
-			if (!name)
+			if (!name || seen_interfaces.contains(name.value())) {
+				iface = iface->next().value_or(nullptr);
 				continue;
+			}
 
 			const auto base = iface->base();
-			if (!base)
+			if (!base || base.value() == 0) {
+				iface = iface->next().value_or(nullptr);
 				continue;
+			}
+
+			seen_interfaces.insert(name.value());
 
 			if (iterate_all)
 				LOG::INFO("[%s] -> [%p]", name.value().c_str(), (void*)base.value());
@@ -78,11 +85,7 @@ public:
 				module.interface_handlers.at(name.value())(base.value());
 			}
 
-			auto next_ptr = iface->next();
-			if (!next_ptr) 
-				break;
-
-			iface = next_ptr.value();
+			iface = iface->next().value_or(nullptr);
 		}
 	}
 };

@@ -125,6 +125,7 @@
     <ClInclude Include="Utils\Memory.h" />
     <ClInclude Include="Utils\ProcessHandle.h" />
     <ClInclude Include="Utils\Updater.h" />
+    <ClInclude Include="Utils\Utils.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

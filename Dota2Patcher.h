@@ -26,11 +26,18 @@ public:
 		static inline const string set_rendering_enabled_fix = "0F 84 ? ? ? ? 48 8B ? 48 85 ? 74 ? 48 8B ? 48 8B";
 	};
 
+	enum class JumpType {
+		JMP = 0xEB,
+		JE = 0x74,
+		JNE = 0x75,
+		TEST = 0x85
+	};
+
 	struct PatchInfo {
 		string name;
 		string module;
 		string pattern;
-		string patch_bytes;
+		JumpType jump_type;
 		int offset = 0;
 	};
 

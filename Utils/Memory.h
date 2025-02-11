@@ -1,5 +1,6 @@
 #pragma once
 #include <unordered_map>
+#include "..\Dota2Patcher.h"
 
 class Memory {
 public:
@@ -15,9 +16,9 @@ public:
 		HMODULE hmodule;
 	};
 
-	static bool load_modules();
+	static bool load_modules(DWORD process_ID);
 	static optional<uintptr_t> pattern_scan(const string target_module, const string target_pattern);
-	static bool patch(const uintptr_t patch_addr, const string& replace_str);
+	static bool patch(const uintptr_t patch_addr, const Patches::JumpType jump_type);
 
 	template<typename T, typename N>
 	static optional<T> absolute_address(N instruction_ptr, ASMType instr_type = ASMType::LEA) {

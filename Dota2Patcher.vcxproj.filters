@@ -79,5 +79,8 @@
     <ClInclude Include="Utils\Updater.h">
       <Filter>Utils</Filter>
     </ClInclude>
+    <ClInclude Include="Utils\Utils.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
