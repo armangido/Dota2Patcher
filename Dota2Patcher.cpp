@@ -63,17 +63,17 @@ int main() {
 		{
 			"engine2.dll", {
 				{ "Source2EngineToClient001", [](uintptr_t base) { vmt.engine = (CEngineClient*)base; } },
-			}
+			}, 187,
 		},
 		{
 			"client.dll", {
-				{ "Source2Client002", [](uintptr_t base) { vmt.client = (CSource2Client*)base; } },
-			}
+				{ "Source2Client002", [](uintptr_t base) { vmt.client = (CSource2Client*)base; } }
+			}, 184,
 		},
 		{
 			"schemasystem.dll", {
-				{ "SchemaSystem_001", [](uintptr_t base) { vmt.schema_system = (CSchemaSystem*)base; } },
-			}
+				{ "SchemaSystem_001", [](uintptr_t base) { vmt.schema_system = (CSchemaSystem*)base; } }
+			}, 43,
 		},
 	};
 

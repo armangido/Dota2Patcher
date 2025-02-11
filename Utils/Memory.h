@@ -125,5 +125,28 @@ public:
 		return result.empty() ? nullopt : optional<string>(std::move(result));
 	}
 
+	template<typename T>
+	static int count_vms(T vmt) {
+		int count = 1;
+
+		while (true) {
+			const auto vfunc = Memory::virtual_function<uintptr_t>(vmt, count);
+			if (!vfunc || vfunc.value_or(0) == 0)
+				break;
+
+			MEMORY_BASIC_INFORMATION mbi;
+
+			if (!VirtualQueryEx(ProcessHandle::get_handle(), (LPCVOID)vfunc.value_or(0), &mbi, sizeof(mbi)))
+				return count;
+
+			if (mbi.State != MEM_COMMIT || !(mbi.Protect & (PAGE_EXECUTE | PAGE_EXECUTE_READ | PAGE_EXECUTE_READWRITE | PAGE_EXECUTE_WRITECOPY)))
+				return count;
+
+			count++;
+		}
+
+		return count;
+	}
+
 	static std::unordered_map<string, ModuleInfo> loaded_modules;
 };

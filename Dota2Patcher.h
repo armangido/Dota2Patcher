@@ -27,10 +27,10 @@ public:
 	};
 
 	enum class JumpType {
-		JMP = 0xEB,
 		JE = 0x74,
 		JNE = 0x75,
-		TEST = 0x85
+		TEST = 0x85,
+		JMP = 0xEB
 	};
 
 	struct PatchInfo {
