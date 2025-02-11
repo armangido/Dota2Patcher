@@ -126,6 +126,23 @@ public:
 	}
 
 	template<typename T>
+	static bool is_valid_ptr(T ptr) {
+		MEMORY_BASIC_INFORMATION mbi{};
+
+		if (!VirtualQueryEx(ProcessHandle::get_handle(), reinterpret_cast<LPCVOID>(ptr), &mbi, sizeof(mbi)))
+			return false;
+
+		if (mbi.State != MEM_COMMIT || !(mbi.Protect & (PAGE_EXECUTE | PAGE_EXECUTE_READ | PAGE_EXECUTE_READWRITE | PAGE_EXECUTE_WRITECOPY)))
+			return false;
+
+		uintptr_t test = 0;
+		if (!ReadProcessMemory(ProcessHandle::get_handle(), reinterpret_cast<LPCVOID>(ptr), &test, sizeof(test), nullptr))
+			return false;
+
+		return true;
+	}
+
+	template<typename T>
 	static int count_vms(T vmt) {
 		int count = 1;
 
@@ -134,12 +151,7 @@ public:
 			if (!vfunc || vfunc.value_or(0) == 0)
 				break;
 
-			MEMORY_BASIC_INFORMATION mbi;
-
-			if (!VirtualQueryEx(ProcessHandle::get_handle(), (LPCVOID)vfunc.value_or(0), &mbi, sizeof(mbi)))
-				return count;
-
-			if (mbi.State != MEM_COMMIT || !(mbi.Protect & (PAGE_EXECUTE | PAGE_EXECUTE_READ | PAGE_EXECUTE_READWRITE | PAGE_EXECUTE_WRITECOPY)))
+			if (!Memory::is_valid_ptr(vfunc.value()))
 				return count;
 
 			count++;
