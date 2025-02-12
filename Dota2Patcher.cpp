@@ -32,16 +32,13 @@ int main() {
 
 	LOG::DEBUG("Waiting for Dota2 process...");
 
-	DWORD process_ID = 0;
-	do {
-		process_ID = ProcessHandle::get_PID_by_name(L"dota2.exe");
+	DWORD process_ID;
+	while ((process_ID = ProcessHandle::get_PID_by_name(L"dota2.exe")) == 0)
 		std::this_thread::sleep_for(std::chrono::seconds(1));
-	} while
-		(process_ID == 0);
 
 	LOG::INFO("Dota2 PID: %d", process_ID);
 
-	ProcessHandle::open_process_handle(process_ID, PROCESS_ALL_ACCESS);
+	ProcessHandle::open_process_handle(process_ID, PROCESS_VM_READ | PROCESS_VM_WRITE | PROCESS_VM_OPERATION | PROCESS_QUERY_INFORMATION);
 	if (!ProcessHandle::is_valid_handle()) {
 		LOG::CRITICAL("Failed to open process. Error: 0x%d", ProcessHandle::get_last_error());
 		system("pause");

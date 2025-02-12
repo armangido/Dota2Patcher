@@ -91,8 +91,8 @@ bool Memory::load_modules(DWORD process_ID) {
                     found_modules[module_name] = modInfo;
                     needed_modules.erase(it);
                 }
-            }
-            while (Module32NextW(hSnapshot, &me32) && !needed_modules.empty());
+            } while
+                (Module32NextW(hSnapshot, &me32) && !needed_modules.empty());
         }
 
         CloseHandle(hSnapshot);
