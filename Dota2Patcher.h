@@ -42,8 +42,8 @@ public:
 	};
 
 	static void add_patch(const PatchInfo& patch) {
-		patches.push_back(patch);
+		g_patches.push_back(patch);
 	}
 
-	static std::vector<PatchInfo> patches;
+	static inline std::vector<PatchInfo> g_patches;
 };

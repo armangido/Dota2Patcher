@@ -120,7 +120,6 @@
     <ClInclude Include="SourceSDK\CSource2Client.h" />
     <ClInclude Include="SourceSDK\interfaces.h" />
     <ClInclude Include="SourceSDK\CSchemaSystem.h" />
-    <ClInclude Include="SourceSDK\utlthash.h" />
     <ClInclude Include="Utils\Config.h" />
     <ClInclude Include="Utils\Memory.h" />
     <ClInclude Include="Utils\ProcessHandle.h" />

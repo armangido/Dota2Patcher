@@ -8,8 +8,6 @@
 #include "SourceSDK/CreateInterface.h"
 #include "SourceSDK/interfaces.h"
 
-std::vector<Patches::PatchInfo> Patches::patches;
-
 int main() {
 	bool open_settings = GetAsyncKeyState(VK_SHIFT) & 1;
 	draw_logo();
@@ -65,12 +63,12 @@ int main() {
 		{
 			"client.dll", {
 				{ "Source2Client002", [](uintptr_t base) { vmt.client = (CSource2Client*)base; } }
-			}, 184,
+			}, 188,
 		},
 		{
 			"schemasystem.dll", {
 				{ "SchemaSystem_001", [](uintptr_t base) { vmt.schema_system = (CSchemaSystem*)base; } }
-			}, 43,
+			}, 46,
 		},
 	};
 
@@ -83,6 +81,22 @@ int main() {
 
 	while (!vmt.find_all())
 		std::this_thread::sleep_for(std::chrono::seconds(1));
+
+	// LOAD NETVARS
+	printf("\n");
+
+	LOG::DEBUG("Loading NetVars...");
+	vmt.schema_system->dump_netvars("client");
+	vmt.schema_system->dump_netvars("server");
+	
+	size_t netvar_count = 0;
+	for (const auto& [class_name, netvar_map] : vmt.schema_system->g_netvars) {
+		netvar_count += netvar_map.size();
+	}
+
+	LOG::INFO("NetVars loaded: %zu in %zu classes", netvar_count, vmt.schema_system->g_netvars.size());
+
+	//cout << "m_iTaggedAsVisibleByTeam: " << std::hex << vmt.schema_system->g_netvars["CDOTA_BaseNPC"]["m_iTaggedAsVisibleByTeam"] << endl;
 
 	// WAITING FOR A LOBBY
 	printf("\n");
@@ -216,7 +230,7 @@ int main() {
 			});
 	}
 
-	for (const auto& patch : Patches::patches) {
+	for (const auto& patch : Patches::g_patches) {
 		const auto patch_addr = Memory::pattern_scan(patch.module, patch.pattern);
 		if (!patch_addr) {
 			LOG::ERR("Pattern for \"%s\" not found!", patch.name.c_str());

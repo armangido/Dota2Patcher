@@ -132,9 +132,6 @@ public:
 		if (!VirtualQueryEx(ProcessHandle::get_handle(), reinterpret_cast<LPCVOID>(ptr), &mbi, sizeof(mbi)))
 			return false;
 
-		if (mbi.State != MEM_COMMIT || !(mbi.Protect & (PAGE_EXECUTE | PAGE_EXECUTE_READ | PAGE_EXECUTE_READWRITE | PAGE_EXECUTE_WRITECOPY)))
-			return false;
-
 		uintptr_t test = 0;
 		if (!ReadProcessMemory(ProcessHandle::get_handle(), reinterpret_cast<LPCVOID>(ptr), &test, sizeof(test), nullptr))
 			return false;
