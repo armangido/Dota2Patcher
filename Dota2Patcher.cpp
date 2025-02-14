@@ -89,7 +89,7 @@ int main() {
 
 	std::vector<string> netvar_classes { "C_DOTA_BaseNPC", "C_DOTA_BaseNPC_Hero" };
 
-	vmt.schema_system->dump_netvars("client.dll", netvar_classes, true);
+	vmt.schema_system->dump_netvars("client.dll", netvar_classes, false);
 	
 	size_t netvar_count = 0;
 	for (const auto& [class_name, netvar_map] : vmt.schema_system->g_netvars) {
