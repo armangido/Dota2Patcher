@@ -6,18 +6,18 @@
 
 class Interface {
 public:
-	optional<uintptr_t> base() {
+	uintptr_t base() const {
 		const auto base_ptr = Memory::read_memory<uintptr_t>(this);
-		return Memory::absolute_address<uintptr_t>(base_ptr.value());;
+		return Memory::absolute_address<uintptr_t>(base_ptr.value()).value_or(0);
 	}
 
-	optional<string> name() {
+	optional<string> name() const {
 		const auto name_ptr = Memory::read_memory<uintptr_t>(this + 0x8);
 		return !name_ptr ? nullopt : Memory::read_string(name_ptr.value());
 	}
 
-	optional<Interface*> next() {
-		return Memory::read_memory<Interface*>(this + 0x10);;
+	optional<Interface*> next() const {
+		return Memory::read_memory<Interface*>(this + 0x10);
 	}
 };
 
@@ -61,22 +61,22 @@ public:
 			}
 
 			const auto base = iface->base();
-			if (!base || base.value() == 0) {
+			if (!base || base == 0) {
 				iface = iface->next().value_or(nullptr);
 				continue;
 			}
 
 			seen_interfaces.insert(name.value());
-			int vfuncs = Memory::count_vms(base.value());
+			int vfuncs = Memory::count_vms(base);
 
 			if (iterate_all)
-				LOG::INFO("[%s] -> [%p]", name.value().c_str(), (void*)base.value());
+				LOG::INFO("[%s] -> [%p]", name.value().c_str(), (void*)base);
 
 			else if (module.interface_handlers.find(name.value()) != module.interface_handlers.end()) {
-				LOG::INFO("Interface [%s] -> [%p]", name.value().c_str(), (void*)base.value());
+				LOG::INFO("Interface [%s] -> [%p]", name.value().c_str(), (void*)base);
 				if (vfuncs != module.known_vfuncs)
 					LOG::ERR("VMT has changed! [%d] -> [%d]", module.known_vfuncs, vfuncs);
-				module.interface_handlers.at(name.value())(base.value());
+				module.interface_handlers.at(name.value())(base);
 			}
 
 			iface = iface->next().value_or(nullptr);

@@ -20,12 +20,12 @@ enum class DOTA_GameState : int {
 
 class CDOTAGamerules {
 public:
-    optional <bool> paused() {
+    bool paused() const {
         const auto paused = Memory::read_memory<bool>(this + 0x38);
         return paused.value_or(0) != 0;
     }
 
-    optional <DOTA_GameState> game_state() {
+    DOTA_GameState game_state() const {
         const auto game_state = Memory::read_memory<int>(this + 0x74);
         return game_state.has_value() ? static_cast<DOTA_GameState>(game_state.value()) : DOTA_GameState::INVALID;
     }
@@ -33,7 +33,7 @@ public:
 
 class C_DOTAGamerulesProxy {
 public:
-    optional <CDOTAGamerules*> gamerules() {
-        return Memory::read_memory<CDOTAGamerules*>(this + 0x560);
+    CDOTAGamerules* gamerules() const {
+        return Memory::read_memory<CDOTAGamerules*>(this + 0x560).value_or(nullptr);
     }
 };

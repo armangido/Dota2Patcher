@@ -4,7 +4,7 @@
 class RegistryConfig {
 public:
     static bool get(const string& valueName, int& out_value) {
-        auto readed = Read(valueName);
+        const auto readed = Read(valueName);
         if (!readed)
             return false;
         out_value = *readed;

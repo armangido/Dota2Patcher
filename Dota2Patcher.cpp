@@ -46,7 +46,7 @@ int main() {
 	LOG::INFO("Dota2 process handle: %p", ProcessHandle::get_handle());
 
 	// LOADING MODULES
-	LOG::DEBUG("Waiting for moules to load...");
+	LOG::DEBUG("Waiting for a modules to load...");
 
 	while (!Memory::load_modules(process_ID))
 		std::this_thread::sleep_for(std::chrono::seconds(1));

@@ -15,15 +15,15 @@ public:
         Memory::write_memory(this + 0x14, static_cast<float>(r_farz));
     }
 
-    optional <float> get_distance() {
-        return Memory::read_memory<float>(this);
+    float get_distance() const {
+        return Memory::read_memory<float>(this).value_or(0);
     }
 
-    optional <float> get_fow() {
-        return Memory::read_memory<float>(this + 0x4);
+    float get_fow() const {
+        return Memory::read_memory<float>(this + 0x4).value_or(0);
     }
 
-    optional <float> get_r_farz() {
-        return Memory::read_memory<float>(this + 0x14);
+    float get_r_farz() const {
+        return Memory::read_memory<float>(this + 0x14).value_or(0);
     }
 };

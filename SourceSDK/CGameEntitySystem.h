@@ -26,16 +26,16 @@ public:
 
 class CEntityIdentity {
 public:
-	optional<CBaseEntity*> base_entity() const {
-		return Memory::read_memory<CBaseEntity*>(this);
+	CBaseEntity* base_entity() const {
+		return Memory::read_memory<CBaseEntity*>(this).value_or(nullptr);
 	}
 
-	optional<CSchemaClassBinding*> schema_class_binding() const {
-		return Memory::read_memory<CSchemaClassBinding*>(this + 0x8);
+	CSchemaClassBinding* schema_class_binding() const {
+		return Memory::read_memory<CSchemaClassBinding*>(this + 0x8).value_or(nullptr);
 	}
 
-	optional<uint32_t> handle() const {
-		return Memory::read_memory<uint32_t>(this + 0x10);
+	uint32_t handle() const {
+		return Memory::read_memory<uint32_t>(this + 0x10).value_or(0);
 	}
 
 	optional<string> internal_name() const { // npc_dota_hero_antimage
@@ -69,98 +69,93 @@ public:
 
 class CGameEntitySystem {
 public:
-	void iterate_entities() { // for testing purposes
+	void dump_entities() const { // for testing purposes
 		std::ofstream dump_file;
 		dump_file.open("C:\\entity_dump.txt");
 		int ents_count = 0;
 
-		auto first_ent = this->get_first_entity();
-		if (!first_ent)
+		auto ident = this->get_first_identity();
+		if (!ident)
 			return;
 
-		CEntityIdentity* ident = first_ent.value();
+		while (true) {
+			ents_count++;
 
-		while (ident->m_pNext().value()) {
-			auto next_ent = ident->m_pNext();
-			if (!next_ent)
-				break;
-
-			ident = next_ent.value();
-
-			auto schema = ident->schema_class_binding();
-			auto internal_name = ident->internal_name();
-			auto entity_name = ident->entity_name();
-			auto binary_name = schema.value()->binary_name();
-			auto class_name = schema.value()->class_name();
+			const auto schema = ident->schema_class_binding();
+			const auto internal_name = ident->internal_name();
+			const auto entity_name = ident->entity_name();
+			const auto binary_name = schema->binary_name();
+			const auto class_name = schema->class_name();
 
 			dump_file
 				<< "internal_name: " << internal_name.value_or("empty") 
 				<< " | entity_name: " << entity_name.value_or("empty") 
 				<< " | binary_name: " << binary_name.value_or("empty") 
 				<< " | class_name: " << class_name.value_or("empty")
-				<< " -> [" << (void*)ident->base_entity().value() << "]\n";
+				<< " -> [" << (void*)ident->base_entity() << "]\n";
 
-			ents_count++;
-		}
-		
-		dump_file.close();
-		printf("\n");
-		LOG::INFO("iterate_entities: done. Total: %d", ents_count);
-	}
-
-	optional<CBaseEntity*> find_by_name(string name_to_find) {
-		auto first_ent = this->get_first_entity();
-		if (!first_ent || first_ent.value() == nullptr) 
-			return nullopt;
-
-		CEntityIdentity* ident = first_ent.value();
-
-		while (ident->m_pNext().value()) {
-			auto next_ent = ident->m_pNext();
+			const auto next_ent = ident->m_pNext();
 			if (!next_ent)
 				break;
 
 			ident = next_ent.value();
+		}
+		
+		dump_file.close();
+		printf("\n");
+		LOG::INFO("dump_entities: done. Total: %d", ents_count);
+	}
 
-			auto internal_name = ident->internal_name();
-			if (internal_name && internal_name.value() == name_to_find)
+	optional<CBaseEntity*> find_by_name(string name_to_find) const {
+		auto ident = this->get_first_identity();
+		if (!ident)
+			return nullopt;
+
+		while (true) {
+			const auto internal_name = ident->internal_name().value_or("");
+			if (internal_name == name_to_find)
 				return ident->base_entity();
 
-			auto entity_name = ident->entity_name();
-			if (entity_name && entity_name.value() == name_to_find)
+			const auto entity_name = ident->entity_name().value_or("");
+			if (entity_name == name_to_find)
 				return ident->base_entity();
-			
-			auto schema = ident->schema_class_binding();
-			if (!schema)
-				continue;
 
-			auto binary_name = schema.value()->binary_name();
-			if (binary_name && binary_name.value() == name_to_find)
+			const auto schema = ident->schema_class_binding();
+
+			const auto binary_name = schema->binary_name().value_or("");
+			if (binary_name == name_to_find)
 				return ident->base_entity();
-			
-			auto class_name = schema.value()->class_name();
-			if (class_name && class_name.value() == name_to_find)
+
+			const auto class_name = schema->class_name().value_or("");
+			if (class_name == name_to_find)
 				return ident->base_entity();
+
+
+			const auto next_ent = ident->m_pNext();
+			if (!next_ent)
+				break;
+
+			ident = next_ent.value();
 		}
 
 		return nullopt;
 	}
 
-	optional<CEntityIdentity*> get_first_entity() {
-		return Memory::read_memory<CEntityIdentity*>(this + 0x210);
+	CEntityIdentity* get_first_identity() const {
+		return Memory::read_memory<CEntityIdentity*>(this + 0x210).value_or(nullptr);
 	}
 
-	optional<CEntityIdentity*> get_base_entity(size_t index) {
+	CEntityIdentity* get_base_entity(size_t index) const {
 		const auto chunk = get_identity_chunk();
 		if (!chunk)
-			return nullopt;
+			return nullptr;
 
-		uintptr_t identityPtr = reinterpret_cast<uintptr_t>(chunk.value()) + (index % MAX_ENTITIES_IN_LIST) * ENTITY_IDENTITY_SIZE;
+		uintptr_t identityPtr = reinterpret_cast<uintptr_t>(chunk) + (index % MAX_ENTITIES_IN_LIST) * ENTITY_IDENTITY_SIZE;
 
 		return reinterpret_cast<CEntityIdentity*>(identityPtr);
 	}
 
-	optional<CEntityIdentities*> get_identity_chunk() {
-		return Memory::read_memory<CEntityIdentities*>(this + 0x10);
+	CEntityIdentities* get_identity_chunk() const {
+		return Memory::read_memory<CEntityIdentities*>(this + 0x10).value_or(nullptr);
 	}
 };

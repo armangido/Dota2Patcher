@@ -110,7 +110,7 @@ bool Scanner::find_CDOTAGamerules() {
     if (!dota_gamerules_ptr)
         return false;
 
-    vmt.gamerules = reinterpret_cast<CDOTAGamerules*>(dota_gamerules_ptr.value());
+    vmt.gamerules = reinterpret_cast<CDOTAGamerules*>(dota_gamerules_ptr);
     LOG::INFO("CDOTAGamerules -> [%p]", (void*)vmt.gamerules);
     return true;
 }
