@@ -128,7 +128,20 @@ public:
 		return nullptr;
 	}
 
-	// DUMPER
+	CSchemaSystemTypeScope* type_scope(size_t scope_index) {
+		if (scope_index > 19)
+			return nullptr;
+
+		const auto scopes_list = Memory::read_memory<uintptr_t>(this + 0x190);
+		if (!scopes_list)
+			return nullptr;
+
+		const auto current_scope = Memory::read_memory<CSchemaSystemTypeScope*>(scopes_list.value() + scope_index * 8);
+		if (!current_scope || current_scope.value_or(nullptr) == nullptr)
+			return nullptr;
+
+		return current_scope.value_or(nullptr);
+	}
 
 	std::stringstream iterate_netvars(string class_name, ClassDescription* class_description, bool dump_to_file) {
 		std::stringstream dump_content;
@@ -151,7 +164,7 @@ public:
 		return dump_content;
 	}
 
-	void dump_netvars(string scope_name, bool dump_to_file = false) {
+	void dump_netvars(string scope_name, bool dump_to_file) {
 		const auto scope = this->type_scope(scope_name);
 		if (!scope)
 			return;
@@ -209,6 +222,18 @@ public:
 
 			container_index++;
 		}
+	}
+
+	void dump_netvars(size_t scope_index, bool dump_to_file) {
+		const auto scope = this->type_scope(scope_index);
+		if (!scope)
+			return;
+
+		const auto scope_name = scope->scope_name();
+		if (!scope_name)
+			return;
+
+		return dump_netvars(scope_name.value(), dump_to_file);
 	}
 
 	static inline std::unordered_map<std::string, std::unordered_map<std::string, int32_t>> g_netvars;
