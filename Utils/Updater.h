@@ -53,7 +53,7 @@ public:
     static bool update_required();
 
 private:
-    static constexpr SemVer local_version = { 2, 8, 0, 0 };
+    static constexpr SemVer local_version = { 2, 8, 0, 1 };
 
     static optional<string> web_request();
     static SemVer get_latest_version(const std::vector<WebVer>& versions);

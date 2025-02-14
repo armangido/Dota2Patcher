@@ -86,17 +86,17 @@ int main() {
 	printf("\n");
 
 	LOG::DEBUG("Loading NetVars...");
-	vmt.schema_system->dump_netvars("client");
-	vmt.schema_system->dump_netvars("server");
+
+	std::vector<string> netvar_classes { "C_DOTA_BaseNPC", "C_DOTA_BaseNPC_Hero" };
+
+	vmt.schema_system->dump_netvars("client.dll", netvar_classes, true);
 	
 	size_t netvar_count = 0;
 	for (const auto& [class_name, netvar_map] : vmt.schema_system->g_netvars) {
 		netvar_count += netvar_map.size();
 	}
 
-	LOG::INFO("NetVars loaded: %zu in %zu classes", netvar_count, vmt.schema_system->g_netvars.size());
-
-	//cout << "m_iTaggedAsVisibleByTeam: " << std::hex << vmt.schema_system->g_netvars["CDOTA_BaseNPC"]["m_iTaggedAsVisibleByTeam"] << endl;
+	LOG::INFO("NetVars loaded: %zu", netvar_count);
 
 	// WAITING FOR A LOBBY
 	printf("\n");

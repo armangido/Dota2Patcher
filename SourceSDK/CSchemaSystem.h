@@ -130,8 +130,7 @@ public:
 
 	// DUMPER
 
-	void dump_netvars(string scope_name_no_ext, bool dump_to_file = false) {
-		string scope_name = scope_name_no_ext + ".dll";
+	void dump_netvars(string scope_name, std::vector<string> needed_classes, bool dump_to_file = false) {
 		const auto scope = this->type_scope(scope_name);
 		if (!scope)
 			return;
@@ -164,10 +163,11 @@ public:
 					const auto m_type = members_description->m_type()->type_name();
 
 					if (netvar_name && offset.value_or(0) != 0) {
-						g_netvars[class_name.value()][netvar_name.value()] = offset.value();
+						if (std::find(needed_classes.begin(), needed_classes.end(), class_name.value()) != needed_classes.end())
+							g_netvars[class_name.value()][netvar_name.value()] = offset.value();
 
 						if (dump_to_file) {
-							dump_content << netvar_name.value() << " | " << std::hex << offset.value() << " | " << m_type.value_or("unknow") << "\n";
+							dump_content << netvar_name.value() << " | " << std::hex << offset.value() << " | " << m_type.value_or("unknow") << " | [" << (void*)members_description << "]\n";
 							has_data = true;
 						}
 					}

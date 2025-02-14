@@ -8,26 +8,16 @@ class Interface {
 public:
 	optional<uintptr_t> base() {
 		const auto base_ptr = Memory::read_memory<uintptr_t>(this);
-		if (!base_ptr)
-			return nullopt;
-
 		return Memory::absolute_address<uintptr_t>(base_ptr.value());;
 	}
 
 	optional<string> name() {
 		const auto name_ptr = Memory::read_memory<uintptr_t>(this + 0x8);
-		if (!name_ptr)
-			return nullopt;
-
-		return Memory::read_string(name_ptr.value());
+		return !name_ptr ? nullopt : Memory::read_string(name_ptr.value());
 	}
 
 	optional<Interface*> next() {
-		const auto next_ptr = Memory::read_memory<Interface*>(this + 0x10);
-		if (next_ptr.value_or(nullptr) == nullptr)
-			return nullopt;
-
-		return next_ptr;
+		return Memory::read_memory<Interface*>(this + 0x10);;
 	}
 };
 

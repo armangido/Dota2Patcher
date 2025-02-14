@@ -113,16 +113,14 @@ public:
 	}
 
 	template<typename T>
-	static optional<string> read_string(T address, size_t maxLength = 512) {
-		std::vector<char> buffer(maxLength, 0);
+	static optional <string> read_string(T address, size_t max_length = 64) {
+		std::vector<char> buffer(max_length, 0);
 		SIZE_T bytesRead;
 
-		if (!ReadProcessMemory(ProcessHandle::get_handle(), reinterpret_cast<LPCVOID>(address), buffer.data(), maxLength, &bytesRead) || bytesRead == 0)
+		if (!ReadProcessMemory(ProcessHandle::get_handle(), reinterpret_cast<LPCVOID>(address), buffer.data(), buffer.size(), &bytesRead))
 			return nullopt;
 
-		string result(buffer.data(), strnlen(buffer.data(), bytesRead));
-
-		return result.empty() ? nullopt : optional<string>(std::move(result));
+		return string(buffer.data());
 	}
 
 	template<typename T>
