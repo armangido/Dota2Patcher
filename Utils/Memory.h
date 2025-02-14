@@ -61,6 +61,9 @@ public:
 		T value{};
 		SIZE_T bytesRead;
 
+		if (!is_valid_ptr(address))
+			return nullopt;
+
 		if (!ReadProcessMemory(ProcessHandle::get_handle(), reinterpret_cast<LPCVOID>(address), &value, sizeof(T), &bytesRead)) {
 			LOG::ERR("(read_memory) Failed to read memory: 0x%X", GetLastError());
 			return nullopt;

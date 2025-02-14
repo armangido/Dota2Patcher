@@ -130,13 +130,37 @@ public:
 
 	// DUMPER
 
-	void dump_netvars(string scope_name, std::vector<string> needed_classes, bool dump_to_file = false) {
+	std::stringstream iterate_netvars(string class_name, ClassDescription* class_description, bool dump_to_file) {
+		std::stringstream dump_content;
+
+		for (size_t i = 0; auto members_description = class_description->members_description(i); ++i) {
+			if (!members_description || !members_description->is_netvar())
+				break;
+
+			const auto netvar_name = members_description->netvar_name();
+			const auto offset = members_description->offset();
+			const auto m_type = members_description->m_type()->type_name();
+
+			if (netvar_name && offset.value_or(0) != 0) {
+				g_netvars[class_name][netvar_name.value()] = offset.value();
+				if (dump_to_file)
+					dump_content << netvar_name.value() << " | " << std::hex << offset.value() << " | " << m_type.value_or("unknow") << " | [" << (void*)members_description << "]\n";
+			}
+		}
+
+		return dump_content;
+	}
+
+	void dump_netvars(string scope_name, bool dump_to_file = false) {
 		const auto scope = this->type_scope(scope_name);
 		if (!scope)
 			return;
 
 		if (dump_to_file)
 			std::filesystem::create_directories("C:\\netvars\\" + scope_name);
+
+		std::unordered_map<string, std::stringstream> class_dumps;
+		std::unordered_set<string> processed_classes;
 
 		size_t container_index = 0;
 		while (true) {
@@ -148,49 +172,39 @@ public:
 			auto class_description = class_description_container->class_description(class_description_index);
 			while (class_description) {
 				const auto class_name = class_description->class_name();
-				if (!class_name)
-					break;
-
-				std::stringstream dump_content;
-				bool has_data = false;
-
-				for (size_t i = 0; auto members_description = class_description->members_description(i); ++i) {
-					if (!members_description || !members_description->is_netvar())
-						break;
-
-					const auto netvar_name = members_description->netvar_name();
-					const auto offset = members_description->offset();
-					const auto m_type = members_description->m_type()->type_name();
-
-					if (netvar_name && offset.value_or(0) != 0) {
-						if (std::find(needed_classes.begin(), needed_classes.end(), class_name.value()) != needed_classes.end())
-							g_netvars[class_name.value()][netvar_name.value()] = offset.value();
-
-						if (dump_to_file) {
-							dump_content << netvar_name.value() << " | " << std::hex << offset.value() << " | " << m_type.value_or("unknow") << " | [" << (void*)members_description << "]\n";
-							has_data = true;
-						}
-					}
+				if (!class_name) {
+					class_description_index++;
+					class_description = class_description_container->class_description(class_description_index);
+					continue;
 				}
 
-				if (has_data) {
+				if (processed_classes.contains(class_name.value())) {
+					class_description_index++;
+					class_description = class_description_container->class_description(class_description_index);
+					continue;
+				}
+
+				processed_classes.insert(class_name.value());
+
+				std::stringstream dump_content = iterate_netvars(class_name.value(), class_description, dump_to_file);
+				class_dumps[class_name.value()] = std::move(dump_content);
+
+				if (dump_to_file && class_dumps[class_name.value()].tellp() != std::streampos(0)) {
+					cout << "[" << container_index << " / 255] " << class_name.value() << " -> [" << (void*)class_description << "]\n";
+
 					string filename = "C:\\netvars\\" + scope_name + "\\" + class_name.value() + ".txt";
 					std::ofstream dump_file(filename);
-					dump_file << dump_content.rdbuf();
+					dump_file << class_dumps[class_name.value()].rdbuf();
 					dump_file.close();
 				}
 
-				if (class_description->members_size().value_or(0) == 0) {
-					auto parent = class_description->parent_info()->parent();
-					if (parent)
-						class_description = parent;
-					else
-						break;
+				const auto parent_info = class_description->parent_info();
+				if (parent_info)
+					class_description = parent_info->parent();
+				else {
+					class_description_index++;
+					class_description = class_description_container->class_description(class_description_index);
 				}
-				else
-					break;
-
-				class_description_index++;
 			}
 
 			container_index++;
