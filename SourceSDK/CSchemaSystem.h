@@ -115,14 +115,14 @@ public:
 
 		for (size_t i = 0; i < 18; i++) {
 			const auto current_scope = Memory::read_memory<CSchemaSystemTypeScope*>(scopes_list.value() + i * 8);
-			if (!current_scope || current_scope.value_or(nullptr) == nullptr)
+			if (!current_scope)
 				continue;
 
 			const auto current_name = current_scope.value()->scope_name();
 			if (!current_name || current_name.value_or(scope_name) != scope_name)
 				continue;
 
-			return current_scope.value_or(nullptr);
+			return current_scope.value();
 		}
 
 		return nullptr;
@@ -137,10 +137,10 @@ public:
 			return nullptr;
 
 		const auto current_scope = Memory::read_memory<CSchemaSystemTypeScope*>(scopes_list.value() + scope_index * 8);
-		if (!current_scope || current_scope.value_or(nullptr) == nullptr)
+		if (!current_scope)
 			return nullptr;
 
-		return current_scope.value_or(nullptr);
+		return current_scope.value();
 	}
 
 	std::stringstream iterate_netvars(string class_name, ClassDescription* class_description, bool dump_to_file) {
