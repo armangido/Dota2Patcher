@@ -137,7 +137,7 @@ int main() {
 			"fog_enable",
 			"engine2.dll",
 			Patches::Patterns::fog_enable,
-			Patches::JumpType::JMP
+			Patches::PATCH_TYPE::JMP
 			});
 	}
 
@@ -160,7 +160,7 @@ int main() {
 			"sv_cheats",
 			"engine2.dll",
 			Patches::Patterns::sv_cheats,
-			Patches::JumpType::JMP
+			Patches::PATCH_TYPE::JMP
 			});
 	}
 
@@ -186,7 +186,7 @@ int main() {
 			"set_rendering_enabled",
 			"particles.dll",
 			Patches::Patterns::set_rendering_enabled,
-			Patches::JumpType::TEST,
+			Patches::PATCH_TYPE::TEST,
 			1
 			});
 
@@ -222,7 +222,7 @@ int main() {
 			"set_rendering_enabled_fix",
 			"client.dll",
 			Patches::Patterns::set_rendering_enabled_fix,
-			Patches::JumpType::TEST,
+			Patches::PATCH_TYPE::TEST,
 			1
 			});
 	}
@@ -236,23 +236,13 @@ int main() {
 
 		LOG::INFO("\"%s\" patch addr -> [%p]", patch.name.c_str(), (void*)patch_addr.value());
 
-		if (!Memory::patch(patch_addr.value() + patch.offset, patch.jump_type)) {
+		if (!Memory::patch(patch_addr.value() + patch.offset, patch.patch_type)) {
 			LOG::ERR("Failed to patch \"%s\"!", patch.name.c_str());
 			continue;
 		}
 
 		LOG::INFO("\"%s\" patched successfully", patch.name.c_str());
 	}
-
-	//std::vector<CBaseEntity*> dota_teams = vmt.entity_system->find_vector_by_name(CGameEntitySystem::NAME_TYPE::binary_name, "C_DOTATeam");
-
-	//for (auto team : dota_teams) {
-	//	auto dota_team = (C_DOTATeam*)team;
-	//	dota_team->can_see_roshan_timer(true);
-	//}
-
-	//while (vmt.gamerules->in_game())
-	//	LOG::INFO("%d", vmt.gamerules->game_state());
 
 	printf("\n");
 	LOG::INFO("Done! Will close in 5 seconds...");

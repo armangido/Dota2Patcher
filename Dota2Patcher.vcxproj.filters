@@ -18,6 +18,9 @@
     <Filter Include="Utils">
       <UniqueIdentifier>{f22df01b-e06c-41cb-8c79-c619f9134726}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Hacks">
+      <UniqueIdentifier>{c3a963f6-7635-4fcb-8ce6-e8e3b0f3fca7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Dota2Patcher.cpp">
@@ -87,6 +90,9 @@
     </ClInclude>
     <ClInclude Include="SourceSDK\CEntityIdentity.h">
       <Filter>Headers\SourceSDK</Filter>
+    </ClInclude>
+    <ClInclude Include="Hacks\Hacks.h">
+      <Filter>Hacks</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

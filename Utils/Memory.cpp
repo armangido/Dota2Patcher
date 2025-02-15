@@ -9,6 +9,19 @@ std::unordered_map<string, Memory::ModuleInfo> Memory::loaded_modules;
 #define getBit(x) (InRange((x & (~0x20)), 'A', 'F') ? ((x & (~0x20)) - 'A' + 0xA): (InRange(x, '0', '9') ? x - '0': 0))
 #define getByte(x) (getBit(x[0]) << 4 | getBit(x[1]))
 
+static std::vector<BYTE> parse_pattern(const std::string& pattern) {
+    std::vector<BYTE> parsed_pattern;
+    std::stringstream ss(pattern);
+    string byte_str;
+    while (ss >> byte_str) {
+        if (byte_str == "?")
+            parsed_pattern.push_back(0xFF);
+        else
+            parsed_pattern.push_back(static_cast<BYTE>(std::stoi(byte_str, nullptr, 16)));
+    }
+    return parsed_pattern;
+}
+
 optional<uintptr_t> Memory::pattern_scan(const string target_module, const string target_pattern) {
     auto* buffer = new unsigned char[Memory::loaded_modules[target_module].region_size];
     SIZE_T bytesRead;
@@ -108,24 +121,28 @@ bool Memory::load_modules(DWORD process_ID) {
     return false;
 }
 
-bool Memory::patch(const uintptr_t patch_addr, const Patches::JumpType jump_type) {
-    std::vector<BYTE> patchData;
-    patchData.push_back((BYTE)jump_type);
+bool Memory::patch(const uintptr_t patch_addr, const Patches::PATCH_TYPE patch_type, const optional<string>& replace_str) {
+    std::vector<BYTE> patch_data;
 
-    DWORD oldProtect;
-    if (!VirtualProtectEx(ProcessHandle::get_handle(), reinterpret_cast<LPVOID>(patch_addr), patchData.size(), PAGE_EXECUTE_READWRITE, &oldProtect)) {
+    if (patch_type == Patches::PATCH_TYPE::CUSTOM)
+        patch_data = parse_pattern(replace_str.value());
+    else
+        patch_data.push_back((BYTE)patch_type);
+
+    DWORD old_protect;
+    if (!VirtualProtectEx(ProcessHandle::get_handle(), reinterpret_cast<LPVOID>(patch_addr), patch_data.size(), PAGE_EXECUTE_READWRITE, &old_protect)) {
         LOG::ERR("(Patch) Failed to change memory protection: 0x%d", GetLastError());
         return false;
     }
 
-    SIZE_T bytesWritten;
-    if (!WriteProcessMemory(ProcessHandle::get_handle(), reinterpret_cast<LPVOID>(patch_addr), patchData.data(), patchData.size(), &bytesWritten)) {
+    SIZE_T bytes_written;
+    if (!WriteProcessMemory(ProcessHandle::get_handle(), reinterpret_cast<LPVOID>(patch_addr), patch_data.data(), patch_data.size(), &bytes_written)) {
         LOG::ERR("(Patch) Failed to write to process memory: 0x%d", GetLastError());
-        VirtualProtectEx(ProcessHandle::get_handle(), reinterpret_cast<LPVOID>(patch_addr), patchData.size(), oldProtect, &oldProtect);
+        VirtualProtectEx(ProcessHandle::get_handle(), reinterpret_cast<LPVOID>(patch_addr), patch_data.size(), old_protect, &old_protect);
         return false;
     }
 
-    if (!VirtualProtectEx(ProcessHandle::get_handle(), reinterpret_cast<LPVOID>(patch_addr), patchData.size(), oldProtect, &oldProtect)) {
+    if (!VirtualProtectEx(ProcessHandle::get_handle(), reinterpret_cast<LPVOID>(patch_addr), patch_data.size(), old_protect, &old_protect)) {
         LOG::ERR("(Patch) Failed to restore memory protection: 0x%d", GetLastError());
         return false;
     }
