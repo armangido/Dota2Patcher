@@ -1,4 +1,5 @@
 #pragma once
+#include "../Utils/Memory.h"
 
 enum class DOTA_GameState : int {
     INVALID = -1,
@@ -28,6 +29,11 @@ public:
     DOTA_GameState game_state() const {
         const auto game_state = Memory::read_memory<int>(this + 0x74);
         return game_state.has_value() ? static_cast<DOTA_GameState>(game_state.value()) : DOTA_GameState::INVALID;
+    }
+
+    bool in_game() const {
+        auto game_state = this->game_state();
+        return game_state != DOTA_GameState::INVALID && (game_state == DOTA_GameState::PRE_GAME || game_state == DOTA_GameState::GAME_IN_PROGRESS);
     }
 };
 

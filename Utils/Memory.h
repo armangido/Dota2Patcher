@@ -57,27 +57,6 @@ public:
 	}
 
 	template<typename T, typename N>
-	static optional<T> read_memory(N address) {
-		T value{};
-		SIZE_T bytesRead;
-
-		if (!is_valid_ptr(address))
-			return nullopt;
-
-		if (!ReadProcessMemory(ProcessHandle::get_handle(), reinterpret_cast<LPCVOID>(address), &value, sizeof(T), &bytesRead)) {
-			LOG::ERR("(read_memory) Failed to read memory: 0x%X", GetLastError());
-			return nullopt;
-		}
-
-		if (bytesRead != sizeof(T)) {
-			LOG::ERR("(read_memory) Partial read at 0x%p", (void*)address);
-			return nullopt;
-		}
-
-		return value;
-	}
-
-	template<typename T, typename N>
 	static optional<T> virtual_function(N vmt, int function_index) {
 		uintptr_t address = 0;
 
@@ -97,6 +76,27 @@ public:
 			return nullopt;
 
 		return instruction_ptr;
+	}
+
+	template<typename T, typename N>
+	static optional<T> read_memory(N address) {
+		T value{};
+		SIZE_T bytesRead = 0;
+
+		if (!is_valid_ptr(address))
+			return nullopt;
+
+		if (!ReadProcessMemory(ProcessHandle::get_handle(), reinterpret_cast<LPCVOID>(address), &value, sizeof(T), &bytesRead)) {
+			LOG::ERR("(read_memory) Failed to read memory: 0x%X", GetLastError());
+			return nullopt;
+		}
+
+		if (bytesRead != sizeof(T)) {
+			LOG::ERR("(read_memory) Partial read at 0x%p", (void*)address);
+			return nullopt;
+		}
+
+		return value;
 	}
 
 	template<typename T, typename N>

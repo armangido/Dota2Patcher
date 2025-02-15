@@ -79,5 +79,14 @@
     <ClInclude Include="Utils\Utils.h">
       <Filter>Utils</Filter>
     </ClInclude>
+    <ClInclude Include="SourceSDK\C_DOTATeam.h">
+      <Filter>Headers\SourceSDK</Filter>
+    </ClInclude>
+    <ClInclude Include="SourceSDK\CBaseEntity.h">
+      <Filter>Headers\SourceSDK</Filter>
+    </ClInclude>
+    <ClInclude Include="SourceSDK\CEntityIdentity.h">
+      <Filter>Headers\SourceSDK</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

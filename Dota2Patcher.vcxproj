@@ -114,12 +114,15 @@
   <ItemGroup>
     <ClInclude Include="Dota2Patcher.h" />
     <ClInclude Include="pch.h" />
+    <ClInclude Include="SourceSDK\CBaseEntity.h" />
     <ClInclude Include="SourceSDK\CDOTACamera.h" />
     <ClInclude Include="SourceSDK\CDOTAGamerules.h" />
     <ClInclude Include="SourceSDK\CEngineClient.h" />
+    <ClInclude Include="SourceSDK\CEntityIdentity.h" />
     <ClInclude Include="SourceSDK\CGameEntitySystem.h" />
     <ClInclude Include="SourceSDK\CreateInterface.h" />
     <ClInclude Include="SourceSDK\CSource2Client.h" />
+    <ClInclude Include="SourceSDK\C_DOTATeam.h" />
     <ClInclude Include="SourceSDK\interfaces.h" />
     <ClInclude Include="SourceSDK\CSchemaSystem.h" />
     <ClInclude Include="Utils\Config.h" />

@@ -1,6 +1,5 @@
 ﻿#include "Dota2Patcher.h"
 #include "Utils/ProcessHandle.h"
-#include "Utils/Memory.h"
 #include "Utils/Config.h"
 #include "Utils/Updater.h"
 #include "SourceSDK/CDOTAGamerules.h"

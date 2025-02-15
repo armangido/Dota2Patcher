@@ -1,4 +1,5 @@
 #pragma once
+#include "../Utils/Memory.h"
 
 #define CLASS_DESCRIPTION_CONTAINERS_ARRAY_OFFSET 0x580
 #define CLASS_DESCRIPTION_CONTAINERS_ARRAY_SIZE 0x28
@@ -234,6 +235,15 @@ public:
 			return;
 
 		return dump_netvars(scope_name.value(), dump_to_file);
+	}
+
+	template<typename T>
+	optional<uintptr_t> get_netvar(T addr, const string& class_name, const string& netvar_name) const {
+		if (auto it_class = g_netvars.find(class_name); it_class != g_netvars.end()) {
+			if (auto it_var = it_class->second.find(netvar_name); it_var != it_class->second.end())
+				return reinterpret_cast<uintptr_t>(addr) + it_var->second;
+		}
+		return nullopt;
 	}
 
 	static inline std::unordered_map<std::string, std::unordered_map<std::string, int32_t>> g_netvars;
