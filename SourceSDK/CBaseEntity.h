@@ -1,9 +1,6 @@
 #pragma once
 #include "interfaces.h"
 
-constexpr int HANDLE_INDEX_MASK = 0x1FFF; // 13 bit index;
-constexpr int HANDLE_SERIAL_SHIFT = 13;   // 14+ bit == serial number
-
 class CBaseEntity {
 public:
 	CEntityIdentity* identity() const {

@@ -6,6 +6,13 @@
 class CEntityIdentity;
 //
 
+constexpr int HANDLE_INDEX_MASK = 0x1FFF; // 13 bit index;
+constexpr int HANDLE_SERIAL_SHIFT = 13;   // 14+ bit == serial number
+constexpr int MAX_ENTITIES_IN_LIST = 512;
+constexpr int MAX_ENTITY_LISTS = 64;
+constexpr int MAX_TOTAL_ENTITIES = MAX_ENTITIES_IN_LIST * MAX_ENTITY_LISTS;
+constexpr int ENTITY_IDENTITY_SIZE = 0x78;
+
 class SchemaName {
 public:
 	optional<string> name() const {
@@ -27,11 +34,6 @@ public:
 	}
 };
 
-#define MAX_ENTITIES_IN_LIST 512
-#define MAX_ENTITY_LISTS 64
-#define MAX_TOTAL_ENTITIES MAX_ENTITIES_IN_LIST * MAX_ENTITY_LISTS
-#define ENTITY_IDENTITY_SIZE 0x78
-
 class CEntityIdentities {
 public:
 	CEntityIdentity m_pIdentities[MAX_ENTITIES_IN_LIST];
@@ -51,7 +53,7 @@ public:
 		dump_file.open("C:\\entity_dump.txt");
 		int ents_count = 0;
 
-		auto ident = this->get_first_identity();
+		auto ident = this->first_identity();
 		if (!ident)
 			return;
 
@@ -84,7 +86,7 @@ public:
 	}
 
 	optional<CBaseEntity*> find_by_name(NAME_TYPE name_type, string name_to_find) const {
-		auto ident = this->get_first_identity();
+		auto ident = this->first_identity();
 		if (!ident)
 			return nullopt;
 
@@ -131,7 +133,7 @@ public:
 	std::vector<CBaseEntity*> find_vector_by_name(NAME_TYPE name_type, string name_to_find) const {
 		std::vector<CBaseEntity*> found;
 
-		auto ident = this->get_first_identity();
+		auto ident = this->first_identity();
 		if (!ident)
 			return found;
 
@@ -175,22 +177,23 @@ public:
 		return found;
 	}
 
-
-	CEntityIdentity* get_first_identity() const {
-		return Memory::read_memory<CEntityIdentity*>(this + 0x210).value_or(nullptr);
-	}
-
-	CEntityIdentity* get_base_entity(size_t index) const {
-		const auto chunk = get_identity_chunk();
-		if (!chunk)
-			return nullptr;
-
+	CEntityIdentity* find_by_index(uint32_t index) const {
+		const auto chunk = identity_chunk();
 		uintptr_t identityPtr = reinterpret_cast<uintptr_t>(chunk) + (index % MAX_ENTITIES_IN_LIST) * ENTITY_IDENTITY_SIZE;
 
 		return reinterpret_cast<CEntityIdentity*>(identityPtr);
 	}
 
-	CEntityIdentities* get_identity_chunk() const {
+	CEntityIdentity* find_by_handle(uint32_t handle) const {
+		uint32_t index = handle & HANDLE_INDEX_MASK;
+		return find_by_index(index);
+	}
+
+	CEntityIdentities* identity_chunk() const {
 		return Memory::read_memory<CEntityIdentities*>(this + 0x10).value_or(nullptr);
+	}
+
+	CEntityIdentity* first_identity() const {
+		return Memory::read_memory<CEntityIdentity*>(this + 0x210).value_or(nullptr);
 	}
 };
