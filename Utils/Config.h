@@ -57,11 +57,11 @@ public:
         void* variable;
     };
 
-    static inline int camera_distance = 1500;
+    static inline int camera_distance = 1200;
     static inline int fow_amount = 70;
-    static inline bool sv_cheats = true;
-    static inline bool fog_enabled = true;
-    static inline bool set_rendering_enabled = true;
+    static inline bool sv_cheats = false;
+    static inline bool fog_enabled = false;
+    static inline bool set_rendering_enabled = false;
     static inline bool allow_rc_update = false;
 
     static inline std::vector<ConfigEntry> config_entries = {
@@ -74,7 +74,7 @@ public:
     };
 
     static void ask_for_settings() {
-        camera_distance = ask_for_int("[~] Enter camera distance: ");
+        camera_distance = ask_for_int("[~] Enter camera distance [default is 1200]: ", 1200, 1500);
         fow_amount = ask_for_int("[~] Enter FOW amount [default is 70]: ");
         sv_cheats = ask_for_bool("[~] Unlock sv_cheats? [y/n or 1/0]: ");
         fog_enabled = ask_for_bool("[~] Disable fog? [y/n or 1/0]: ");
@@ -110,7 +110,7 @@ public:
     }
 
 private:
-    static int ask_for_int(const string& prompt) {
+    static int ask_for_int(const string& prompt, const optional<int> min_value = nullopt, const optional<int> max_value = nullopt) {
         int value;
         while (true) {
             cout << prompt;
@@ -119,6 +119,15 @@ private:
 
             try {
                 value = std::stoi(input);
+
+                if (!min_value.has_value() || !max_value.has_value())
+                    break;
+
+                if (value < min_value.value() || value > max_value.value()) {
+                    LOG::ERR("Input must be between %s and %s", std::to_string(min_value.value()).c_str(),  std::to_string(max_value.value()).c_str());
+                    continue;
+                }
+
                 break;
             }
             catch (...) {
