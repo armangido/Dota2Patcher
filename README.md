@@ -15,6 +15,11 @@
 	* Patcher will close if no errors occurred
 * That's all!
 
+### 🧾 Documentation:  
+
+Developers can look at [documentation](https://wolf49406.github.io/Dota2Patcher/) (work in progress)  
+Разработчики могут посмотреть [документацию](https://wolf49406.github.io/Dota2Patcher/) (дополняется)  
+
 ## ❗ Features:
 
 ### ✨ New: Camera distance patch without ConVars
@@ -60,5 +65,5 @@ Allows you to use any cheat-protected commands in multiplayer (ex: `dota_camera_
 * Just copy raw list and past to console
 
 ```
-fog_enable 0; fow_client_nofiltering 1; dota_camera_distance 1500; r_farz 3000;
+fog_enable 0; dota_camera_distance 1500; r_farz 3000; fow_client_nofiltering 1;
 ```
