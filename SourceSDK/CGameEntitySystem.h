@@ -85,7 +85,7 @@ public:
 		LOG::INFO("dump_entities: done. Total: %d", ents_count);
 	}
 
-	optional<CBaseEntity*> find_by_name(NAME_TYPE name_type, string name_to_find) const {
+	optional<CBaseEntity*> find_by_name(const NAME_TYPE& name_type, const string& name_to_find) const {
 		auto ident = this->first_identity();
 		if (!ident)
 			return nullopt;
@@ -130,7 +130,7 @@ public:
 		return nullopt;
 	}
 
-	std::vector<CBaseEntity*> find_vector_by_name(NAME_TYPE name_type, string name_to_find) const {
+	std::vector<CBaseEntity*> find_vector_by_name(const NAME_TYPE& name_type, const string& name_to_find) const {
 		std::vector<CBaseEntity*> found;
 
 		auto ident = this->first_identity();
@@ -177,14 +177,14 @@ public:
 		return found;
 	}
 
-	CEntityIdentity* find_by_index(uint32_t index) const {
+	CEntityIdentity* find_by_index(const uint32_t index) const {
 		const auto chunk = identity_chunk();
 		uintptr_t identityPtr = reinterpret_cast<uintptr_t>(chunk) + (index % MAX_ENTITIES_IN_LIST) * ENTITY_IDENTITY_SIZE;
 
 		return reinterpret_cast<CEntityIdentity*>(identityPtr);
 	}
 
-	CEntityIdentity* find_by_handle(uint32_t handle) const {
+	CEntityIdentity* find_by_handle(const uint32_t handle) const {
 		uint32_t index = handle & HANDLE_INDEX_MASK;
 		return find_by_index(index);
 	}

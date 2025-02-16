@@ -16,12 +16,12 @@ public:
 		HMODULE hmodule;
 	};
 
-	static bool load_modules(DWORD process_ID);
-	static optional<uintptr_t> pattern_scan(const string target_module, const string target_pattern);
-	static bool patch(const uintptr_t patch_addr, const Patches::PATCH_TYPE patch_type, const optional<string>& replace_str = std::nullopt);
+	static bool load_modules(const DWORD process_ID);
+	static optional<uintptr_t> pattern_scan(const string& target_module, const string& target_pattern);
+	static bool patch(const uintptr_t& patch_addr, const Patches::PATCH_TYPE patch_type, const optional<string>& replace_str = nullopt);
 
 	template<typename T, typename N>
-	static optional<T> absolute_address(N instruction_ptr, ASMType instr_type = ASMType::LEA) {
+	static optional<T> absolute_address(const N& instruction_ptr, const ASMType instr_type = ASMType::LEA) {
 		uintptr_t address = 0;
 
 		if constexpr (std::is_pointer_v<N>)
@@ -57,7 +57,7 @@ public:
 	}
 
 	template<typename T, typename N>
-	static optional<T> virtual_function(N vmt, int function_index) {
+	static optional<T> virtual_function(const N& vmt, const int function_index) {
 		uintptr_t address = 0;
 
 		if constexpr (std::is_pointer_v<N>)
@@ -79,7 +79,7 @@ public:
 	}
 
 	template<typename T, typename N>
-	static optional<T> read_memory(N address) {
+	static optional<T> read_memory(const N& address) {
 		T value{};
 		SIZE_T bytesRead = 0;
 
@@ -100,7 +100,7 @@ public:
 	}
 
 	template<typename T, typename N>
-	static bool write_memory(N address, const T& value) {
+	static bool write_memory(const N& address, const T& value) {
 		SIZE_T bytesWritten;
 		if (!WriteProcessMemory(ProcessHandle::get_handle(), reinterpret_cast<LPVOID>(address), &value, sizeof(T), &bytesWritten)) {
 			LOG::ERR("(write_memory) Failed to write memory at 0x%p: 0x%X", (void*)address, GetLastError());
@@ -116,7 +116,7 @@ public:
 	}
 
 	template<typename T>
-	static optional <string> read_string(T address, size_t max_length = 64) {
+	static optional <string> read_string(const T& address, const size_t max_length = 64) {
 		std::vector<char> buffer(max_length, 0);
 		SIZE_T bytesRead;
 
@@ -127,7 +127,7 @@ public:
 	}
 
 	template<typename T>
-	static bool is_valid_ptr(T ptr) {
+	static bool is_valid_ptr(const T& ptr) {
 		MEMORY_BASIC_INFORMATION mbi{};
 
 		if (!VirtualQueryEx(ProcessHandle::get_handle(), reinterpret_cast<LPCVOID>(ptr), &mbi, sizeof(mbi)))
@@ -141,7 +141,7 @@ public:
 	}
 
 	template<typename T>
-	static int count_vms(T vmt) {
+	static int count_vms(const T& vmt) {
 		int count = 1;
 
 		while (true) {

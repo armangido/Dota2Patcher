@@ -29,7 +29,7 @@ public:
 		int known_vfuncs;
 	};
 
-	static optional<Interface*> get_first_interface(string module_name) {
+	static optional<Interface*> get_first_interface(const string& module_name) {
 		const auto CreateInterfaceFn = Memory::pattern_scan(module_name, Patches::Patterns::CreateInterface);
 		if (!CreateInterfaceFn) {
 			LOG::CRITICAL("Can't find [%s] CreateInterface pattern!", module_name.c_str());

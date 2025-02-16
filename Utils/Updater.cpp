@@ -5,12 +5,12 @@
 #include "Config.h"
 using json = nlohmann::json;
 
-static size_t curl_callback(void* contents, size_t size, size_t nmemb, void* userp) {
+static size_t curl_callback(void* contents, const size_t size, const size_t nmemb, const void* userp) {
     ((string*)userp)->append((char*)contents, size * nmemb);
     return size * nmemb;
 }
 
-static void open_url(string url) {
+static void open_url(const string& url) {
     if (ShellExecuteW(0, L"open", Utils::string_to_wstring(url).c_str(), 0, 0, SW_SHOWNORMAL) <= (HINSTANCE)32)
         LOG::ERR("Failed to open the browser. Please visit %s", url.c_str());
 }

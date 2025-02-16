@@ -22,7 +22,7 @@ static std::vector<BYTE> parse_pattern(const std::string& pattern) {
     return parsed_pattern;
 }
 
-optional<uintptr_t> Memory::pattern_scan(const string target_module, const string target_pattern) {
+optional<uintptr_t> Memory::pattern_scan(const string& target_module, const string& target_pattern) {
     auto* buffer = new unsigned char[Memory::loaded_modules[target_module].region_size];
     SIZE_T bytesRead;
 
@@ -70,7 +70,7 @@ optional<uintptr_t> Memory::pattern_scan(const string target_module, const strin
     return nullopt;
 }
 
-bool Memory::load_modules(DWORD process_ID) {
+bool Memory::load_modules(const DWORD process_ID) {
     const char* Modules[] {
         "client.dll",
         "engine2.dll",
@@ -121,7 +121,7 @@ bool Memory::load_modules(DWORD process_ID) {
     return false;
 }
 
-bool Memory::patch(const uintptr_t patch_addr, const Patches::PATCH_TYPE patch_type, const optional<string>& replace_str) {
+bool Memory::patch(const uintptr_t& patch_addr, const Patches::PATCH_TYPE patch_type, const optional<string>& replace_str) {
     std::vector<BYTE> patch_data;
 
     if (patch_type == Patches::PATCH_TYPE::CUSTOM)

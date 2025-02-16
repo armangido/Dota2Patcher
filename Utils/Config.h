@@ -11,7 +11,7 @@ public:
         return true;
     }
 
-    static void set(const string& valueName, int value) {
+    static void set(const string& valueName, const int value) {
         Write(valueName, value);
     }
 

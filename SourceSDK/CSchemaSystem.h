@@ -1,11 +1,11 @@
 #pragma once
 #include "../Utils/Memory.h"
 
-#define CLASS_DESCRIPTION_CONTAINERS_ARRAY_OFFSET 0x580
-#define CLASS_DESCRIPTION_CONTAINERS_ARRAY_SIZE 0x28
-#define CLASS_DESCRIPTION_CONTAINERS_ARRAY_MAX_INDEX 256
-#define CLASS_DESCRIPTION_CONTAINER_SIZE 0x20
-#define SCHEMA_CLASS_FIELD_DATA_SIZE 0x20
+constexpr size_t CLASS_DESCRIPTION_CONTAINERS_ARRAY_OFFSET = 0x580;
+constexpr size_t CLASS_DESCRIPTION_CONTAINERS_ARRAY_SIZE = 0x28;
+constexpr size_t CLASS_DESCRIPTION_CONTAINERS_ARRAY_MAX_INDEX = 256;
+constexpr size_t CLASS_DESCRIPTION_CONTAINER_SIZE = 0x20;
+constexpr size_t SCHEMA_CLASS_FIELD_DATA_SIZE = 0x20;
 
 class CSchemaType_Builtin {
 public:
@@ -59,7 +59,7 @@ public:
 		return Memory::read_memory<uint32_t>(this + 0x1C);
 	}
 
-	optional <SchemaClassFieldData_t*> members_description(size_t index) const { // empty if members_size() == 0, go to parent_info
+	optional <SchemaClassFieldData_t*> members_description(const size_t index) const { // empty if members_size() == 0, go to parent_info
 		const auto schema_class_field_data_base = Memory::read_memory<uintptr_t>(this + 0x28);
 		if (!schema_class_field_data_base || schema_class_field_data_base.value_or(0) == 0)
 			return nullptr;
@@ -78,7 +78,7 @@ public:
 
 class ClassDescription_Container {
 public:
-	optional <ClassDescription*> class_description(size_t index) const {
+	optional <ClassDescription*> class_description(const size_t index) const {
 		auto class_description_ptr = reinterpret_cast<uintptr_t>(this) + CLASS_DESCRIPTION_CONTAINER_SIZE * index;
 		return Memory::is_valid_ptr(class_description_ptr) ? Memory::read_memory<ClassDescription*>(class_description_ptr + 0x10) : nullopt;
 	}
@@ -90,7 +90,7 @@ public:
 		return Memory::read_string(this + 0x8);
 	}
 
-	optional <ClassDescription_Container*> class_description_container(size_t index) const {
+	optional <ClassDescription_Container*> class_description_container(const size_t index) const {
 		if (index > CLASS_DESCRIPTION_CONTAINERS_ARRAY_MAX_INDEX)
 			return nullopt;
 
@@ -109,7 +109,7 @@ public:
 
 class CSchemaSystem {
 public:
-	optional <CSchemaSystemTypeScope*> type_scope(string scope_name) const {
+	optional <CSchemaSystemTypeScope*> type_scope(const string& scope_name) const {
 		const auto scopes_list = Memory::read_memory<uintptr_t>(this + 0x190);
 		if (!scopes_list)
 			return nullopt;
@@ -129,7 +129,7 @@ public:
 		return nullopt;
 	}
 
-	optional <CSchemaSystemTypeScope*> type_scope(size_t scope_index) const {
+	optional <CSchemaSystemTypeScope*> type_scope(const size_t scope_index) const {
 		if (scope_index > 19)
 			return nullopt;
 
@@ -144,7 +144,7 @@ public:
 		return current_scope;
 	}
 
-	std::stringstream iterate_netvars(string class_name, ClassDescription* class_description, bool dump_to_file) const {
+	std::stringstream iterate_netvars(const string& class_name, const ClassDescription* class_description, bool dump_to_file) const {
 		std::stringstream dump_content;
 
 		for (size_t i = 0; auto members_description = class_description->members_description(i); ++i) {
@@ -165,7 +165,7 @@ public:
 		return dump_content;
 	}
 
-	void dump_netvars(string scope_name, bool dump_to_file, const std::vector<string>& class_filter = {}) const {
+	void dump_netvars(const string& scope_name, const bool dump_to_file, const std::vector<string>& class_filter = {}) const {
 		const auto scope = this->type_scope(scope_name);
 		if (!scope)
 			return;
@@ -233,7 +233,7 @@ public:
 		}
 	}
 
-	void dump_netvars(size_t scope_index, bool dump_to_file, const std::vector<string>& class_filter = {}) const {
+	void dump_netvars(const size_t scope_index, const bool dump_to_file, const std::vector<string>& class_filter = {}) const {
 		const auto scope = this->type_scope(scope_index);
 		if (!scope)
 			return;
@@ -246,7 +246,7 @@ public:
 	}
 
 	template<typename T>
-	optional<uintptr_t> get_netvar(T addr, const string& class_name, const string& netvar_name) const {
+	optional<uintptr_t> get_netvar(const T& addr, const string& class_name, const string& netvar_name) const {
 		if (auto it_class = g_netvars.find(class_name); it_class != g_netvars.end()) {
 			if (auto it_var = it_class->second.find(netvar_name); it_var != it_class->second.end())
 				return reinterpret_cast<uintptr_t>(addr) + it_var->second;

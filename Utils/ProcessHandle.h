@@ -28,7 +28,7 @@ public:
         return PID;
     }
 
-    static void open_process_handle(DWORD processID, DWORD accessRights) {
+    static void open_process_handle(const DWORD processID, const DWORD accessRights) {
         if (hProcess != NULL)
             CloseHandle(hProcess);
 
