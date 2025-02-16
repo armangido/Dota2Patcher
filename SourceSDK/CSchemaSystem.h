@@ -62,11 +62,11 @@ public:
 	optional <SchemaClassFieldData_t*> members_description(const size_t index) const { // empty if members_size() == 0, go to parent_info
 		const auto schema_class_field_data_base = Memory::read_memory<uintptr_t>(this + 0x28);
 		if (!schema_class_field_data_base || schema_class_field_data_base.value_or(0) == 0)
-			return nullptr;
+			return nullopt;
 
 		const auto schema_class_field_data = schema_class_field_data_base.value() + SCHEMA_CLASS_FIELD_DATA_SIZE * index ;
 		if (!Memory::is_valid_ptr(schema_class_field_data))
-			return nullptr;
+			return nullopt;
 
 		return reinterpret_cast<SchemaClassFieldData_t*>(schema_class_field_data);
 	}
