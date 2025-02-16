@@ -6,7 +6,7 @@
 class CEntityIdentity;
 //
 
-constexpr int HANDLE_INDEX_MASK = 0x1FFF; // 13 bit index;
+constexpr int HANDLE_INDEX_MASK = 0x1FFF; // 13 bit index
 constexpr int HANDLE_SERIAL_SHIFT = 13;   // 14+ bit == serial number
 constexpr int MAX_ENTITIES_IN_LIST = 512;
 constexpr int MAX_ENTITY_LISTS = 64;

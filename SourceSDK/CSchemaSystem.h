@@ -165,13 +165,13 @@ public:
 		return dump_content;
 	}
 
-	void dump_netvars(string scope_name, bool dump_to_file) const {
+	void dump_netvars(string scope_name, bool dump_to_file, const std::vector<string>& class_filter = {}) const {
 		const auto scope = this->type_scope(scope_name);
 		if (!scope)
 			return;
 
 		if (dump_to_file)
-			std::filesystem::create_directories("C:\\netvars\\" + scope_name);
+			std::filesystem::create_directories("C:\\netvars\\");
 
 		std::unordered_map<string, std::stringstream> class_dumps;
 		std::unordered_set<string> processed_classes;
@@ -186,7 +186,7 @@ public:
 			auto class_description = class_description_container.value()->class_description(class_description_index);
 			while (class_description) {
 				const auto class_name = class_description.value()->class_name();
-				if (!class_name) {
+				if (!class_name || (!class_filter.empty() && std::find(class_filter.begin(), class_filter.end(), class_name.value()) == class_filter.end())) {
 					class_description_index++;
 					class_description = class_description_container.value()->class_description(class_description_index);
 					continue;
@@ -198,34 +198,42 @@ public:
 					continue;
 				}
 
-				processed_classes.insert(class_name.value());
+				std::stringstream dump_content;
+				auto current_class = class_description.value();
+				std::vector<std::pair<string, ClassDescription*>> class_hierarchy;
+				while (current_class) {
+					const auto current_class_name = current_class->class_name();
+					if (!current_class_name)
+						break;
+					class_hierarchy.emplace_back(current_class_name.value(), current_class);
+					current_class = current_class->parent_info() ? current_class->parent_info().value()->parent() : nullptr;
+				}
 
-				std::stringstream dump_content = iterate_netvars(class_name.value(), class_description.value(), dump_to_file);
+				for (const auto& [name, desc] : class_hierarchy) {
+					dump_content << "[" << name << "] -> [" << std::hex << desc << "]\n";
+					dump_content << iterate_netvars(name, desc, dump_to_file).rdbuf();
+					dump_content << "\n";
+				}
+
+				processed_classes.insert(class_name.value());
 				class_dumps[class_name.value()] = std::move(dump_content);
 
-				if (dump_to_file && class_dumps[class_name.value()].tellp() != std::streampos(0)) {
-					cout << "[" << container_index << " / 255] " << class_name.value() << " -> [" << (void*)class_description.value() << "]\n";
-
-					string filename = "C:\\netvars\\" + scope_name + "\\" + class_name.value() + ".txt";
+				if (dump_to_file && class_dumps[class_name.value()].tellp() != std::streampos(0) && class_dumps[class_name.value()].str().find("|") != std::string::npos) {
+					string filename = "C:\\netvars\\" + class_name.value() + ".txt";
 					std::ofstream dump_file(filename);
 					dump_file << class_dumps[class_name.value()].rdbuf();
 					dump_file.close();
 				}
 
-				const auto parent_info = class_description.value()->parent_info();
-				if (parent_info)
-					class_description = parent_info.value()->parent();
-				else {
-					class_description_index++;
-					class_description = class_description_container.value()->class_description(class_description_index);
-				}
+				class_description_index++;
+				class_description = class_description_container.value()->class_description(class_description_index);
 			}
 
 			container_index++;
 		}
 	}
 
-	void dump_netvars(size_t scope_index, bool dump_to_file) const {
+	void dump_netvars(size_t scope_index, bool dump_to_file, const std::vector<string>& class_filter = {}) const {
 		const auto scope = this->type_scope(scope_index);
 		if (!scope)
 			return;
@@ -234,7 +242,7 @@ public:
 		if (!scope_name)
 			return;
 
-		return dump_netvars(scope_name.value(), dump_to_file);
+		return dump_netvars(scope_name.value(), dump_to_file, class_filter);
 	}
 
 	template<typename T>
