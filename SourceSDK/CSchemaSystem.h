@@ -158,7 +158,7 @@ public:
 			if (netvar_name && offset.value_or(0) != 0) {
 				g_netvars[class_name][netvar_name.value()] = offset.value();
 				if (dump_to_file)
-					dump_content << netvar_name.value() << " | " << std::hex << offset.value() << " | " << m_type.value_or("unknow") << " | [" << (void*)members_description.value() << "]\n";
+					dump_content << netvar_name.value() << " | " << std::hex << offset.value() << " | " << m_type.value_or("unknow") << "\n";
 			}
 		}
 
@@ -210,7 +210,7 @@ public:
 				}
 
 				for (const auto& [name, desc] : class_hierarchy) {
-					dump_content << "[" << name << "] -> [" << std::hex << desc << "]\n";
+					dump_content << "[" << name << "]\n";
 					dump_content << iterate_netvars(name, desc, dump_to_file).rdbuf();
 					dump_content << "\n";
 				}
@@ -218,7 +218,7 @@ public:
 				processed_classes.insert(class_name.value());
 				class_dumps[class_name.value()] = std::move(dump_content);
 
-				if (dump_to_file && class_dumps[class_name.value()].tellp() != std::streampos(0) && class_dumps[class_name.value()].str().find("|") != std::string::npos) {
+				if (dump_to_file && class_dumps[class_name.value()].tellp() != std::streampos(0) && class_dumps[class_name.value()].str().find("|") != string::npos) {
 					string filename = "C:\\netvars\\" + class_name.value() + ".txt";
 					std::ofstream dump_file(filename);
 					dump_file << class_dumps[class_name.value()].rdbuf();
