@@ -100,8 +100,6 @@ public:
 			return nullopt;
 
 		const auto container = Memory::read_memory<ClassDescription_Container*>(container_ptr + 0x18);
-		if (!container)
-			return nullopt;
 
 		return container;
 	}
