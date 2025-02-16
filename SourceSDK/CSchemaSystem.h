@@ -136,7 +136,7 @@ public:
 		return Memory::read_memory<CSchemaSystemTypeScope*>(scopes_list.value() + scope_index * 8);
 	}
 
-	std::stringstream iterate_netvars(const string& class_name, const ClassDescription* class_description, bool dump_to_file) const {
+	std::stringstream iterate_netvars(const string& class_name, const ClassDescription* class_description, const bool dump_to_file) const {
 		std::stringstream dump_content;
 
 		for (size_t i = 0; auto members_description = class_description->members_description(i); ++i) {
@@ -238,7 +238,7 @@ public:
 	}
 
 	template<typename T>
-	optional<uintptr_t> get_netvar(const T& addr, const string& class_name, const string& netvar_name) const {
+	optional <uintptr_t> get_netvar(const T& addr, const string& class_name, const string& netvar_name) const {
 		if (auto it_class = g_netvars.find(class_name); it_class != g_netvars.end()) {
 			if (auto it_var = it_class->second.find(netvar_name); it_var != it_class->second.end())
 				return reinterpret_cast<uintptr_t>(addr) + it_var->second;
