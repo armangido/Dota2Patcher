@@ -99,9 +99,7 @@ public:
 		if (!Memory::is_valid_ptr(container_ptr))
 			return nullopt;
 
-		const auto container = Memory::read_memory<ClassDescription_Container*>(container_ptr + 0x18);
-
-		return container;
+		return Memory::read_memory<ClassDescription_Container*>(container_ptr + 0x18);
 	}
 };
 
@@ -135,11 +133,7 @@ public:
 		if (!scopes_list)
 			return nullopt;
 
-		const auto current_scope = Memory::read_memory<CSchemaSystemTypeScope*>(scopes_list.value() + scope_index * 8);
-		if (!current_scope)
-			return nullopt;
-
-		return current_scope;
+		return Memory::read_memory<CSchemaSystemTypeScope*>(scopes_list.value() + scope_index * 8);
 	}
 
 	std::stringstream iterate_netvars(const string& class_name, const ClassDescription* class_description, bool dump_to_file) const {
