@@ -65,28 +65,28 @@ public:
 class ClassDescription {
 public:
 	/**
-	* Optional. Get a name of a class. Ex: C_DOTA_BaseNPC
+	* Get a name of a class. Ex: C_DOTA_BaseNPC
 	*/
 	optional <string> class_name() const {
 		const auto class_name_ptr = Memory::read_memory<uintptr_t>(this + 0x8);
 		return !class_name_ptr ? nullopt : Memory::read_string(class_name_ptr.value());
 	}
 	/**
-	* Optional. Get class size
+	* Get class size
 	*/
 	optional <uint32_t> class_size() const {
 		return Memory::read_memory<uint32_t>(this + 0x18);
 	}
 
 	/**
-	* Optional. Get a member's size. Could be 0
+	* Get a member's size. Could be 0
 	*/
 	optional <uint32_t> members_size() const {
 		return Memory::read_memory<uint32_t>(this + 0x1C);
 	}
 
 	/**
-	* Optional. Get a SchemaClassFieldData_t pointer. empty if members_size == 0. Then go to parent_info
+	* Get a SchemaClassFieldData_t pointer. empty if members_size == 0. Then go to parent_info
 	*/
 	optional <SchemaClassFieldData_t*> members_description(const size_t index) const {
 		const auto schema_class_field_data_base = Memory::read_memory<uintptr_t>(this + 0x28);
@@ -101,7 +101,7 @@ public:
 	}
 
 	/**
-	* Optional. Get a pointer to a parent class. Ex: C_DOTAPlayerController -> CBasePlayerController -> C_BaseEntity -> CEntityInstance
+	* Get a pointer to a parent class. Ex: C_DOTAPlayerController -> CBasePlayerController -> C_BaseEntity -> CEntityInstance
 	*/
 	optional <SchemaParentInfo*> parent_info() const {
 		return Memory::read_memory<SchemaParentInfo*>(this + 0x38);
@@ -111,7 +111,7 @@ public:
 class ClassDescription_Container {
 public:
 	/**
-	* Optional. Get a ClassDescription pointer
+	* Get a ClassDescription pointer
 	*/
 	optional <ClassDescription*> class_description(const size_t index) const {
 		auto class_description_ptr = reinterpret_cast<uintptr_t>(this) + CLASS_DESCRIPTION_CONTAINER_SIZE * index;
@@ -122,14 +122,14 @@ public:
 class CSchemaSystemTypeScope {
 public:
 	/**
-	* Optional. Get a name of a scope. Ex: client.dll
+	* Get a name of a scope. Ex: client.dll
 	*/
 	optional <string> scope_name() const {
 		return Memory::read_string(this + 0x8);
 	}
 
 	/**
-	* Optional. Get a ClassDescription_Container pointer
+	* Get a ClassDescription_Container pointer
 	* 
 	* @param index Index of a ClassDescription_Container in a CSchemaSystemTypeScope class
 	*/
@@ -196,7 +196,7 @@ public:
 	* 
 	* @param class_name Name of a class. Ex: C_DOTA_BaseNPC
 	* @param class_description Pointer to a ClassDescription* class
-	* @param dump_to_file (Optional) Dump NetVars to files or not
+	* @param dump_to_file Dump NetVars to files or not
 	* @return A stringstream with a list of NetVars
 	*/
 	std::stringstream iterate_netvars(const string& class_name, const ClassDescription* class_description, const bool dump_to_file) const {
@@ -225,7 +225,7 @@ public:
 	*
 	* @param scope_name Name of a scope. Ex: client.dll
 	* @param dump_to_file Dump NetVars to files or not
-	* @param class_filter (Optional) Filter NetVars search with std::vector<string>. Ex: { "C_DOTA_BaseNPC", "C_DOTA_BaseNPC_Hero" }
+	* @param class_filter Filter NetVars search with std::vector<string>. Ex: { "C_DOTA_BaseNPC", "C_DOTA_BaseNPC_Hero" }
 	*/
 	void dump_netvars(const string& scope_name, const bool dump_to_file, const std::vector<string>& class_filter = {}) const {
 		const auto scope = this->type_scope(scope_name);
@@ -318,7 +318,7 @@ public:
 	* @param addr Pointer to a class instance (this)
 	* @param class_name Name of the class. Ex: C_DOTA_BaseNPC
 	* @param netvar_name Name of the netvar. Ex: m_iszUnitName
-	* @return (Optional) uintptr_t address of this + offset
+	* @return uintptr_t address of this + offset
 	*/
 	template<typename T>
 	optional <uintptr_t> get_netvar(const T& addr, const string& class_name, const string& netvar_name) const {
