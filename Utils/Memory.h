@@ -117,6 +117,16 @@ public:
 	}
 
 	template<typename T>
+	static void write_string(const T& address, const string& text) {
+		size_t text_size = strlen(text.c_str()) + 1;
+		HANDLE hproc = ProcessHandle::get_handle();
+
+		VirtualAllocEx(hproc, nullptr, text_size, MEM_COMMIT | MEM_RESERVE, PAGE_READWRITE);
+		WriteProcessMemory(hproc, reinterpret_cast<LPVOID>(address), text.c_str(), text_size, nullptr);
+		VirtualFreeEx(hproc, reinterpret_cast<LPVOID>(address), 0, MEM_RELEASE);
+	}
+
+	template<typename T>
 	static optional <string> read_string(const T& address, const size_t max_length = 64) {
 		std::vector<char> buffer(max_length, 0);
 		SIZE_T bytesRead;

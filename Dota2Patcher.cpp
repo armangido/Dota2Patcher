@@ -230,6 +230,35 @@ int main() {
 			});
 	}
 
+	// C_DOTA_BaseNPC_Additive vfunc with #STR: "dota_portrait_unit_stats_changed", "dota_force_portrait_update"
+	// push		rbx
+	// push		rdi
+	// push		r14
+	// sub		rsp, 40h
+	// mov		[rsp+58h+arg_10], rsi
+	// mov		rdi, rcx
+	// mov		esi, edx
+	// call		sub_180268560
+	// call		sub_181222C90
+	// cmp		eax, 1 <<<< 1 -> 2
+	// jbe		short loc_181520859
+	// mov		ecx, eax
+	// mov		eax, 1
+	// shl		eax, cl
+	// cmp		[rdi+0C94h], eax
+	// jz		short loc_181520859
+	// mov		[rdi+0C94h], eax <<<< m_iTaggedAsVisibleByTeam
+	if (ConfigManager::visible_by_enemy) {
+		Patches::add_patch({
+			"visible_by_enemy",
+			"client.dll",
+			Patches::Patterns::visible_by_enemy,
+			Patches::PATCH_TYPE::CUSTOM,
+			2,
+			"02"
+			});
+	}
+
 	for (const auto& patch : Patches::g_patches) {
 		const auto patch_addr = Memory::pattern_scan(patch.module, patch.pattern);
 		if (!patch_addr) {
@@ -239,7 +268,7 @@ int main() {
 
 		LOG::INFO("\"%s\" patch addr -> [%p]", patch.name.c_str(), (void*)patch_addr.value());
 
-		if (!Memory::patch(patch_addr.value() + patch.offset, patch.patch_type)) {
+		if (!Memory::patch(patch_addr.value() + patch.offset, patch.patch_type, patch.custom_patch_bytes)) {
 			LOG::ERR("Failed to patch \"%s\"!", patch.name.c_str());
 			continue;
 		}
@@ -247,16 +276,12 @@ int main() {
 		LOG::INFO("\"%s\" patched successfully", patch.name.c_str());
 	}
 
-	// LOCAL PLAYER AND HERO
-	printf("\n");
-
-	LOG::DEBUG("Trying to find Local Player...");
-	while (!Hacks::find_local_player())
-		std::this_thread::sleep_for(std::chrono::seconds(1));
-
-	LOG::DEBUG("Trying to find Local Hero...");
-	while (!Hacks::find_local_hero()) 
-		std::this_thread::sleep_for(std::chrono::seconds(1));
+	// WAITING FOR A GAME
+	if (Hacks::hacks_enabled()) {
+		printf("\n");
+		LOG::DEBUG("Waiting for a Game to start...");
+		Hacks::start_worker();
+	}
 
 	printf("\n");
 	LOG::INFO("Done! Will close in 5 seconds...");

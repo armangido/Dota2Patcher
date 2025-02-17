@@ -10,11 +10,6 @@ public:
 		return nullptr;
 	}
 
-	optional <string> unit_name() const { // npc_dota_hero_antimage
-		const auto ptr = vmt.schema_system->get_netvar(this, "C_DOTA_BaseNPC", "m_iszUnitName");
-		return !ptr ? nullopt : Memory::read_string(ptr.value());
-	}
-
 	int unit_type() const {
 		const auto ptr = vmt.schema_system->get_netvar(this, "C_DOTA_BaseNPC", "m_iUnitType");
 		return Memory::read_memory<int>(ptr.value()).value_or(-1);
@@ -22,6 +17,17 @@ public:
 
 	bool is_hero() const {
 		return this->unit_type() == 1;
+	}
+	
+	bool visible() const {
+		const auto ptr = vmt.schema_system->get_netvar(this, "C_DOTA_BaseNPC", "m_iTaggedAsVisibleByTeam");
+		const auto value = Memory::read_memory<int>(ptr.value());
+		return value.value() == 14 || value.value() == 30;
+	}
+
+	void set_custom_health_label(const string& label) {
+		const auto ptr = vmt.schema_system->get_netvar(this, "C_DOTA_BaseNPC", "m_CustomHealthLabel");
+		Memory::write_string(ptr.value(), label);
 	}
 
 	bool has_client_seen_illusion_modifier() const {
@@ -36,7 +42,7 @@ public:
 
 	bool is_illusion() const {
 		const auto ptr = vmt.schema_system->get_netvar(this, "C_DOTA_BaseNPC_Hero", "m_hReplicatingOtherHeroModel");
-		const auto result = Memory::read_memory<uint32_t>(ptr.value());
-		return result.value() != 0xFFFFFFFF;
+		const auto result = Memory::read_memory<int>(ptr.value());
+		return result.value() != -1;
 	}
 };

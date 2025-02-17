@@ -24,6 +24,7 @@ public:
 		static inline const string fog_enable = "74 ? B0 ? EB ? 32 C0 88 85";
 		static inline const string set_rendering_enabled = "0F 84 ? ? ? ? 4D 89 73";
 		static inline const string set_rendering_enabled_fix = "0F 84 ? ? ? ? 48 8B ? 48 85 ? 74 ? 48 8B ? 48 8B";
+		static inline const string visible_by_enemy = "83 F8 ? 76 ? 8B C8 B8";
 	};
 
 	enum class PATCH_TYPE {
@@ -40,6 +41,7 @@ public:
 		string pattern;
 		PATCH_TYPE patch_type;
 		int offset = 0;
+		string custom_patch_bytes;
 	};
 
 	static void add_patch(const PatchInfo& patch) {
