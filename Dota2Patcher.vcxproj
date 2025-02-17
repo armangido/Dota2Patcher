@@ -123,6 +123,7 @@
     <ClInclude Include="SourceSDK\CGameEntitySystem.h" />
     <ClInclude Include="SourceSDK\CreateInterface.h" />
     <ClInclude Include="SourceSDK\CSource2Client.h" />
+    <ClInclude Include="SourceSDK\C_DOTAPlayerController.h" />
     <ClInclude Include="SourceSDK\C_DOTATeam.h" />
     <ClInclude Include="SourceSDK\interfaces.h" />
     <ClInclude Include="SourceSDK\CSchemaSystem.h" />

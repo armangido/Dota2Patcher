@@ -17,8 +17,8 @@ public:
 		return Memory::read_memory<CSchemaClassBinding*>(this + 0x8).value_or(nullptr);
 	}
 
-	uint32_t handle() const {
-		return Memory::read_memory<uint32_t>(this + 0x10).value_or(0);
+	CHandle handle() const {
+		return Memory::read_memory<CHandle>(this + 0x10).value_or(0);
 	}
 
 	optional<string> internal_name() const { // npc_dota_hero_antimage

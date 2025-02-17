@@ -1,13 +1,12 @@
 #pragma once
 #include "../Utils/Memory.h"
 #include "CEntityIdentity.h"
+#include "CHandle.h"
 
 // Forward declaration
 class CEntityIdentity;
 //
 
-constexpr int HANDLE_INDEX_MASK = 0x1FFF; // 13 bit index
-constexpr int HANDLE_SERIAL_SHIFT = 13;   // 14+ bit == serial number
 constexpr int MAX_ENTITIES_IN_LIST = 512;
 constexpr int MAX_ENTITY_LISTS = 64;
 constexpr int MAX_TOTAL_ENTITIES = MAX_ENTITIES_IN_LIST * MAX_ENTITY_LISTS;
@@ -184,9 +183,8 @@ public:
 		return reinterpret_cast<CEntityIdentity*>(identityPtr);
 	}
 
-	CEntityIdentity* find_by_handle(const uint32_t handle) const {
-		uint32_t index = handle & HANDLE_INDEX_MASK;
-		return find_by_index(index);
+	CEntityIdentity* find_by_handle(const CHandle handle) const {
+		return find_by_index(handle.to_index());
 	}
 
 	CEntityIdentities* identity_chunk() const {

@@ -7,16 +7,6 @@ public:
 		return Memory::read_memory<CEntityIdentity*>(this + 0x10).value_or(nullptr);
 	}
 
-	int handle_to_index() const { // CHandle -> index
-		uint32_t handle = this->identity()->handle();
-		return handle & HANDLE_INDEX_MASK;
-	}
-
-	int handle_to_serial() const { // CHandle -> serial
-		uint32_t handle = this->identity()->handle();
-		return handle >> HANDLE_SERIAL_SHIFT;
-	}
-
 	optional <string> unit_name() const { // npc_dota_hero_antimage
 		const auto ptr = vmt.schema_system->get_netvar(this, "C_DOTA_BaseNPC", "m_iszUnitName");
 		return !ptr ? nullopt : Memory::read_string(ptr.value());

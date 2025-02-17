@@ -94,5 +94,8 @@
     <ClInclude Include="Hacks\Hacks.h">
       <Filter>Hacks</Filter>
     </ClInclude>
+    <ClInclude Include="SourceSDK\C_DOTAPlayerController.h">
+      <Filter>Headers\SourceSDK</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
