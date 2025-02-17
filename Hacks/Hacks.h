@@ -12,6 +12,7 @@ public:
 	static void reset();
 	static inline C_DOTAPlayerController* local_player;
 	static inline CBaseEntity* local_hero;
+	static inline int local_team;
 };
 
 class Hacks : public GameData {

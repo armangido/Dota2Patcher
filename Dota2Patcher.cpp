@@ -87,7 +87,7 @@ int main() {
 
 	LOG::DEBUG("Loading NetVars...");
 
-	std::vector<string> class_filter { "C_DOTA_BaseNPC", "C_DOTA_BaseNPC_Hero", "C_DOTAPlayerController", "C_DOTATeam" };
+	std::vector<string> class_filter { "C_DOTA_BaseNPC", "C_DOTA_BaseNPC_Hero", "C_DOTAPlayerController", "C_BaseEntity", "C_DOTATeam" };
 
 	vmt.schema_system->dump_netvars("client.dll", false, class_filter);
 	

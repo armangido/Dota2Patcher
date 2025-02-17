@@ -19,6 +19,11 @@ public:
 		return this->unit_type() == 1;
 	}
 	
+	int team_num() const {
+		const auto ptr = vmt.schema_system->get_netvar(this, "C_BaseEntity", "m_iTeamNum");
+		return Memory::read_memory<int>(ptr.value()).value_or(-1);
+	}
+
 	bool visible() const {
 		const auto ptr = vmt.schema_system->get_netvar(this, "C_DOTA_BaseNPC", "m_iTaggedAsVisibleByTeam");
 		const auto value = Memory::read_memory<int>(ptr.value());
