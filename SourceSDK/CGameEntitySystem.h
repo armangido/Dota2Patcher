@@ -1,16 +1,11 @@
 #pragma once
 #include "../Utils/Memory.h"
 #include "CEntityIdentity.h"
-#include "CHandle.h"
 
 // Forward declaration
+class CHandle;
 class CEntityIdentity;
 //
-
-constexpr int MAX_ENTITIES_IN_LIST = 512;
-constexpr int MAX_ENTITY_LISTS = 64;
-constexpr int MAX_TOTAL_ENTITIES = MAX_ENTITIES_IN_LIST * MAX_ENTITY_LISTS;
-constexpr int ENTITY_IDENTITY_SIZE = 0x78;
 
 class SchemaName {
 public:
@@ -31,11 +26,6 @@ public:
 		optional base = Memory::read_memory<SchemaName*>(this + 0x38);
 		return !base ? nullopt : base.value()->name();
 	}
-};
-
-class CEntityIdentities {
-public:
-	CEntityIdentity m_pIdentities[MAX_ENTITIES_IN_LIST];
 };
 
 class CGameEntitySystem {
@@ -66,11 +56,15 @@ public:
 			const auto class_name = schema->class_name();
 
 			dump_file
-				<< "internal_name: " << internal_name.value_or("empty") 
-				<< " | entity_name: " << entity_name.value_or("empty") 
-				<< " | binary_name: " << binary_name.value_or("empty") 
-				<< " | class_name: " << class_name.value_or("empty")
-				<< " -> [" << (void*)ident->base_entity() << "]\n";
+				<< "internal_name: " << internal_name.value_or("empty")
+				<< " | entity_name: " << entity_name.value_or("empty")
+				<< " | binary_name: " << binary_name.value_or("empty")
+				<< " | class_name: " << class_name.value_or("empty");
+
+			if (ident->handle())
+				dump_file << " | handle: " << std::hex << ident->handle().value().get() << " | index: " << ident->handle().value().to_index();
+
+			dump_file << " -> [" << (void*)ident->base_entity() << "]\n";
 
 			const auto next_ent = ident->m_pNext();
 			if (!next_ent)
@@ -176,19 +170,20 @@ public:
 		return found;
 	}
 
-	CEntityIdentity* find_by_index(const uint32_t index) const {
-		const auto chunk = identity_chunk();
-		uintptr_t identityPtr = reinterpret_cast<uintptr_t>(chunk) + (index % MAX_ENTITIES_IN_LIST) * ENTITY_IDENTITY_SIZE;
+	optional<CBaseEntity*> find_by_index(const uint32_t index) const {
+		auto ident = this->first_identity();
+		while (ident) {
+			if (ident->handle() && ident->handle().value().to_index() == index)
+				return ident->base_entity();
 
-		return reinterpret_cast<CEntityIdentity*>(identityPtr);
+			ident = ident->m_pNext().value_or(nullptr);
+		}
+
+		return nullopt;
 	}
 
-	CEntityIdentity* find_by_handle(const CHandle handle) const {
+	optional <CBaseEntity*> find_by_handle(const CHandle handle) const {
 		return find_by_index(handle.to_index());
-	}
-
-	CEntityIdentities* identity_chunk() const {
-		return Memory::read_memory<CEntityIdentities*>(this + 0x10).value_or(nullptr);
 	}
 
 	CEntityIdentity* first_identity() const {

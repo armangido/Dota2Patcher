@@ -8,24 +8,24 @@
 
 class Scanner {
 public:
-    static bool find_CGameEntitySystem();
-    static bool find_CDOTACamera();
-    static bool find_CDOTAGamerules();
-    static bool find_all();
+    static inline bool find_CGameEntitySystem();
+    static inline bool find_CDOTACamera();
+    static inline bool find_CDOTAGamerules();
+    static inline bool find_all();
 };
 
 static class dota_interfaces {
 public:
-    bool find_all() {
+    static inline bool find_all() {
         return Scanner::find_all();
     }
 
-    CEngineClient* engine;
-    CSource2Client* client;
-    CDOTAGamerules* gamerules;
-    CDOTACamera* camera;
-    CGameEntitySystem* entity_system;
-    CSchemaSystem* schema_system;
+    static inline CEngineClient* engine;
+    static inline CSource2Client* client;
+    static inline CDOTAGamerules* gamerules;
+    static inline CDOTACamera* camera;
+    static inline CGameEntitySystem* entity_system;
+    static inline CSchemaSystem* schema_system;
 } vmt;
 
 

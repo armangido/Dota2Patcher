@@ -1,10 +1,31 @@
 #pragma once
-#include "../SourceSDK/CGameEntitySystem.h"
-#include "../SourceSDK/CSchemaSystem.h"
 
-class Hacks {
+class C_DOTAPlayerController;
+class CBaseEntity;
+
+class GameData {
 public:
-	
+	static inline optional <C_DOTAPlayerController*> local_player;
+	static inline optional <CBaseEntity*> local_hero;
+
+	static inline void reset() {
+		local_player.reset();
+		local_hero.reset();
+	}
+};
+
+class Hacks : public GameData {
+public:
+	static bool local_player_found() {
+		return local_player != nullopt;
+	}
+
+	static bool local_hero_found() {
+		return local_hero != nullopt;
+	}
+
+	static bool find_local_player();
+	static bool find_local_hero();
 };
 
 //std::vector<CBaseEntity*> dota_teams = vmt.entity_system->find_vector_by_name(CGameEntitySystem::NAME_TYPE::binary_name, "C_DOTATeam");

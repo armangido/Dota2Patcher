@@ -1,5 +1,7 @@
 #pragma once
 #include "../Utils/Memory.h"
+#include "../Utils/ProcessHandle.h"
+#include <unordered_set>
 
 constexpr size_t CLASS_DESCRIPTION_CONTAINERS_ARRAY_OFFSET = 0x580;
 constexpr size_t CLASS_DESCRIPTION_CONTAINERS_ARRAY_SIZE = 0x28;

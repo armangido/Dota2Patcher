@@ -35,6 +35,9 @@
     <ClCompile Include="Utils\Updater.cpp">
       <Filter>Utils</Filter>
     </ClCompile>
+    <ClCompile Include="Hacks\Entities.cpp">
+      <Filter>Hacks</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Dota2Patcher.h">
@@ -95,6 +98,9 @@
       <Filter>Hacks</Filter>
     </ClInclude>
     <ClInclude Include="SourceSDK\C_DOTAPlayerController.h">
+      <Filter>Headers\SourceSDK</Filter>
+    </ClInclude>
+    <ClInclude Include="SourceSDK\CHandle.h">
       <Filter>Headers\SourceSDK</Filter>
     </ClInclude>
   </ItemGroup>

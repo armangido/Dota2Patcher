@@ -6,6 +6,7 @@
 #include "SourceSDK/CDOTACamera.h"
 #include "SourceSDK/CreateInterface.h"
 #include "SourceSDK/interfaces.h"
+#include "Hacks/Hacks.h"
 
 int main() {
 	bool open_settings = GetAsyncKeyState(VK_SHIFT) & 1;
@@ -245,6 +246,17 @@ int main() {
 
 		LOG::INFO("\"%s\" patched successfully", patch.name.c_str());
 	}
+
+	// LOCAL PLAYER AND HERO
+	printf("\n");
+
+	LOG::DEBUG("Trying to find Local Player...");
+	while (!Hacks::find_local_player())
+		std::this_thread::sleep_for(std::chrono::seconds(1));
+
+	LOG::DEBUG("Trying to find Local Hero...");
+	while (!Hacks::find_local_hero()) 
+		std::this_thread::sleep_for(std::chrono::seconds(1));
 
 	printf("\n");
 	LOG::INFO("Done! Will close in 5 seconds...");

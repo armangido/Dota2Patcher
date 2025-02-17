@@ -1,10 +1,13 @@
 #pragma once
 #include "interfaces.h"
 
+class CEntityIdentity;
+
 class CBaseEntity {
 public:
 	CEntityIdentity* identity() const {
 		return Memory::read_memory<CEntityIdentity*>(this + 0x10).value_or(nullptr);
+		return nullptr;
 	}
 
 	optional <string> unit_name() const { // npc_dota_hero_antimage
@@ -14,7 +17,7 @@ public:
 
 	int unit_type() const {
 		const auto ptr = vmt.schema_system->get_netvar(this, "C_DOTA_BaseNPC", "m_iUnitType");
-		return Memory::read_memory<int>(ptr).value_or(-1);
+		return Memory::read_memory<int>(ptr.value()).value_or(-1);
 	}
 
 	bool is_hero() const {

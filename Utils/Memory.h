@@ -1,6 +1,7 @@
 #pragma once
 #include <unordered_map>
 #include "..\Dota2Patcher.h"
+#include "ProcessHandle.h"
 
 class Memory {
 public:

@@ -7,11 +7,11 @@ class CHandle {
 public:
     explicit CHandle(uint32_t handle = 0) : m_handle(handle) {}
 
-    int to_index() const {
+    uint32_t to_index() const {
         return m_handle & HANDLE_INDEX_MASK;
     }
 
-    int to_serial() const {
+    uint32_t to_serial() const {
         return m_handle >> HANDLE_SERIAL_SHIFT;
     }
 

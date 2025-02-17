@@ -1,6 +1,7 @@
 #pragma once
 #include "../Utils/Memory.h"
 #include "CGameEntitySystem.h"
+#include "CHandle.h"
 
 // Forward declaration
 class CBaseEntity;
@@ -17,8 +18,8 @@ public:
 		return Memory::read_memory<CSchemaClassBinding*>(this + 0x8).value_or(nullptr);
 	}
 
-	CHandle handle() const {
-		return Memory::read_memory<CHandle>(this + 0x10).value_or(0);
+	optional <CHandle> handle() const {
+		return Memory::read_memory<CHandle>(this + 0x10);
 	}
 
 	optional<string> internal_name() const { // npc_dota_hero_antimage
