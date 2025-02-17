@@ -1,7 +1,8 @@
 #pragma once
+#include <unordered_set>
+#include <ranges>
 #include "../Utils/Memory.h"
 #include "../Utils/ProcessHandle.h"
-#include <unordered_set>
 
 constexpr size_t CLASS_DESCRIPTION_CONTAINERS_ARRAY_OFFSET = 0x580;
 constexpr size_t CLASS_DESCRIPTION_CONTAINERS_ARRAY_SIZE = 0x28;
@@ -237,7 +238,6 @@ public:
 		if (dump_to_file)
 			std::filesystem::create_directories("C:\\netvars\\");
 
-		std::unordered_map<string, std::stringstream> class_dumps;
 		std::unordered_set<string> processed_classes;
 
 		size_t container_index = 0;
@@ -256,43 +256,42 @@ public:
 					continue;
 				}
 
-				if (processed_classes.contains(class_name.value())) {
-					class_description_index++;
-					class_description = class_description_container.value()->class_description(class_description_index);
-					continue;
-				}
-
-				std::stringstream dump_content;
-				auto current_class = class_description.value();
 				std::vector<std::pair<string, ClassDescription*>> class_hierarchy;
+				auto current_class = class_description.value();
 				while (current_class) {
 					const auto current_class_name = current_class->class_name();
 					if (!current_class_name)
 						break;
-					class_hierarchy.emplace_back(current_class_name.value(), current_class);
+					class_hierarchy.insert(class_hierarchy.begin(), { current_class_name.value(), current_class });
 					current_class = current_class->parent_info() ? current_class->parent_info().value()->parent() : nullptr;
 				}
 
 				for (const auto& [name, desc] : class_hierarchy) {
+					if (processed_classes.contains(name))
+						continue;
+
+					std::stringstream dump_content;
+					dump_content << "[Hierarchy]\n";
+					for (const auto& [hier_name, _] : class_hierarchy)
+						dump_content << hier_name << " -> ";
+					dump_content.seekp(-4, std::ios_base::end);
+					dump_content << "\n\n";
+
 					dump_content << "[" << name << "]\n";
 					dump_content << iterate_netvars(name, desc, dump_to_file).rdbuf();
-					dump_content << "\n";
-				}
+					processed_classes.insert(name);
 
-				processed_classes.insert(class_name.value());
-				class_dumps[class_name.value()] = std::move(dump_content);
-
-				if (dump_to_file && class_dumps[class_name.value()].tellp() != std::streampos(0) && class_dumps[class_name.value()].str().find("|") != string::npos) {
-					string filename = "C:\\netvars\\" + class_name.value() + ".txt";
-					std::ofstream dump_file(filename);
-					dump_file << class_dumps[class_name.value()].rdbuf();
-					dump_file.close();
+					if (dump_to_file && dump_content.tellp() != std::streampos(0) && dump_content.str().find("|") != string::npos) {
+						string filename = "C:\\netvars\\" + name + ".txt";
+						std::ofstream dump_file(filename);
+						dump_file << dump_content.rdbuf();
+						dump_file.close();
+					}
 				}
 
 				class_description_index++;
 				class_description = class_description_container.value()->class_description(class_description_index);
 			}
-
 			container_index++;
 		}
 	}
