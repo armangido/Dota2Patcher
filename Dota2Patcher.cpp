@@ -34,16 +34,16 @@ int main() {
 	while ((process_ID = ProcessHandle::get_PID_by_name(L"dota2.exe")) == 0)
 		std::this_thread::sleep_for(std::chrono::seconds(1));
 
-	LOG::INFO("Dota2 PID: %d", process_ID);
+	LOG::INFO("Dota2 PID: {}", process_ID);
 
 	ProcessHandle::open_process_handle(process_ID, PROCESS_VM_READ | PROCESS_VM_WRITE | PROCESS_VM_OPERATION | PROCESS_QUERY_INFORMATION);
 	if (!ProcessHandle::is_valid_handle()) {
-		LOG::CRITICAL("Failed to open process. Error: 0x%d", ProcessHandle::get_last_error());
+		LOG::CRITICAL("Failed to open process. Error: {}", ProcessHandle::get_last_error());
 		system("pause");
 		return 0;
 	}
 
-	LOG::INFO("Dota2 process handle: %p", ProcessHandle::get_handle());
+	LOG::INFO("Dota2 process handle: {}", TO_VOID(ProcessHandle::get_handle()));
 
 	// LOADING MODULES
 	LOG::DEBUG("Waiting for a modules to load...");
@@ -96,7 +96,7 @@ int main() {
 		netvar_count += netvar_map.size();
 	}
 
-	LOG::INFO("NetVars loaded: %d", netvar_count);
+	LOG::INFO("NetVars loaded: {}", netvar_count);
 
 	// WAITING FOR A LOBBY
 	printf("\n");
@@ -262,18 +262,18 @@ int main() {
 	for (const auto& patch : Patches::g_patches) {
 		const auto patch_addr = Memory::pattern_scan(patch.module, patch.pattern);
 		if (!patch_addr) {
-			LOG::ERR("Pattern for \"%s\" not found!", patch.name.c_str());
+			LOG::ERR("Pattern for \"{}\" not found!", patch.name);
 			continue;
 		}
 
-		LOG::INFO("\"%s\" patch addr -> [%p]", patch.name.c_str(), (void*)patch_addr.value());
+		LOG::INFO("\"{}\" patch addr -> [{}]", patch.name, TO_VOID(patch_addr.value()));
 
 		if (!Memory::patch(patch_addr.value() + patch.offset, patch.patch_type, patch.custom_patch_bytes)) {
-			LOG::ERR("Failed to patch \"%s\"!", patch.name.c_str());
+			LOG::ERR("Failed to patch \"{}\"!", patch.name);
 			continue;
 		}
 
-		LOG::INFO("\"%s\" patched successfully", patch.name.c_str());
+		LOG::INFO("\"{}\" patched successfully", patch.name);
 	}
 
 	// WAITING FOR A GAME

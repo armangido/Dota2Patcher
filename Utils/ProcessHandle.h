@@ -9,7 +9,7 @@ public:
 
         HANDLE hSnap = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0);
         if (hSnap == INVALID_HANDLE_VALUE) {
-            LOG::CRITICAL("(ProcessHandle) CreateToolhelp32Snapshot error: 0x%d", GetLastError());
+            LOG::CRITICAL("(ProcessHandle) CreateToolhelp32Snapshot error: {}", GetLastError());
             return 0;
         }
 

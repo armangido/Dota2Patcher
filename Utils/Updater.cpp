@@ -12,7 +12,7 @@ static size_t curl_callback(void* contents, const size_t size, const size_t nmem
 
 static void open_url(const string& url) {
     if (ShellExecuteW(0, L"open", Utils::string_to_wstring(url).c_str(), 0, 0, SW_SHOWNORMAL) <= (HINSTANCE)32)
-        LOG::ERR("Failed to open the browser. Please visit %s", url.c_str());
+        LOG::ERR("Failed to open the browser. Please visit {}", url);
 }
 
 optional<string> Updater::web_request() {
@@ -29,7 +29,7 @@ optional<string> Updater::web_request() {
         res = curl_easy_perform(curl);
         curl_easy_cleanup(curl);
         if (res != CURLE_OK) {
-            LOG::CRITICAL("Can't check update. CURL Error: %s", curl_easy_strerror(res));
+            LOG::CRITICAL("Can't check update. CURL Error: {}", curl_easy_strerror(res));
             return nullopt;
         }
     }
@@ -65,7 +65,7 @@ SemVer Updater::get_latest_version(const std::vector<WebVer>& web_versions) {
 }
 
 bool Updater::update_required() {
-    LOG::INFO("Current version: %s", Updater::local_version.to_string().c_str());
+    LOG::INFO("Current version: {}", Updater::local_version.to_string());
 
 #ifdef _DEBUG
     return false;
@@ -89,17 +89,17 @@ bool Updater::update_required() {
         }
     }
     catch (const json::parse_error& e) {
-        LOG::CRITICAL("(Updater) JSON parse error: %s", e.what());
+        LOG::CRITICAL("(Updater) JSON parse error: {}", e.what());
         return false;
     }
     catch (const std::exception& e) {
-        LOG::CRITICAL("(Updater) Error: %s", e.what());
+        LOG::CRITICAL("(Updater) Error: {}", e.what());
         return false;
     }
 
     SemVer latest_version = Updater::get_latest_version(web_versions);
     if (Updater::local_version < latest_version) {
-        LOG::ERR("Update Required! New version: %s", latest_version.to_string().c_str());
+        LOG::ERR("Update Required! New version: {}", latest_version.to_string());
         LOG::INFO("Press Enter to continue...");
 
         system("pause");

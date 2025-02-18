@@ -37,13 +37,13 @@ public:
     static void Write(const string& valueName, const T& value) {
         HKEY hKey;
         if (RegCreateKeyExW(HKEY_CURRENT_USER, L"Software\\Dota2Patcher", 0, NULL, 0, KEY_WRITE, NULL, &hKey, NULL) != ERROR_SUCCESS) {
-            LOG::ERR("(Config) RegCreateKeyExW error [%lu] for %s", GetLastError(), valueName.c_str());
+            LOG::ERR("(Config) RegCreateKeyExW error [{}] for {}", GetLastError(), valueName);
             return;
         }
 
         int int_value = static_cast<int>(value);
         if (RegSetValueExW(hKey, std::wstring(valueName.begin(), valueName.end()).c_str(), 0, REG_DWORD, reinterpret_cast<const BYTE*>(&int_value), sizeof(int_value)) != ERROR_SUCCESS)
-            LOG::ERR("(Config) RegSetValueExW error [%lu] for %s", GetLastError(), valueName.c_str());
+            LOG::ERR("(Config) RegSetValueExW error [{}] for {}", GetLastError(), valueName);
 
         RegCloseKey(hKey);
     }
@@ -142,7 +142,7 @@ private:
                     break;
 
                 if (value < min_value.value() || value > max_value.value()) {
-                    LOG::ERR("Input must be between %s and %s", std::to_string(min_value.value()).c_str(),  std::to_string(max_value.value()).c_str());
+                    LOG::ERR("Input must be between {} and {}", std::to_string(min_value.value()),  std::to_string(max_value.value()));
                     continue;
                 }
 

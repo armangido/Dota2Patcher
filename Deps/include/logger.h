@@ -1,11 +1,11 @@
 #pragma once
 
-#include <iostream>
-#include <cstdarg>
-#include <cstdio>
-#include <Windows.h>
+#include <iostream>     // std::cout
+#include <string>       // std::string
+#include <format>       // std::format
+#include <windows.h>    // HANDLE, GetStdHandle, SetConsoleTextAttribute
 
-enum class ConColor {
+enum class CON_COLOR {
     BLACK = 0,
     CYAN = 3,
     GREEN = 10,
@@ -14,7 +14,7 @@ enum class ConColor {
     WHITE = 15,
 };
 
-enum class ConBackgroundColor {
+enum class CON_BG_COLOR {
     BLACK = 0x0,
     BLUE = 0x10,
     GREEN = 0x20,
@@ -26,60 +26,49 @@ enum class ConBackgroundColor {
 
 class LOG {
 public:
-    static void DEBUG(const char* format, ...) {
-        va_list arglist;
-        va_start(arglist, format);
-        LogMessage(ConColor::WHITE, ConBackgroundColor::BLACK, "[~]", format, arglist);
-        va_end(arglist);
+    template <typename... Args>
+    static void DEBUG(std::format_string<Args...> format, Args&&... args) {
+        log_message(CON_COLOR::WHITE, CON_BG_COLOR::BLACK, "[~]", format, std::forward<Args>(args)...);
     }
 
-    static void INFO(const char* format, ...) {
-        va_list arglist;
-        va_start(arglist, format);
-        LogMessage(ConColor::CYAN, ConBackgroundColor::BLACK, "[i]", format, arglist);
-        va_end(arglist);
+    template <typename... Args>
+    static void INFO(std::format_string<Args...> format, Args&&... args) {
+        log_message(CON_COLOR::CYAN, CON_BG_COLOR::BLACK, "[i]", format, std::forward<Args>(args)...);
     }
 
-    static void ERR(const char* format, ...) {
-        va_list arglist;
-        va_start(arglist, format);
-        LogMessage(ConColor::RED, ConBackgroundColor::BLACK, "[-]", format, arglist);
-        va_end(arglist);
+    template <typename... Args>
+    static void ERR(std::format_string<Args...> format, Args&&... args) {
+        log_message(CON_COLOR::RED, CON_BG_COLOR::BLACK, "[-]", format, std::forward<Args>(args)...);
     }
 
-    static void CRITICAL(const char* format, ...) {
-        va_list arglist;
-        va_start(arglist, format);
-        LogMessage(ConColor::BLACK, ConBackgroundColor::RED, "[!]", format, arglist);
-        va_end(arglist);
+    template <typename... Args>
+    static void CRITICAL(std::format_string<Args...> format, Args&&... args) {
+        log_message(CON_COLOR::BLACK, CON_BG_COLOR::RED, "[!]", format, std::forward<Args>(args)...);
     }
 
 private:
     static HANDLE hConsole;
 
-    static void SetConsoleColor(ConColor textColor, ConBackgroundColor bgColor) {
+    static void set_console_color(CON_COLOR textColor, CON_BG_COLOR bgColor) {
         if (!hConsole)
             hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
         SetConsoleTextAttribute(hConsole, static_cast<int>(textColor) | static_cast<int>(bgColor));
     }
 
-    static void LogMessage(ConColor textColor, ConBackgroundColor bgColor, const char* prefix, const char* format, va_list args) {
-        va_list args_copy;
-        va_copy(args_copy, args);
-        int size = std::vsnprintf(nullptr, 0, format, args_copy);
-        va_end(args_copy);
+    template <typename... Args>
+    static void log_message(CON_COLOR textColor, CON_BG_COLOR bgColor, const char* prefix, std::format_string<Args...> format, Args&&... args) {
+        std::string formattedMessage = std::format(format, std::forward<Args>(args)...);
+        std::string finalMessage = std::string(prefix) + " " + formattedMessage;
 
-        if (size < 0)
-            return;
-
-        string buf(size, '\0');
-        std::vsnprintf(buf.data(), buf.size() + 1, format, args);
-        string finalMessage = string(prefix) + " " + buf;
-
-        SetConsoleColor(textColor, bgColor);
-        cout << finalMessage << endl;
-        SetConsoleColor(ConColor::WHITE, ConBackgroundColor::BLACK);
+        set_console_color(textColor, bgColor);
+        std::cout << finalMessage << std::endl;
+        set_console_color(CON_COLOR::WHITE, CON_BG_COLOR::BLACK);
     }
 };
 
 inline HANDLE LOG::hConsole = nullptr;
+
+template <typename T>
+constexpr void* TO_VOID(const T& ptr) {
+    return reinterpret_cast<void*>(ptr);
+}

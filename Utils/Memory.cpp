@@ -27,7 +27,7 @@ optional<uintptr_t> Memory::pattern_scan(const string& target_module, const stri
     SIZE_T bytesRead;
 
     if (!ReadProcessMemory(ProcessHandle::get_handle(), reinterpret_cast<LPCVOID>(Memory::loaded_modules[target_module].start_address), buffer, Memory::loaded_modules[target_module].region_size, &bytesRead)) {
-        LOG::ERR("(PatternScan) ReadProcessMemory failed: 0x%d", GetLastError());
+        LOG::ERR("(PatternScan) ReadProcessMemory failed: {}", GetLastError());
         delete[] buffer;
         return nullopt;
     }
@@ -131,19 +131,19 @@ bool Memory::patch(const uintptr_t& patch_addr, const Patches::PATCH_TYPE patch_
 
     DWORD old_protect;
     if (!VirtualProtectEx(ProcessHandle::get_handle(), reinterpret_cast<LPVOID>(patch_addr), patch_data.size(), PAGE_EXECUTE_READWRITE, &old_protect)) {
-        LOG::ERR("(Patch) Failed to change memory protection: 0x%d", GetLastError());
+        LOG::ERR("(Patch) Failed to change memory protection: {}", GetLastError());
         return false;
     }
 
     SIZE_T bytes_written;
     if (!WriteProcessMemory(ProcessHandle::get_handle(), reinterpret_cast<LPVOID>(patch_addr), patch_data.data(), patch_data.size(), &bytes_written)) {
-        LOG::ERR("(Patch) Failed to write to process memory: 0x%d", GetLastError());
+        LOG::ERR("(Patch) Failed to write to process memory: {}", GetLastError());
         VirtualProtectEx(ProcessHandle::get_handle(), reinterpret_cast<LPVOID>(patch_addr), patch_data.size(), old_protect, &old_protect);
         return false;
     }
 
     if (!VirtualProtectEx(ProcessHandle::get_handle(), reinterpret_cast<LPVOID>(patch_addr), patch_data.size(), old_protect, &old_protect)) {
-        LOG::ERR("(Patch) Failed to restore memory protection: 0x%d", GetLastError());
+        LOG::ERR("(Patch) Failed to restore memory protection: {}", GetLastError());
         return false;
     }
 

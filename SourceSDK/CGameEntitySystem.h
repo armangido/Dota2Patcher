@@ -75,7 +75,7 @@ public:
 		
 		dump_file.close();
 		printf("\n");
-		LOG::INFO("dump_entities: done. Total: %d", ents_count);
+		LOG::INFO("dump_entities: done. Total: {}", ents_count);
 	}
 
 	optional<CBaseEntity*> find_by_name(const NAME_TYPE& name_type, const string& name_to_find) const {

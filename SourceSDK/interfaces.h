@@ -55,7 +55,7 @@ bool Scanner::find_CGameEntitySystem() {
         return false;
 
     vmt.entity_system = reinterpret_cast<CGameEntitySystem*>(CGameEntitySystem_ptr.value());
-    LOG::INFO("CGameEntitySystem -> [%p]", (void*)vmt.entity_system);
+    LOG::INFO("CGameEntitySystem -> [{}]", TO_VOID(CGameEntitySystem_ptr.value()));
     return true;
 }
 
@@ -91,7 +91,7 @@ bool Scanner::find_CDOTACamera() {
         return false;
 
     vmt.camera = reinterpret_cast<CDOTACamera*>(camera_base_address.value() - 0x40);
-    LOG::INFO("CDOTA_Camera -> [%p]", (void*)vmt.camera);
+    LOG::INFO("CDOTA_Camera -> [{}]", TO_VOID(vmt.camera));
     return true;
 }
 
@@ -104,13 +104,13 @@ bool Scanner::find_CDOTAGamerules() {
         return false;
 
     C_DOTAGamerulesProxy* dota_gamerules_proxy = reinterpret_cast<C_DOTAGamerulesProxy*>(dota_gamerules_proxy_ptr.value());
-    LOG::INFO("C_DOTAGamerules_Proxy -> [%p]", (void*)dota_gamerules_proxy_ptr.value());
+    LOG::INFO("C_DOTAGamerules_Proxy -> [{}]", TO_VOID(dota_gamerules_proxy_ptr.value()));
 
     const auto dota_gamerules_ptr = dota_gamerules_proxy->gamerules();
     if (!dota_gamerules_ptr)
         return false;
 
     vmt.gamerules = reinterpret_cast<CDOTAGamerules*>(dota_gamerules_ptr);
-    LOG::INFO("CDOTAGamerules -> [%p]", (void*)vmt.gamerules);
+    LOG::INFO("CDOTAGamerules -> [{}]", TO_VOID(vmt.gamerules));
     return true;
 }

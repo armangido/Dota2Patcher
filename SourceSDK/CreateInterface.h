@@ -32,11 +32,11 @@ public:
 	static optional<Interface*> get_first_interface(const string& module_name) {
 		const auto CreateInterfaceFn = Memory::pattern_scan(module_name, Patches::Patterns::CreateInterface);
 		if (!CreateInterfaceFn) {
-			LOG::CRITICAL("Can't find [%s] CreateInterface pattern!", module_name.c_str());
+			LOG::CRITICAL("Can't find [{}] CreateInterface pattern!", module_name);
 			return nullopt;
 		}
 
-		LOG::INFO("%s CreateInterface -> [%p]", module_name.c_str(), (void*)CreateInterfaceFn.value());
+		LOG::INFO("{} CreateInterface -> [{}]", module_name, TO_VOID(CreateInterfaceFn.value()));
 
 		const auto first_interface_base = Memory::absolute_address<uintptr_t>(CreateInterfaceFn.value());
 		if (!first_interface_base)
@@ -70,12 +70,12 @@ public:
 			int vfuncs = Memory::count_vms(base);
 
 			if (iterate_all)
-				LOG::INFO("[%s] -> [%p]", name.value().c_str(), (void*)base);
+				LOG::INFO("[{}] -> [{}]", name.value(), TO_VOID(base));
 
 			else if (module.interface_handlers.find(name.value()) != module.interface_handlers.end()) {
-				LOG::INFO("Interface [%s] -> [%p]", name.value().c_str(), (void*)base);
+				LOG::INFO("Interface [{}] -> [{}]", name.value(), TO_VOID(base));
 				if (vfuncs != module.known_vfuncs)
-					LOG::ERR("VMT has changed! [%d] -> [%d]", module.known_vfuncs, vfuncs);
+					LOG::ERR("VMT has changed! [{}] -> [{}]", module.known_vfuncs, vfuncs);
 				module.interface_handlers.at(name.value())(base);
 			}
 
