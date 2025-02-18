@@ -50,6 +50,7 @@ void Hacks::start_worker() {
                     }
                 }
             }
+
             std::this_thread::sleep_for(std::chrono::milliseconds(50));
         }
 

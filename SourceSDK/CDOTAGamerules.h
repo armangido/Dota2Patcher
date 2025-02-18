@@ -32,8 +32,8 @@ public:
     }
 
     bool in_game() const {
-        auto game_state = this->game_state();
-        return game_state != DOTA_GameState::INVALID && (game_state == DOTA_GameState::PRE_GAME || game_state == DOTA_GameState::GAME_IN_PROGRESS || game_state == DOTA_GameState::POST_GAME);
+        const auto game_state = this->game_state();
+        return game_state == DOTA_GameState::PRE_GAME || game_state == DOTA_GameState::GAME_IN_PROGRESS || game_state == DOTA_GameState::POST_GAME;
     }
 };
 

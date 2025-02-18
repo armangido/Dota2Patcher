@@ -106,10 +106,8 @@ int main() {
 		std::this_thread::sleep_for(std::chrono::seconds(1));
 
 	// CAMERA HACK
-
-	int camera_distance = ConfigManager::camera_distance;
-	vmt.camera->set_distance(camera_distance);
-	vmt.camera->set_r_farz(camera_distance * 2);
+	vmt.camera->set_distance(ConfigManager::camera_distance);
+	vmt.camera->set_r_farz(ConfigManager::camera_distance * 2);
 	vmt.camera->set_fow(ConfigManager::fow_amount);
 
 	// PATCHES
@@ -195,7 +193,7 @@ int main() {
 
 		// idk for some reason set_rendering_enabled causes to crash without this fix
 		// C_SceneEntity almost the last vfunc
-		// #STR: "C_SceneEntity::SetupClientOnlyScene:  Couldn't determine d, "!self", "couldn't load scene file %s\n", "Failed to find soundevent '%s' when falling back from miss
+		// #STR: "C_SceneEntity::SetupClientOnlyScene:  Couldn't determine d, "!self", "couldn't load scene file %s\n", "Failed to find soundevent '%s' when falling back from miss"
 		// In the middle there will be #STR: "blank"
 		// xor		edx, edx
 		// lea		rcx, [rsp+180h+var_120]
@@ -247,7 +245,7 @@ int main() {
 	// shl		eax, cl
 	// cmp		[rdi+0C94h], eax
 	// jz		short loc_181520859
-	// mov		[rdi+0C94h], eax <<<< m_iTaggedAsVisibleByTeam
+	// mov		[rdi+0C94h], eax <<<< m_iTaggedAsVisibleByTeam NetVar's offset
 	if (ConfigManager::visible_by_enemy) {
 		Patches::add_patch({
 			"visible_by_enemy",
