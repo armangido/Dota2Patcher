@@ -123,48 +123,43 @@ public:
 		return nullopt;
 	}
 
-	std::vector<CBaseEntity*> find_vector_by_name(const NAME_TYPE& name_type, const string& name_to_find) const {
-		std::vector<CBaseEntity*> found;
+	template <typename T>
+	std::vector<T*> find_vector_by_name(const NAME_TYPE& name_type, const string& name_to_find) const {
+		std::vector<T*> found;
 
 		auto ident = this->first_identity();
-		if (!ident)
-			return found;
 
-		while (true) {
+		while (ident) {
 			switch (name_type) {
 				case NAME_TYPE::internal_name: {
 					const auto internal_name = ident->internal_name().value_or("");
 					if (internal_name == name_to_find)
-						found.push_back(ident->base_entity());
+						found.push_back(reinterpret_cast<T*>(ident->base_entity()));
 					break;
 				}
 				case NAME_TYPE::entity_name: {
 					const auto entity_name = ident->entity_name().value_or("");
 					if (entity_name == name_to_find)
-						found.push_back(ident->base_entity());
+						found.push_back(reinterpret_cast<T*>(ident->base_entity()));
 					break;
 				}
 				case NAME_TYPE::binary_name: {
 					const auto schema = ident->schema_class_binding();
 					const auto binary_name = schema->binary_name().value_or("");
 					if (binary_name == name_to_find)
-						found.push_back(ident->base_entity());
+						found.push_back(reinterpret_cast<T*>(ident->base_entity()));
 					break;
 				}
 				case NAME_TYPE::class_name: {
 					const auto schema = ident->schema_class_binding();
 					const auto class_name = schema->class_name().value_or("");
 					if (class_name == name_to_find)
-						found.push_back(ident->base_entity());
+						found.push_back(reinterpret_cast<T*>(ident->base_entity()));
 					break;
 				}
 			}
 
-			const auto next_ent = ident->m_pNext();
-			if (!next_ent)
-				break;
-
-			ident = next_ent.value();
+			ident = ident->m_pNext().value_or(nullptr);
 		}
 
 		return found;
