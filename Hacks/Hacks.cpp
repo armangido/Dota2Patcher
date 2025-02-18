@@ -4,13 +4,7 @@
 #include "../Utils/Config.h"
 
 bool Hacks::hacks_enabled() {
-	bool enabled = true;
-
-	enabled &= ConfigManager::visible_by_enemy;
-	enabled &= ConfigManager::illusions_detection;
-	enabled &= ConfigManager::roshan_timer_hack;
-
-	return enabled;
+	return ConfigManager::visible_by_enemy || ConfigManager::illusions_detection || ConfigManager::roshan_timer_hack;
 }
 
 void Hacks::hack_roshan_timer() {
