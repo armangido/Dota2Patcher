@@ -3,7 +3,7 @@
  
 [![MSBuild](https://github.com/Wolf49406/Dota2Patcher/actions/workflows/msbuild.yml/badge.svg?branch=main)](https://github.com/Wolf49406/Dota2Patcher/actions/workflows/msbuild.yml)
 
-![image](https://github.com/user-attachments/assets/93bd5129-2224-41aa-80c9-a69aff4d5c32)
+![image](https://github.com/user-attachments/assets/bdf713c9-55c1-4bd9-8ef3-87cb0b1d2b48)
 
 ## ❓ How To:
 * Download [latest release](https://github.com/Wolf49406/Dota2Patcher/releases/latest)
@@ -12,7 +12,7 @@
 * Launch Dota 2
 	* Patcher will wait for a lobby to start
 * Wait for Patcher to do his job
-	* Patcher will close if no errors occurred
+	* Patcher will close if no errors occurred and if no [CHEAT] functions enabled
 * That's all!
 
 ### 🧾 Documentation:  
@@ -22,7 +22,21 @@ Developers can look at [documentation](https://wolf49406.github.io/Dota2Patcher/
 
 ## ❗ Features:
 
-### ✨ New: Camera distance patch without ConVars
+### ✨ NEW: Visible By Enemy  
+Draws a back dot above your hero and your teammates is they are visible by enemy
+
+![image](https://github.com/user-attachments/assets/b3b990c1-f2cf-4321-a722-de112b25a911)
+
+### ✨ NEW: Enemy Illusions Detection
+
+![image](https://github.com/user-attachments/assets/68fd753a-8f16-439f-9bfa-54542169a9a9)
+
+### ✨ NEW: Roshan Timer Hack (Templar Assassin's Third Eye)
+Atl+Click to see remaining time
+
+![image](https://github.com/user-attachments/assets/48129d87-6a6f-4d6b-b4e3-35a3109ffc9a)
+
+### ✨ Camera distance patch without ConVars
 Now you don't have to use ConVars (ex: `dota_camera_distance 1500; r_farz 18000`) to set camera distance!  
 Dota2Patcher will do it for you. Default value is 1500 which is pretty safe to use.  
 But you still can use `dota_camera_distance` if you want to.
