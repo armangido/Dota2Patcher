@@ -40,11 +40,11 @@ void Hacks::start_worker() {
         while (vmt.gamerules->in_game()) {
             for (auto ident = vmt.entity_system->first_identity(); ident; ident = ident->m_pNext().value_or(nullptr)) {
                 if (auto current_ent = ident->base_entity(); current_ent && current_ent->is_hero()) {
-                    if (current_ent->team_num() == GameData::local_team) {
+                    if (current_ent->team_num() == GameData::local_team) { // Teammates
                         if (ConfigManager::visible_by_enemy)
                             current_ent->set_custom_health_label(current_ent->visible() ? "0" : "");
                     }
-                    else {
+                    else { // Enemies
                         if (ConfigManager::illusions_detection && current_ent->is_illusion())
                             current_ent->set_client_seen_illusion_modifier(true);
                     }

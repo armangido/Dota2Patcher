@@ -1,5 +1,7 @@
 #include <limits>
 #include <variant>
+#include <algorithm>
+#include <array>
 
 class RegistryConfig {
 public:
@@ -60,10 +62,14 @@ public:
     static inline bool fog_enabled = false;
     static inline bool set_rendering_enabled = false;
     static inline bool allow_rc_update = false;
-
+    // HACKS
     static inline bool visible_by_enemy = false;
     static inline bool illusions_detection = false;
     static inline bool roshan_timer_hack = false;
+
+    static inline bool hacks_enabled() {
+        return visible_by_enemy || illusions_detection || roshan_timer_hack;
+    }
 
     static inline std::vector<ConfigEntry> config_entries = {
     { "camera_distance", &camera_distance },
@@ -101,7 +107,7 @@ public:
             << "[~] Fog disabled: " << std::boolalpha << fog_enabled << "\n"
             << "[~] Show hidden particles: " << std::boolalpha << set_rendering_enabled << "\n"
             << "[~] Check for BETA update: " << std::boolalpha << allow_rc_update << "\n"
-            << "[HACKS] Dota2Patcher will not close!\n"
+            << "[HACKS]\n"
             << "[~] Visible By Enemy: " << std::boolalpha << visible_by_enemy << "\n"
             << "[~] Illusions Detection: " << std::boolalpha << illusions_detection << "\n"
             << "[~] Roshan Timer Hack: " << std::boolalpha << roshan_timer_hack << "\n";

@@ -277,7 +277,7 @@ int main() {
 	}
 
 	// WAITING FOR A GAME
-	if (Hacks::hacks_enabled()) {
+	if (ConfigManager::hacks_enabled()) {
 		printf("\n");
 		LOG::DEBUG("Waiting for a Game to start...");
 		Hacks::start_worker();
