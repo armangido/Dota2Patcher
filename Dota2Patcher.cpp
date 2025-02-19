@@ -228,12 +228,40 @@ int main() {
 			});
 	}
 
+	// #STR: "particles/generic_gameplay/screen_death_indicator.vpcf"
+	// push		rbx
+	// sub		rsp, 40h
+	// mov		rbx, rcx
+	// call		sub_18159CC20   ; #STR: "dota_portrait_unit_stats_changed", "dota_force_portrait_update" <<<<
+	//
+	// sub_18159CC20:
+	// push		rbx
+	// push		rdi
+	// push		r14
+	// sub		rsp, 40h
+	// mov		[rsp+58h+arg_10], rsi
+	// mov		rdi, rcx
+	// mov		esi, edx
+	// call		sub_180271290
+	// call		sub_181281B10
+	// mov		rcx, cs:qword_1851BA2C0
+	// mov		ebx, eax
+	// mov		r8, [rcx]
+	// call		qword ptr [r8+130h]
+	// xor		r14d, r14d
+	// test		al, al
+	// jnz		short loc_18159CCAA
+	// mov		rcx, cs:qword_1851BA2C0
+	// mov		rdx, [rcx]
+	// call		qword ptr [rdx+288h]
+	// test		al, al
+	// jnz		short loc_18159CCAA <<<<
 	if (ConfigManager::visible_by_enemy) {
 		Patches::add_patch({
 			"visible_by_enemy",
 			"client.dll",
 			Patches::Patterns::visible_by_enemy,
-			Patches::PATCH_TYPE::JNE
+			Patches::PATCH_TYPE::JMP
 			});
 	}
 
