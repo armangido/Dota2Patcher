@@ -60,6 +60,7 @@ public:
     static inline int fow_amount = 70;
     static inline bool sv_cheats = false;
     static inline bool fog_enabled = false;
+    static inline bool fow_client_nofiltering = false;
     static inline bool set_rendering_enabled = false;
     static inline bool allow_rc_update = false;
     // HACKS
@@ -75,6 +76,7 @@ public:
     { "fow_amount", &fow_amount },
     { "sv_cheats", &sv_cheats },
     { "fog_enabled", &fog_enabled },
+    { "fow_client_nofiltering", &fow_client_nofiltering },
     { "set_rendering_enabled", &set_rendering_enabled },
     { "allow_rc_update", &allow_rc_update },
     { "visible_by_enemy",&visible_by_enemy },
@@ -86,6 +88,7 @@ public:
         fow_amount = ask_for_int("[~] Enter FOW amount [default is 70]: ");
         sv_cheats = ask_for_bool("[~] Unlock sv_cheats? [y/n or 1/0]: ");
         fog_enabled = ask_for_bool("[~] Disable fog? [y/n or 1/0]: ");
+        fow_client_nofiltering = ask_for_bool("[~] Remove FoG anti-aliasing? [y/n or 1/0]: ");
         set_rendering_enabled = ask_for_bool("[~] Show hidden particles? [y/n or 1/0]: ");
         allow_rc_update = ask_for_bool("[~] Check for BETA update? [y/n or 1/0]: ");
         printf("[HACKS] Dota2Patcher will not close!\n");
@@ -102,6 +105,7 @@ public:
             << "[~] FOW amount: " << fow_amount << "\n"
             << "[~] sv_heats unlock: " << std::boolalpha << sv_cheats << "\n"
             << "[~] Fog disabled: " << std::boolalpha << fog_enabled << "\n"
+            << "[~] Remove FoG anti-aliasing: " << std::boolalpha << fow_client_nofiltering << "\n"
             << "[~] Show hidden particles: " << std::boolalpha << set_rendering_enabled << "\n"
             << "[~] Check for BETA update: " << std::boolalpha << allow_rc_update << "\n"
             << "[HACKS]\n"

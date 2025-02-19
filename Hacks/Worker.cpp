@@ -31,7 +31,9 @@ void Hacks::start_worker() {
             if (!GameData::local_hero && Hacks::find_local_hero()) {
                 LOG::INFO("Local Hero: [{}] -> [{}]", GameData::local_hero->identity()->entity_name().value(), TO_VOID(GameData::local_hero));
                 local_team = GameData::local_hero->team_num();
-                dota_range_display = vmt.cvar->node_by_name("dota_range_display").value();
+                dota_range_display = vmt.cvar->cvar_by_name("dota_range_display").value();
+                vmt.cvar->cvar_by_name("fow_client_nofiltering").value()->set_int(!ConfigManager::fow_client_nofiltering);
+                vmt.cvar->cvar_by_name("fog_enable").value()->set_int(!ConfigManager::fog_enabled);
             }
             std::this_thread::sleep_for(std::chrono::seconds(1));
         }
@@ -39,7 +41,7 @@ void Hacks::start_worker() {
         LOG::DEBUG("Entering in-game loop...");
 
         while (vmt.gamerules->in_game()) {
-            dota_range_display->set_float(GameData::local_hero->visible() ? 100.f : 0.f);
+            dota_range_display->set_int(GameData::local_hero->visible() ? 100 : 0);
 
             for (auto ident = vmt.entity_system->first_identity(); ident; ident = ident->m_pNext().value_or(nullptr)) {
                 if (auto current_ent = ident->base_entity(); current_ent && current_ent->is_hero()) {

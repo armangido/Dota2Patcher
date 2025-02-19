@@ -14,8 +14,8 @@ public:
 		return Memory::read_memory<float>(this + 0x40).value_or(0);
 	}
 
-	void set_float(float value) {
-		Memory::write_memory<float>(this + 0x40, value);
+	void set_int(int value) {
+		Memory::write_memory<int>(this + 0x40, value);
 	}
 };
 
@@ -32,7 +32,7 @@ public:
 		return Memory::read_memory<CCvarNodes*>(this + 0x40).value_or(nullptr);
 	}
 
-	optional<CCvarNode*> node_by_name(const string& name_to_find) const {
+	optional<CCvarNode*> cvar_by_name(const string& name_to_find) const {
 		const auto nodes = this->node();
 
 		for (size_t index = 0; auto current_node = nodes->node_by_index(index); ++index) {

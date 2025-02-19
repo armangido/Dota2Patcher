@@ -117,35 +117,6 @@ int main() {
 
 	// PATCHES
 	printf("\n");
-	
-	// CRenderingWorldSession 15' vfunc with #STR: "backColorBuffer", "ClearLayer", "MainView"
-	// lea		rdx, [rbp+490h+var_510]
-	// mov		[rbp+490h+var_508], eax
-	// mov		rcx, rbx
-	// call		sub_180219A30 <<<< #STR: "(Texture)", "Player %d%s", "output_color_texture", "output_depth_texture", "output_color_back_buffer"...
-	//
-	// sub_180219A30:
-	// cmp		[rbp+1200h+var_1014], 0
-	// jz		short loc_18021A42B
-	// mov		edx, 0FFFFFFFFh
-	// lea		rcx, unk_180619270
-	// call		sub_1803A4AB0
-	// test		rax, rax
-	// jnz		short loc_18021A422
-	// mov		rax, cs:qword_180619278
-	// mov		rax, [rax+8]
-	// cmp		byte ptr [rax], 0
-	// jz		short loc_18021A42B <<<<
-	// mov		al, 1
-	// jmp		short loc_18021A42D
-	if (ConfigManager::fog_enabled) {
-		Patches::add_patch({
-			"fog_enable",
-			"engine2.dll",
-			Patches::Patterns::fog_enable,
-			Patches::PATCH_TYPE::JMP
-			});
-	}
 
 	// #STR: "SV: Convar '%s' is cheat protected, change ignored"
 	// jnz		short loc_1801AA477 <<<<
