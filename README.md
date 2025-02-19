@@ -31,11 +31,6 @@ Draws a back dot above your hero and your teammates is they are visible by enemy
 
 ![image](https://github.com/user-attachments/assets/68fd753a-8f16-439f-9bfa-54542169a9a9)
 
-### ✨ NEW: Roshan Timer Hack (Templar Assassin's Third Eye)
-Atl+Click to see remaining time
-
-![image](https://github.com/user-attachments/assets/48129d87-6a6f-4d6b-b4e3-35a3109ffc9a)
-
 ### ✨ Camera distance patch without ConVars
 Now you don't have to use ConVars (ex: `dota_camera_distance 1500; r_farz 18000`) to set camera distance!  
 Dota2Patcher will do it for you. Default value is 1500 which is pretty safe to use.  
