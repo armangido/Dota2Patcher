@@ -165,22 +165,21 @@ public:
 		return found;
 	}
 
-	optional<CBaseEntity*> find_by_index(const uint32_t index, bool hero_only = false) const {
-		auto ident = this->first_identity();
-		while (ident) {
-			if (hero_only && !ident->is_hero()) {
-				ident = ident->m_pNext().value_or(nullptr);
-				continue;
+	optional<CBaseEntity*> find_by_index(uint32_t index, bool hero_only = false) const {
+		for (auto ident = this->first_identity(); ident; ident = ident->m_pNext().value_or(nullptr)) {
+			if (hero_only) {
+				const auto schema = ident->schema_class_binding();
+				if (!schema || schema->class_name().value_or("") != "C_DOTA_BaseNPC_Hero")
+					continue;
 			}
 
 			if (ident->handle() && ident->handle().value().to_index() == index)
 				return ident->base_entity();
-
-			ident = ident->m_pNext().value_or(nullptr);
 		}
 
 		return nullopt;
 	}
+
 
 	optional <CBaseEntity*> find_by_handle(const CHandle handle, bool hero_only = false) const {
 		return find_by_index(handle.to_index(), hero_only);
