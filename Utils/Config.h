@@ -65,10 +65,9 @@ public:
     // HACKS
     static inline bool visible_by_enemy = false;
     static inline bool illusions_detection = false;
-    static inline bool roshan_timer_hack = false;
 
     static inline bool hacks_enabled() {
-        return visible_by_enemy || illusions_detection || roshan_timer_hack;
+        return visible_by_enemy || illusions_detection;
     }
 
     static inline std::vector<ConfigEntry> config_entries = {
@@ -80,7 +79,6 @@ public:
     { "allow_rc_update", &allow_rc_update },
     { "visible_by_enemy",&visible_by_enemy },
     { "illusions_detection", &illusions_detection },
-    { "roshan_timer_hack", &roshan_timer_hack }
     };
 
     static void ask_for_settings() {
@@ -93,7 +91,6 @@ public:
         printf("[HACKS] Dota2Patcher will not close!\n");
         visible_by_enemy = ask_for_bool("[~] Visible By Enemy [y/n or 1/0]: ");
         illusions_detection = ask_for_bool("[~] Illusions Detection [y/n or 1/0]: ");
-        roshan_timer_hack = ask_for_bool("[~] Roshan Timer Hack [y/n or 1/0]: ");
 
         write_settings();
     }
@@ -110,7 +107,7 @@ public:
             << "[HACKS]\n"
             << "[~] Visible By Enemy: " << std::boolalpha << visible_by_enemy << "\n"
             << "[~] Illusions Detection: " << std::boolalpha << illusions_detection << "\n"
-            << "[~] Roshan Timer Hack: " << std::boolalpha << roshan_timer_hack << "\n";
+            ;
     }
 
     static bool read_settings() {

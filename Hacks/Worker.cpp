@@ -29,8 +29,6 @@ void Hacks::start_worker() {
             if (!GameData::local_hero && Hacks::find_local_hero()) {
                 LOG::INFO("Local Hero: [{}] -> [{}]", GameData::local_hero->identity()->entity_name().value(), TO_VOID(GameData::local_hero));
                 local_team = GameData::local_hero->team_num();
-                if (ConfigManager::roshan_timer_hack)
-                    Hacks::hack_roshan_timer();
             }
             std::this_thread::sleep_for(std::chrono::seconds(1));
         }

@@ -18,5 +18,4 @@ public:
 class Hacks : public GameData {
 public:
 	static void start_worker();
-	static void hack_roshan_timer();
 };
