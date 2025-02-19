@@ -14,6 +14,11 @@ public:
 		return Memory::read_memory<CBaseEntity*>(this).value_or(nullptr);
 	}
 
+	bool is_hero() const {
+		const auto name = this->internal_name();
+		return strstr(name.value_or("").c_str(), "npc_dota_hero_");
+	}
+
 	CSchemaClassBinding* schema_class_binding() const {
 		return Memory::read_memory<CSchemaClassBinding*>(this + 0x8).value_or(nullptr);
 	}

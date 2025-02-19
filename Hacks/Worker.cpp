@@ -36,13 +36,11 @@ void Hacks::start_worker() {
         LOG::DEBUG("Entering in-game loop...");
 
         while (vmt.gamerules->in_game()) {
+            Hacks::range_display(GameData::local_hero->visible() ? 100.f : 0.f);
+
             for (auto ident = vmt.entity_system->first_identity(); ident; ident = ident->m_pNext().value_or(nullptr)) {
                 if (auto current_ent = ident->base_entity(); current_ent && current_ent->is_hero()) {
-                    if (current_ent->team_num() == GameData::local_team) { // Teammates
-                        if (ConfigManager::visible_by_enemy)
-                            current_ent->set_custom_health_label(current_ent->visible() ? "0" : "");
-                    }
-                    else { // Enemies
+                    if (current_ent->team_num() != GameData::local_team) {
                         if (ConfigManager::illusions_detection && current_ent->is_illusion())
                             current_ent->set_client_seen_illusion_modifier(true);
                     }

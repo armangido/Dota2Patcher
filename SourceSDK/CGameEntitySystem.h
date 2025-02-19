@@ -165,9 +165,14 @@ public:
 		return found;
 	}
 
-	optional<CBaseEntity*> find_by_index(const uint32_t index) const {
+	optional<CBaseEntity*> find_by_index(const uint32_t index, bool hero_only = false) const {
 		auto ident = this->first_identity();
 		while (ident) {
+			if (hero_only && !ident->is_hero()) {
+				ident = ident->m_pNext().value_or(nullptr);
+				continue;
+			}
+
 			if (ident->handle() && ident->handle().value().to_index() == index)
 				return ident->base_entity();
 
@@ -177,7 +182,7 @@ public:
 		return nullopt;
 	}
 
-	optional <CBaseEntity*> find_by_handle(const CHandle handle) const {
+	optional <CBaseEntity*> find_by_handle(const CHandle handle, bool hero_only = false) const {
 		return find_by_index(handle.to_index());
 	}
 

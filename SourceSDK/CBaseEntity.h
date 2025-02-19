@@ -11,9 +11,7 @@ public:
 	}
 
 	bool is_hero() const {
-		const auto ident = this->identity();
-		const auto name = ident->internal_name();
-		return strstr(name.value_or("").c_str(), "npc_dota_hero_");
+		return this->identity()->is_hero();
 	}
 	
 	int team_num() const {

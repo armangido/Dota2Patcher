@@ -4,7 +4,7 @@
 #include "../SourceSDK/CBaseEntity.h"
 
 bool GameData::find_local_hero() {
-	const auto hero = vmt.entity_system->find_by_handle(GameData::local_player->assigned_hero_handle());
+	const auto hero = vmt.entity_system->find_by_handle(GameData::local_player->assigned_hero_handle(), true);
 	if (!hero)
 		return false;
 

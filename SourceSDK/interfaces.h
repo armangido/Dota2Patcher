@@ -5,12 +5,15 @@
 #include "CDOTACamera.h"
 #include "CGameEntitySystem.h"
 #include "CSchemaSystem.h"
+#include "../Hacks/Hacks.h"
 
 class Scanner {
 public:
     static inline bool find_CGameEntitySystem();
     static inline bool find_CDOTACamera();
     static inline bool find_CDOTAGamerules();
+    static inline bool find_dota_range_display();
+
     static inline bool find_all();
 };
 
@@ -34,6 +37,7 @@ bool Scanner::find_all() {
 
     status &= find_CGameEntitySystem();
     status &= find_CDOTACamera();
+    status &= find_dota_range_display();
 
     return status;
 }
@@ -59,7 +63,6 @@ bool Scanner::find_CGameEntitySystem() {
     return true;
 }
 
-bool Scanner::find_CDOTACamera() {
 // CDOTA_Camera 20'th vfunc (offset 0xA0):
 // sub                          rsp, 48h
 // movaps[rsp + 48h + var_18],  xmm6
@@ -79,6 +82,7 @@ bool Scanner::find_CDOTACamera() {
 // add                          rsp, 20h
 // pop                          rbx
 // retn
+bool Scanner::find_CDOTACamera() {
     if (vmt.camera)
         return true;
 
@@ -112,5 +116,37 @@ bool Scanner::find_CDOTAGamerules() {
 
     vmt.gamerules = reinterpret_cast<CDOTAGamerules*>(dota_gamerules_ptr);
     LOG::INFO("CDOTAGamerules -> [{}]", TO_VOID(vmt.gamerules));
+    return true;
+}
+
+// C_DOTA_BaseNPC_Additive vfinc with #STR: "particles/ui_mouseactions/range_display.vpcf", "particles/ui_mouseactions/hero_highlighter.vpcf", "sv_cheats"
+// lea		rcx, unk_1851C2C50 <<<<
+// call		sub_182EFA600
+// test		rax, rax
+// jnz		short loc_1815B00CB
+// mov		rax, cs:qword_1851C2C58
+// mov		rax, [rax+8]
+// movss	xmm0, dword ptr [rdi+1160h]
+// ucomiss	xmm0, dword ptr [rax]
+// jp		loc_1815B0272
+// jnz		loc_1815B0272
+// xor		r8d, r8d
+// lea		rdx, aSvCheats  ; "sv_cheats"
+bool Scanner::find_dota_range_display() {
+    const auto base = Memory::pattern_scan("client.dll", Patches::Patterns::dota_range_display);
+    if (!base)
+        return false;
+
+    auto absolute_address = Memory::absolute_address<uintptr_t>(base.value());
+    if (!absolute_address)
+        return false;
+
+    auto dota_range_display = Memory::read_memory<uintptr_t>(absolute_address.value());
+    if (!dota_range_display)
+        return false;
+
+    GameData::dota_range_display = dota_range_display.value();
+    LOG::INFO("dota_range_display -> [{}]", TO_VOID(GameData::dota_range_display));
+
     return true;
 }
