@@ -58,18 +58,23 @@ int main() {
 		{
 			"engine2.dll", {
 				{ "Source2EngineToClient001", [](uintptr_t base) { vmt.engine = (CEngineClient*)base; } },
-			}, 192, // was 187
+			}, 192,
 		},
 		{
 			"client.dll", {
 				{ "Source2Client002", [](uintptr_t base) { vmt.client = (CSource2Client*)base; } }
-			}, 190, // was 188
+			}, 190,
 		},
 		{
 			"schemasystem.dll", {
 				{ "SchemaSystem_001", [](uintptr_t base) { vmt.schema_system = (CSchemaSystem*)base; } }
 			}, 46,
 		},
+		{
+			"tier0.dll", {
+				{ "VEngineCvar007", [](uintptr_t base) { vmt.cvar = (CCvar*)base; } }
+			}, 47,
+		}
 	};
 
 	for (const auto& interface_ : interfaces_to_load) {

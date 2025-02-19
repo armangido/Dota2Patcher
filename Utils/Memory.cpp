@@ -76,6 +76,7 @@ bool Memory::load_modules(const DWORD process_ID) {
         "engine2.dll",
         "schemasystem.dll",
         "particles.dll",
+        "tier0.dll"
     };
 
     std::unordered_map<string, ModuleInfo> found_modules;

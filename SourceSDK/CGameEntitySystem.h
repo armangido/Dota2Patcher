@@ -183,7 +183,7 @@ public:
 	}
 
 	optional <CBaseEntity*> find_by_handle(const CHandle handle, bool hero_only = false) const {
-		return find_by_index(handle.to_index());
+		return find_by_index(handle.to_index(), hero_only);
 	}
 
 	CEntityIdentity* first_identity() const {

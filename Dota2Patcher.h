@@ -25,7 +25,6 @@ public:
 		static inline const string set_rendering_enabled = "0F 84 ? ? ? ? 4D 89 73";
 		static inline const string set_rendering_enabled_fix = "0F 84 ? ? ? ? 48 8B ? 48 85 ? 74 ? 48 8B ? 48 8B";
 		static inline const string visible_by_enemy = "75 ? 41 8B CE E8 ? ? ? ? 48 85 C0 74 ? 80 B8";
-		static inline const string dota_range_display = "48 8B ? ? ? ? ? 48 8B ? ? F3 0F ? ? 4C 8D ? ? BA";
 	};
 
 	enum class PATCH_TYPE {

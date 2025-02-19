@@ -7,7 +7,6 @@ class CBaseEntity {
 public:
 	CEntityIdentity* identity() const {
 		return Memory::read_memory<CEntityIdentity*>(this + 0x10).value_or(nullptr);
-		return nullptr;
 	}
 
 	bool is_hero() const {

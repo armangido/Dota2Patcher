@@ -130,6 +130,7 @@
     <ClInclude Include="SourceSDK\C_DOTATeam.h" />
     <ClInclude Include="SourceSDK\interfaces.h" />
     <ClInclude Include="SourceSDK\CSchemaSystem.h" />
+    <ClInclude Include="SourceSDK\CCvar.h" />
     <ClInclude Include="Utils\Config.h" />
     <ClInclude Include="Utils\Memory.h" />
     <ClInclude Include="Utils\ProcessHandle.h" />
