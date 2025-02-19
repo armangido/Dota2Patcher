@@ -40,6 +40,6 @@ public:
 class C_DOTAGamerulesProxy {
 public:
     CDOTAGamerules* gamerules() const {
-        return Memory::read_memory<CDOTAGamerules*>(this + 0x560).value_or(nullptr);
+        return Memory::read_memory<CDOTAGamerules*>(this + 0x510).value_or(nullptr);
     }
 };

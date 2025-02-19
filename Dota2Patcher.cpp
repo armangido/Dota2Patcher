@@ -58,12 +58,12 @@ int main() {
 		{
 			"engine2.dll", {
 				{ "Source2EngineToClient001", [](uintptr_t base) { vmt.engine = (CEngineClient*)base; } },
-			}, 187,
+			}, 192, // was 187
 		},
 		{
 			"client.dll", {
 				{ "Source2Client002", [](uintptr_t base) { vmt.client = (CSource2Client*)base; } }
-			}, 188,
+			}, 190, // was 188
 		},
 		{
 			"schemasystem.dll", {
@@ -228,32 +228,12 @@ int main() {
 			});
 	}
 
-	// C_DOTA_BaseNPC_Additive vfunc with #STR: "dota_portrait_unit_stats_changed", "dota_force_portrait_update"
-	// push		rbx
-	// push		rdi
-	// push		r14
-	// sub		rsp, 40h
-	// mov		[rsp+58h+arg_10], rsi
-	// mov		rdi, rcx
-	// mov		esi, edx
-	// call		sub_180268560
-	// call		sub_181222C90
-	// cmp		eax, 1 <<<< 1 -> 2
-	// jbe		short loc_181520859
-	// mov		ecx, eax
-	// mov		eax, 1
-	// shl		eax, cl
-	// cmp		[rdi+0C94h], eax
-	// jz		short loc_181520859
-	// mov		[rdi+0C94h], eax <<<< m_iTaggedAsVisibleByTeam NetVar's offset
 	if (ConfigManager::visible_by_enemy) {
 		Patches::add_patch({
 			"visible_by_enemy",
 			"client.dll",
 			Patches::Patterns::visible_by_enemy,
-			Patches::PATCH_TYPE::CUSTOM,
-			2,
-			"02"
+			Patches::PATCH_TYPE::JNE
 			});
 	}
 

@@ -14,13 +14,11 @@ bool GameData::find_local_hero() {
 }
 
 bool GameData::find_local_player() {
-	std::vector<CBaseEntity*> players = vmt.entity_system->find_vector_by_name<CBaseEntity>(CGameEntitySystem::NAME_TYPE::entity_name, "dota_player_controller");
+	std::vector<C_DOTAPlayerController*> players = vmt.entity_system->find_vector_by_name<C_DOTAPlayerController>(CGameEntitySystem::NAME_TYPE::entity_name, "dota_player_controller");
 
 	for (const auto player : players) {
-		const auto player_controller = (C_DOTAPlayerController*)player;
-
-		if (player_controller->is_local_player()) {
-			GameData::local_player = player_controller;
+		if (player->is_local_player()) {
+			GameData::local_player = player;
 			return true;
 		}
 	}

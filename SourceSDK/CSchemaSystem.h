@@ -107,7 +107,7 @@ public:
 	* Get a pointer to a parent class. Ex: C_DOTAPlayerController -> CBasePlayerController -> C_BaseEntity -> CEntityInstance
 	*/
 	optional <SchemaParentInfo*> parent_info() const {
-		return Memory::read_memory<SchemaParentInfo*>(this + 0x38);
+		return Memory::read_memory<SchemaParentInfo*>(this + 0x30);
 	}
 };
 

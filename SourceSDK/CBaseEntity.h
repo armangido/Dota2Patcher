@@ -10,13 +10,10 @@ public:
 		return nullptr;
 	}
 
-	int unit_type() const {
-		const auto ptr = vmt.schema_system->get_netvar(this, "C_DOTA_BaseNPC", "m_iUnitType");
-		return Memory::read_memory<int>(ptr.value()).value_or(-1);
-	}
-
 	bool is_hero() const {
-		return this->unit_type() == 1;
+		const auto ident = this->identity();
+		const auto name = ident->internal_name();
+		return strstr(name.value_or("").c_str(), "npc_dota_hero_");
 	}
 	
 	int team_num() const {
