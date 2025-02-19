@@ -23,9 +23,9 @@ Developers can look at [documentation](https://wolf49406.github.io/Dota2Patcher/
 ## ❗ Features:
 
 ### ✨ NEW: Visible By Enemy  
-Draws a back dot above your hero and your teammates is they are visible by enemy
+Draws a ring under your hero if you are visible by enemy
 
-![image](https://github.com/user-attachments/assets/b3b990c1-f2cf-4321-a722-de112b25a911)
+![image](https://github.com/user-attachments/assets/051de205-f4fb-440b-b04a-81db3c65bca6)
 
 ### ✨ NEW: Enemy Illusions Detection
 
