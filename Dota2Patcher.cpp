@@ -103,6 +103,12 @@ int main() {
 
 	LOG::INFO("NetVars loaded: {}", netvar_count);
 
+	// LOAD CONVARS
+	printf("\n");
+
+	LOG::DEBUG("Loading ConVars...");
+	LOG::INFO("ConVars loaded: {}", vmt.cvar->load_convars());
+
 	// WAITING FOR A LOBBY
 	printf("\n");
 	LOG::DEBUG("Waiting for a lobby to start...");

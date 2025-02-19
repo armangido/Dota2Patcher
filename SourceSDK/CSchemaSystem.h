@@ -331,5 +331,5 @@ public:
 	}
 
 	//! Global variable to store dumped NetVars
-	static inline std::unordered_map<std::string, std::unordered_map<std::string, int32_t>> g_netvars;
+	static inline std::unordered_map<string, std::unordered_map<std::string, int32_t>> g_netvars;
 };
