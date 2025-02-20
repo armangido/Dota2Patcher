@@ -3,7 +3,7 @@
  
 [![MSBuild](https://github.com/Wolf49406/Dota2Patcher/actions/workflows/msbuild.yml/badge.svg?branch=main)](https://github.com/Wolf49406/Dota2Patcher/actions/workflows/msbuild.yml)
 
-![image](https://github.com/user-attachments/assets/bdf713c9-55c1-4bd9-8ef3-87cb0b1d2b48)
+![image](https://github.com/user-attachments/assets/c8d40b32-9eda-40dc-b552-cd3c4020f334)
 
 ## ❓ How To:
 * Download [latest release](https://github.com/Wolf49406/Dota2Patcher/releases/latest)
