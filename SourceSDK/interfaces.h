@@ -63,25 +63,28 @@ bool Scanner::find_CGameEntitySystem() {
     return true;
 }
 
-// CDOTA_Camera 20'th vfunc (offset 0xA0):
-// sub                          rsp, 48h
-// movaps[rsp + 48h + var_18],  xmm6
-// movaps                       xmm6, xmm1
-// movaps[rsp + 48h + var_28],  xmm7
-// call                         get_camera_distance <<<
-// 
-// get_camera_distance:
-// mov                          edx, cs:TlsIndex
-// mov                          rax, gs:58h
-// mov                          ecx, 40h ; '@'
-// mov                          rax, [rax+rdx*8]
-// mov                          eax, [rcx+rax]
-// cmp                          cs:dword_184FE0578, eax
-// jg                           short loc_1816542DF
-// lea                          rax, dword_184FE0560 <<<<<
-// add                          rsp, 20h
-// pop                          rbx
-// retn
+// #STR: "Failed to create camera\n", "Failed to init camera with file %s", "Usage: <camera_file>\n"
+// lea		rax, ??_7CDOTACameraManager@@6B@ ; const CDOTACameraManager::`vftable'
+// mov		cs:byte_1851E0C18, 0
+// mov		cs:qword_1851E0B90, rax
+// lea		rcx, sub_182FD0C10 ; void (__cdecl *)() <<<<
+// lea		rax, ??_7CDOTACameraManager@@6B@_0 ; const CDOTACameraManager::`vftable'
+// mov		cs:dword_1851E0C1C, 0FFFFFFFFh
+// mov		cs:qword_1851E0B98, rax
+// call		atexit
+// lea		rcx, dword_1851E0C20
+// call		_Init_thread_footer
+// jmp		loc_181713F7F
+// endp
+//
+// sub_182FD0C10:
+// lea		rax, ??_7CDOTACameraManager@@6B@ ; const CDOTACameraManager::`vftable'
+// mov		cs:qword_1851E0B90, rax
+// lea		rcx, qword_1851E0B90 <<<<
+// lea		rax, ??_7CDOTACameraManager@@6B@_0 ; const CDOTACameraManager::`vftable'
+// mov		cs:qword_1851E0B98, rax
+// jmp		sub_181499FC0
+// endp
 bool Scanner::find_CDOTACamera() {
     if (vmt.camera)
         return true;
