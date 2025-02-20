@@ -5,11 +5,6 @@
 
 class Memory {
 public:
-	enum class ASMType {
-		LEA, // 3, 7
-		CALL // 2, 6
-	};
-
 	struct ModuleInfo {
 		uintptr_t start_address;
 		uintptr_t end_address;
@@ -19,10 +14,10 @@ public:
 
 	static bool load_modules(const DWORD process_ID);
 	static optional<uintptr_t> pattern_scan(const string& target_module, const string& target_pattern);
-	static bool patch(const uintptr_t& patch_addr, const Patches::PATCH_TYPE patch_type, const optional<string>& replace_str = nullopt);
+	static bool patch(const uintptr_t& patch_addr, const PATCH_TYPE patch_type, const optional<string>& replace_str = nullopt);
 
 	template<typename T, typename N>
-	static optional<T> absolute_address(const N& instruction_ptr, const ASMType instr_type = ASMType::LEA) {
+	static optional<T> absolute_address(const N& instruction_ptr, const ASM_TYPE instr_type = ASM_TYPE::LEA) {
 		uintptr_t address = 0;
 
 		if constexpr (std::is_pointer_v<N>)
@@ -33,11 +28,11 @@ public:
 		ptrdiff_t offset = 0;
 		uint32_t size = 0;
 		switch (instr_type) {
-		case ASMType::LEA:
+		case ASM_TYPE::LEA:
 			offset = 3;
 			size = 7;
 			break;
-		case ASMType::CALL:
+		case ASM_TYPE::CALL:
 			offset = 2;
 			size = 6;
 			break;

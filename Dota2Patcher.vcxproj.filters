@@ -109,5 +109,8 @@
     <ClInclude Include="SourceSDK\CCvar.h">
       <Filter>Headers\SourceSDK</Filter>
     </ClInclude>
+    <ClInclude Include="SourceSDK\Enums.h">
+      <Filter>Headers\SourceSDK</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

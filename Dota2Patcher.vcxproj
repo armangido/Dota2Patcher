@@ -128,6 +128,7 @@
     <ClInclude Include="SourceSDK\CSource2Client.h" />
     <ClInclude Include="SourceSDK\C_DOTAPlayerController.h" />
     <ClInclude Include="SourceSDK\C_DOTATeam.h" />
+    <ClInclude Include="SourceSDK\Enums.h" />
     <ClInclude Include="SourceSDK\interfaces.h" />
     <ClInclude Include="SourceSDK\CSchemaSystem.h" />
     <ClInclude Include="SourceSDK\CCvar.h" />

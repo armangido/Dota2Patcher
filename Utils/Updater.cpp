@@ -48,12 +48,14 @@ SemVer Updater::get_latest_version(const std::vector<WebVer>& web_versions) {
             if (parsed > latest_RC) {
                 latest_RC = parsed;
                 latest_RC.update_url = web_ver.html_url;
+                latest_RC.body = web_ver.body;
             }
         }
         else {
             if (parsed > latest_release) {
                 latest_release = parsed;
                 latest_release.update_url = web_ver.html_url;
+                latest_release.body = web_ver.body;
             }
         }
     }
@@ -66,10 +68,6 @@ SemVer Updater::get_latest_version(const std::vector<WebVer>& web_versions) {
 
 bool Updater::update_required() {
     LOG::INFO("Current version: {}", Updater::local_version.to_string());
-
-#ifdef _DEBUG
-    return false;
-#endif
 
     auto web_resp = web_request();
     if (!web_resp)
@@ -84,8 +82,11 @@ bool Updater::update_required() {
             string tag_name = parsed_json[i]["tag_name"];
             bool prerelease = parsed_json[i]["prerelease"];
             string html_url = parsed_json[i]["html_url"];
+            optional <string> body = parsed_json[i]["body"];
+            if (!body || body.value().empty())
+                body = nullopt;
 
-            web_versions.push_back({ tag_name, prerelease, html_url });
+            web_versions.push_back({ tag_name, prerelease, html_url, body });
         }
     }
     catch (const json::parse_error& e) {
@@ -100,10 +101,12 @@ bool Updater::update_required() {
     SemVer latest_version = Updater::get_latest_version(web_versions);
     if (Updater::local_version < latest_version) {
         LOG::ERR("Update Required! New version: {}", latest_version.to_string());
+        if (latest_version.body)
+            LOG::INFO("Update Log: {}", latest_version.body.value());
         LOG::INFO("Press Enter to continue...");
 
         system("pause");
-        latest_version.update_url ? open_url(latest_version.update_url.value()) : open_url(download_url.data());
+        open_url(latest_version.update_url.value());
 
         return true;
     }

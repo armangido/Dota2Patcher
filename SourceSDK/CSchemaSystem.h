@@ -195,8 +195,8 @@ public:
 	}
 
 	/**
-	* Iterate throw a list of NetVars and save them to a g_netvars
-	* 
+	* Iterate through a list of NetVars and save them to g_netvars
+	*
 	* @param class_name Name of a class. Ex: C_DOTA_BaseNPC
 	* @param class_description Pointer to a ClassDescription* class
 	* @param dump_to_file Dump NetVars to files or not
@@ -228,9 +228,8 @@ public:
 	*
 	* @param scope_name Name of a scope. Ex: client.dll
 	* @param dump_to_file Dump NetVars to files or not
-	* @param class_filter Filter NetVars search with std::vector<string>. Ex: { "C_DOTA_BaseNPC", "C_DOTA_BaseNPC_Hero" }
 	*/
-	void dump_netvars(const string& scope_name, const bool dump_to_file, const std::vector<string>& class_filter = {}) const {
+	void dump_netvars(const string& scope_name, const bool dump_to_file) const {
 		const auto scope = this->type_scope(scope_name);
 		if (!scope)
 			return;
@@ -250,11 +249,8 @@ public:
 			auto class_description = class_description_container.value()->class_description(class_description_index);
 			while (class_description) {
 				const auto class_name = class_description.value()->class_name();
-				if (!class_name || (!class_filter.empty() && std::find(class_filter.begin(), class_filter.end(), class_name.value()) == class_filter.end())) {
-					class_description_index++;
-					class_description = class_description_container.value()->class_description(class_description_index);
-					continue;
-				}
+				if (!class_name)
+					break;
 
 				std::vector<std::pair<string, ClassDescription*>> class_hierarchy;
 				auto current_class = class_description.value();
@@ -301,7 +297,7 @@ public:
 	* 
 	* @param scope_index Index a of scope. Will be converted to a scope_name and send to original dump_netvars
 	*/
-	void dump_netvars(const size_t scope_index, const bool dump_to_file, const std::vector<string>& class_filter = {}) const {
+	void dump_netvars(const size_t scope_index, const bool dump_to_file) const {
 		const auto scope = this->type_scope(scope_index);
 		if (!scope)
 			return;
@@ -310,7 +306,7 @@ public:
 		if (!scope_name)
 			return;
 
-		return dump_netvars(scope_name.value(), dump_to_file, class_filter);
+		return dump_netvars(scope_name.value(), dump_to_file);
 	}
 
 	/**

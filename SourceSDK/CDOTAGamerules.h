@@ -1,24 +1,6 @@
 #pragma once
 #include "../Utils/Memory.h"
 
-enum class DOTA_GameState : int {
-    INVALID = -1,
-    INIT = 0,
-    WAIT_FOR_PLAYERS_TO_LOAD = 1,
-    HERO_SELECTION = 2,
-    STRATEGY_TIME = 3,
-    PRE_GAME = 4,
-    GAME_IN_PROGRESS = 5,
-    POST_GAME = 6,
-    DISCONNECT = 7,
-    TEAM_SHOWCASE = 8,
-    CUSTOM_GAME_SETUP = 9,
-    WAIT_FOR_MAP_TO_LOAD = 10,
-    SCENARIO_SETUP = 11,
-    PLAYER_DRAFT = 12,
-    LAST = 13,
-};
-
 class CDOTAGamerules {
 public:
     bool paused() const {

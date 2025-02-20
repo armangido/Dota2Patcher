@@ -26,14 +26,6 @@ public:
 		static inline const string visible_by_enemy = "75 ? 41 8B CE E8 ? ? ? ? 48 85 C0 74 ? 80 B8";
 	};
 
-	enum class PATCH_TYPE {
-		JE = 0x74,
-		JNE = 0x75,
-		TEST = 0x85,
-		JMP = 0xEB,
-		CUSTOM = 0x0
-	};
-
 	struct PatchInfo {
 		string name;
 		string module;

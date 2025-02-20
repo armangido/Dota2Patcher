@@ -92,9 +92,7 @@ int main() {
 
 	LOG::DEBUG("Loading NetVars...");
 
-	std::vector<string> class_filter { "C_DOTA_BaseNPC", "C_DOTA_BaseNPC_Hero", "C_DOTAPlayerController", "C_BaseEntity", "C_DOTATeam" };
-
-	vmt.schema_system->dump_netvars("client.dll", false, class_filter);
+	vmt.schema_system->dump_netvars("client.dll", false);
 	
 	size_t netvar_count = 0;
 	for (const auto& [class_name, netvar_map] : vmt.schema_system->g_netvars) {
@@ -143,7 +141,7 @@ int main() {
 			"sv_cheats",
 			"engine2.dll",
 			Patches::Patterns::sv_cheats,
-			Patches::PATCH_TYPE::JMP
+			PATCH_TYPE::JMP
 			});
 	}
 
@@ -169,7 +167,7 @@ int main() {
 			"set_rendering_enabled",
 			"particles.dll",
 			Patches::Patterns::set_rendering_enabled,
-			Patches::PATCH_TYPE::TEST,
+			PATCH_TYPE::TEST,
 			1
 			});
 
@@ -205,7 +203,7 @@ int main() {
 			"set_rendering_enabled_fix",
 			"client.dll",
 			Patches::Patterns::set_rendering_enabled_fix,
-			Patches::PATCH_TYPE::TEST,
+			PATCH_TYPE::TEST,
 			1
 			});
 	}
@@ -243,7 +241,7 @@ int main() {
 			"visible_by_enemy",
 			"client.dll",
 			Patches::Patterns::visible_by_enemy,
-			Patches::PATCH_TYPE::JMP
+			PATCH_TYPE::JMP
 			});
 	}
 

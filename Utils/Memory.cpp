@@ -41,7 +41,7 @@ optional<uintptr_t> Memory::pattern_scan(const string& target_module, const stri
             return Memory::loaded_modules[target_module].start_address + first_match;
         }
 
-// Retarder visual studio
+        // Retarder visual studio
 #pragma warning(push)
 #pragma warning(disable : 6385)
         const unsigned char pattern_current = *reinterpret_cast<const unsigned char*>(pattern);
@@ -71,7 +71,7 @@ optional<uintptr_t> Memory::pattern_scan(const string& target_module, const stri
 }
 
 bool Memory::load_modules(const DWORD process_ID) {
-    const char* Modules[] {
+    const char* Modules[]{
         "client.dll",
         "engine2.dll",
         "schemasystem.dll",
@@ -122,10 +122,10 @@ bool Memory::load_modules(const DWORD process_ID) {
     return false;
 }
 
-bool Memory::patch(const uintptr_t& patch_addr, const Patches::PATCH_TYPE patch_type, const optional<string>& replace_str) {
+bool Memory::patch(const uintptr_t& patch_addr, const PATCH_TYPE patch_type, const optional<string>& replace_str) {
     std::vector<BYTE> patch_data;
 
-    if (patch_type == Patches::PATCH_TYPE::CUSTOM)
+    if (patch_type == PATCH_TYPE::CUSTOM)
         patch_data = parse_pattern(replace_str.value());
     else
         patch_data.push_back((BYTE)patch_type);

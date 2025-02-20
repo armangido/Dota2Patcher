@@ -103,7 +103,7 @@ bool Scanner::find_CDOTAGamerules() {
     if (vmt.gamerules)
         return true;
 
-    const auto dota_gamerules_proxy_ptr = vmt.entity_system->find_by_name(CGameEntitySystem::NAME_TYPE::binary_name, "C_DOTAGamerulesProxy");
+    const auto dota_gamerules_proxy_ptr = vmt.entity_system->find_by_name(ENTITY_NAME_TYPE::BINARY_NAME, "C_DOTAGamerulesProxy");
     if (!dota_gamerules_proxy_ptr)
         return false;
 

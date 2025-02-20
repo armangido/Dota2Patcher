@@ -30,13 +30,6 @@ public:
 
 class CGameEntitySystem {
 public:
-	enum class NAME_TYPE {
-		internal_name,
-		entity_name,
-		binary_name,
-		class_name
-	};
-
 	void dump_entities() const { // for testing purposes
 		std::ofstream dump_file;
 		dump_file.open("C:\\entity_dump.txt");
@@ -78,33 +71,33 @@ public:
 		LOG::INFO("dump_entities: done. Total: {}", ents_count);
 	}
 
-	optional<CBaseEntity*> find_by_name(const NAME_TYPE& name_type, const string& name_to_find) const {
+	optional<CBaseEntity*> find_by_name(const ENTITY_NAME_TYPE& name_type, const string& name_to_find) const {
 		auto ident = this->first_identity();
 		if (!ident)
 			return nullopt;
 
 		while (true) {
 			switch (name_type) {
-				case NAME_TYPE::internal_name: {
+				case ENTITY_NAME_TYPE::INTERNAL_NAME: {
 					const auto internal_name = ident->internal_name().value_or("");
 					if (internal_name == name_to_find)
 						return ident->base_entity();
 					break;
 				}
-				case NAME_TYPE::entity_name: {
+				case ENTITY_NAME_TYPE::ENTITY_NAME: {
 					const auto entity_name = ident->entity_name().value_or("");
 					if (entity_name == name_to_find)
 						return ident->base_entity();
 					break;
 				}
-				case NAME_TYPE::binary_name: {
+				case ENTITY_NAME_TYPE::BINARY_NAME: {
 					const auto schema = ident->schema_class_binding();
 					const auto binary_name = schema->binary_name().value_or("");
 					if (binary_name == name_to_find)
 						return ident->base_entity();
 					break;
 				}
-				case NAME_TYPE::class_name: {
+				case ENTITY_NAME_TYPE::CLASS_NAME: {
 					const auto schema = ident->schema_class_binding();
 					const auto class_name = schema->class_name().value_or("");
 					if (class_name == name_to_find)
@@ -124,33 +117,33 @@ public:
 	}
 
 	template <typename T>
-	std::vector<T*> find_vector_by_name(const NAME_TYPE& name_type, const string& name_to_find) const {
+	std::vector<T*> find_vector_by_name(const ENTITY_NAME_TYPE& name_type, const string& name_to_find) const {
 		std::vector<T*> found;
 
 		auto ident = this->first_identity();
 
 		while (ident) {
 			switch (name_type) {
-				case NAME_TYPE::internal_name: {
+				case ENTITY_NAME_TYPE::INTERNAL_NAME: {
 					const auto internal_name = ident->internal_name().value_or("");
 					if (internal_name == name_to_find)
 						found.push_back(reinterpret_cast<T*>(ident->base_entity()));
 					break;
 				}
-				case NAME_TYPE::entity_name: {
+				case ENTITY_NAME_TYPE::ENTITY_NAME: {
 					const auto entity_name = ident->entity_name().value_or("");
 					if (entity_name == name_to_find)
 						found.push_back(reinterpret_cast<T*>(ident->base_entity()));
 					break;
 				}
-				case NAME_TYPE::binary_name: {
+				case ENTITY_NAME_TYPE::BINARY_NAME: {
 					const auto schema = ident->schema_class_binding();
 					const auto binary_name = schema->binary_name().value_or("");
 					if (binary_name == name_to_find)
 						found.push_back(reinterpret_cast<T*>(ident->base_entity()));
 					break;
 				}
-				case NAME_TYPE::class_name: {
+				case ENTITY_NAME_TYPE::CLASS_NAME: {
 					const auto schema = ident->schema_class_binding();
 					const auto class_name = schema->class_name().value_or("");
 					if (class_name == name_to_find)

@@ -5,12 +5,14 @@ struct WebVer {
     string tag_name;
     bool prerelease;
     string html_url;
+    optional <string> body;
 };
 
 struct SemVer {
     int major, minor, patch;
-    optional<int> rc_ver;
-    optional<string> update_url;
+    optional <int> rc_ver;
+    optional <string> update_url;
+    optional <string> body;
 
     static SemVer from_string(const string& version_str) {
         SemVer ver{ 0, 0, 0, nullopt };
@@ -58,5 +60,4 @@ private:
     static optional<string> web_request();
     static SemVer get_latest_version(const std::vector<WebVer>& versions);
     static constexpr std::string_view update_url = "https://api.github.com/repos/Wolf49406/Dota2Patcher/releases";
-    static constexpr std::string_view download_url = "https://github.com/Wolf49406/Dota2Patcher/releases/latest";
 };
