@@ -14,7 +14,7 @@ public:
 	}
 
 	template <typename T>
-	void set(T value) {
+	void set(const T value) {
 		Memory::write_memory<T>(this + 0x40, value);
 	}
 };
@@ -41,8 +41,8 @@ public:
 		return nullopt;
 	}
 
-	int load_convars() const {
-		int count = 0;
+	size_t load_convars() const {
+		size_t count = 0;
 		for (size_t index = 0; auto current_node = this->node()->node_by_index(index); ++index) {
 			if (const auto current_name = current_node->name(); current_name) {
 				g_convars[current_name.value()] = current_node;

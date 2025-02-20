@@ -104,6 +104,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Dota2Patcher.cpp" />
+    <ClCompile Include="Hacks\Convars.cpp" />
     <ClCompile Include="Hacks\Entities.cpp" />
     <ClCompile Include="Hacks\Worker.cpp" />
     <ClCompile Include="pch.cpp">

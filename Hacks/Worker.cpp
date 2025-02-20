@@ -5,11 +5,11 @@
 #include "../Utils/Config.h"
 
 void GameData::reset() {
-	local_player = nullptr;
-	local_hero = nullptr;
+    local_player = nullptr;
+    local_hero = nullptr;
     local_team = -1;
-	vmt.gamerules = nullptr;
     dota_range_display = nullptr;
+    vmt.gamerules = nullptr;
 }
 
 void Hacks::start_worker() {
@@ -25,16 +25,14 @@ void Hacks::start_worker() {
         LOG::DEBUG("Game started, looking for a Local Player and Hero...");
 
         while (!GameData::local_player || !GameData::local_hero) {
-            if (!GameData::local_player && Hacks::find_local_player())
+            if (!GameData::local_player && Hacks::find_local_player()) {
                 LOG::INFO("Local Player -> [{}]", TO_VOID(GameData::local_player));
+                Hacks::find_and_set_convars();
+            }
 
             if (!GameData::local_hero && Hacks::find_local_hero()) {
                 LOG::INFO("Local Hero: [{}] -> [{}]", GameData::local_hero->identity()->entity_name().value(), TO_VOID(GameData::local_hero));
-                local_team = GameData::local_hero->team_num();
-                dota_range_display = vmt.cvar->g_convars["dota_range_display"];
-                vmt.cvar->g_convars["fow_client_nofiltering"]->set<bool>(!ConfigManager::fow_client_nofiltering);
-                vmt.cvar->g_convars["fog_enable"]->set<bool>(!ConfigManager::fog_enabled);
-                vmt.cvar->g_convars["cl_weather"]->set<DOTA_WEATHER>(ConfigManager::cl_weather);
+                GameData::local_team = GameData::local_hero->team_num();
             }
             std::this_thread::sleep_for(std::chrono::seconds(1));
         }
@@ -42,7 +40,7 @@ void Hacks::start_worker() {
         LOG::DEBUG("Entering in-game loop...");
 
         while (vmt.gamerules->in_game()) {
-            dota_range_display->set<float>(GameData::local_hero->visible() ? 100.f: 0.f);
+            GameData::dota_range_display->set<float>(GameData::local_hero->visible() ? 100.f: 0.f);
 
             for (auto ident = vmt.entity_system->first_identity(); ident; ident = ident->m_pNext().value_or(nullptr)) {
                 if (auto current_ent = ident->base_entity(); current_ent && current_ent->is_hero()) {

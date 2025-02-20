@@ -91,15 +91,7 @@ int main() {
 	printf("\n");
 
 	LOG::DEBUG("Loading NetVars...");
-
-	vmt.schema_system->dump_netvars("client.dll", false);
-	
-	size_t netvar_count = 0;
-	for (const auto& [class_name, netvar_map] : vmt.schema_system->g_netvars) {
-		netvar_count += netvar_map.size();
-	}
-
-	LOG::INFO("NetVars loaded: {}", netvar_count);
+	LOG::INFO("NetVars loaded: {}", vmt.schema_system->dump_netvars("client.dll", false));
 
 	// LOAD CONVARS
 	printf("\n");

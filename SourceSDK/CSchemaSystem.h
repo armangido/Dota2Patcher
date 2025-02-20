@@ -229,10 +229,10 @@ public:
 	* @param scope_name Name of a scope. Ex: client.dll
 	* @param dump_to_file Dump NetVars to files or not
 	*/
-	void dump_netvars(const string& scope_name, const bool dump_to_file) const {
+	size_t dump_netvars(const string& scope_name, const bool dump_to_file) const {
 		const auto scope = this->type_scope(scope_name);
 		if (!scope)
-			return;
+			return 0;
 
 		if (dump_to_file)
 			std::filesystem::create_directories("C:\\netvars\\");
@@ -290,6 +290,13 @@ public:
 			}
 			container_index++;
 		}
+
+		size_t netvar_count = 0;
+		for (const auto& [class_name, netvar_map] : g_netvars) {
+			netvar_count += netvar_map.size();
+		}
+
+		return netvar_count;
 	}
 
 	/**
@@ -297,14 +304,14 @@ public:
 	* 
 	* @param scope_index Index a of scope. Will be converted to a scope_name and send to original dump_netvars
 	*/
-	void dump_netvars(const size_t scope_index, const bool dump_to_file) const {
+	size_t dump_netvars(const size_t scope_index, const bool dump_to_file) const {
 		const auto scope = this->type_scope(scope_index);
 		if (!scope)
-			return;
+			return 0;
 
 		const auto scope_name = scope.value()->scope_name();
 		if (!scope_name)
-			return;
+			return 0;
 
 		return dump_netvars(scope_name.value(), dump_to_file);
 	}

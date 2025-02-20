@@ -8,17 +8,17 @@ class CCvarNode;
 
 class GameData {
 public:
-	static bool find_local_player();
-	static bool find_local_hero();
-
-	static void reset();
 	static inline C_DOTAPlayerController* local_player;
 	static inline CBaseEntity* local_hero;
 	static inline CCvarNode* dota_range_display;
 	static inline int local_team;
+	static void reset();
 };
 
-class Hacks : public GameData {
+class Hacks {
 public:
 	static void start_worker();
+	static bool find_local_player();
+	static bool find_local_hero();
+	static void find_and_set_convars();
 };
