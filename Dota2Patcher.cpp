@@ -264,6 +264,7 @@ int main() {
 	printf("\n");
 	LOG::INFO("Done! Will close in 5 seconds...");
 	ProcessHandle::close_process_handle();
+	system("pause");
 	std::this_thread::sleep_for(std::chrono::seconds(5));
 	return 0;
 }

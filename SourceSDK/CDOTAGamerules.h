@@ -8,14 +8,14 @@ public:
         return paused.value_or(0) != 0;
     }
 
-    DOTA_GameState game_state() const {
+    DOTA_GAME_STATE game_state() const {
         const auto game_state = Memory::read_memory<int>(this + 0x74);
-        return game_state.has_value() ? static_cast<DOTA_GameState>(game_state.value()) : DOTA_GameState::INVALID;
+        return game_state.has_value() ? static_cast<DOTA_GAME_STATE>(game_state.value()) : DOTA_GAME_STATE::INVALID;
     }
 
     bool in_game() const {
         const auto game_state = this->game_state();
-        return game_state == DOTA_GameState::PRE_GAME || game_state == DOTA_GameState::GAME_IN_PROGRESS || game_state == DOTA_GameState::POST_GAME;
+        return game_state >= DOTA_GAME_STATE::HERO_SELECTION && game_state <= DOTA_GAME_STATE::POST_GAME;
     }
 };
 

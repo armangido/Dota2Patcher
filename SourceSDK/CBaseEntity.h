@@ -21,7 +21,7 @@ public:
 	bool visible() const {
 		const auto ptr = vmt.schema_system->get_netvar(this, "C_DOTA_BaseNPC", "m_iTaggedAsVisibleByTeam");
 		const auto value = Memory::read_memory<int>(ptr.value());
-		return value.value() == 14 || value.value() == 30;
+		return value.value_or(14) == 14 || value.value_or(30) == 30;
 	}
 
 	void set_custom_health_label(const string& label) {

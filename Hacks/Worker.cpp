@@ -8,7 +8,6 @@ void GameData::reset() {
     local_player = nullptr;
     local_hero = nullptr;
     local_team = -1;
-    dota_range_display = nullptr;
     vmt.gamerules = nullptr;
 }
 

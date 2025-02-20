@@ -1,6 +1,6 @@
 #pragma once
 
-enum class DOTA_GameState : int {
+enum class DOTA_GAME_STATE : int {
     INVALID = -1,
     INIT,
     WAIT_FOR_PLAYERS_TO_LOAD,

@@ -23,13 +23,13 @@ public:
         return Scanner::find_all();
     }
 
-    static inline CEngineClient* engine;
-    static inline CSource2Client* client;
-    static inline CDOTAGamerules* gamerules;
-    static inline CDOTACamera* camera;
-    static inline CGameEntitySystem* entity_system;
-    static inline CSchemaSystem* schema_system;
-    static inline CCvar* cvar;
+    static inline CEngineClient* engine = nullptr;
+    static inline CSource2Client* client = nullptr;
+    static inline CDOTAGamerules* gamerules = nullptr;
+    static inline CDOTACamera* camera = nullptr;
+    static inline CGameEntitySystem* entity_system = nullptr;
+    static inline CSchemaSystem* schema_system = nullptr;
+    static inline CCvar* cvar = nullptr;
 } vmt;
 
 
