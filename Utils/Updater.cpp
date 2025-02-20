@@ -5,6 +5,14 @@
 #include "Config.h"
 using json = nlohmann::json;
 
+static string trim_string(const string& str) {
+    const size_t MAX_LENGTH = 150;
+    if (str.size() > MAX_LENGTH)
+        return str.substr(0, MAX_LENGTH) + "...[]";
+    return str;
+}
+
+
 static size_t curl_callback(void* contents, const size_t size, const size_t nmemb, const void* userp) {
     ((string*)userp)->append((char*)contents, size * nmemb);
     return size * nmemb;
@@ -102,8 +110,7 @@ bool Updater::update_required() {
     if (Updater::local_version < latest_version) {
         LOG::ERR("Update Required! New version: {}", latest_version.to_string());
         if (latest_version.body)
-            LOG::INFO("Update Log: {}", latest_version.body.value());
-        LOG::INFO("Press Enter to continue...");
+            LOG::INFO("Update Log: {}", trim_string(latest_version.body.value()));
 
         system("pause");
         open_url(latest_version.update_url.value());
