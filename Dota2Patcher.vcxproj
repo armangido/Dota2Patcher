@@ -119,6 +119,7 @@
     <ClInclude Include="Hacks\Hacks.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="SourceSDK\CBaseEntity.h" />
+    <ClInclude Include="SourceSDK\CDOTACamera.h" />
     <ClInclude Include="SourceSDK\CDOTAGamerules.h" />
     <ClInclude Include="SourceSDK\CEngineClient.h" />
     <ClInclude Include="SourceSDK\CEntityIdentity.h" />

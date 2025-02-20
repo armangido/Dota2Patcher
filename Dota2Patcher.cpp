@@ -3,6 +3,7 @@
 #include "Utils/Config.h"
 #include "Utils/Updater.h"
 #include "SourceSDK/CDOTAGamerules.h"
+#include "SourceSDK/CDOTACamera.h"
 #include "SourceSDK/CreateInterface.h"
 #include "SourceSDK/interfaces.h"
 #include "Hacks/Hacks.h"
@@ -97,7 +98,6 @@ int main() {
 
 	LOG::DEBUG("Loading ConVars...");
 	LOG::INFO("ConVars loaded: {}", vmt.cvar->load_convars());
-	Hacks::find_and_set_convars();
 
 	// WAITING FOR A LOBBY
 	printf("\n");
@@ -106,31 +106,12 @@ int main() {
 	while (!Scanner::find_CDOTAGamerules())
 		std::this_thread::sleep_for(std::chrono::seconds(1));
 
+	// CAMERA HACK
+	vmt.camera->set_distance(ConfigManager::camera_distance);
+	vmt.camera->set_r_farz(ConfigManager::camera_distance * 2);
+
 	// PATCHES
 	printf("\n");
-
-	// #STR: "SV: Convar '%s' is cheat protected, change ignored"
-	// jnz		short loc_1801AA477 <<<<
-	// mov		rax, cs:LOG_CONSOLE
-	// mov		edx, 3
-	// mov		ecx, [rax]
-	// call		cs:LoggingSystem_IsChannelEnabled
-	// test		al, al
-	// jz		short loc_1801AA469
-	// cmp		[r15+438h], r13d
-	// jle		short loc_1801AA44B
-	// mov		rax, [r15+440h]
-	// mov		rdi, [rax]
-	// mov		rax, cs:LOG_CONSOLE
-	// lea		r8, aSvConvarSIsChe ; "SV: Convar '%s' is cheat protected, cha"...
-	if (ConfigManager::sv_cheats) {
-		Patches::add_patch({
-			"sv_cheats",
-			"engine2.dll",
-			Patches::Patterns::sv_cheats,
-			PATCH_TYPE::JMP
-			});
-	}
 
 	// CParticleCollection 95'th vfunc (offset 0x5F)
 	// #STR: "Error in child list of particle system %s [%p], parent: %p, "m_Children.m_pHead: [%p]\n", "Address of m_Children.m_pHead: [%p]\n"
@@ -250,16 +231,10 @@ int main() {
 	}
 
 	// WAITING FOR A GAME
-	if (ConfigManager::hacks_enabled()) {
-		printf("\n");
-		LOG::DEBUG("Waiting for a Game to start...");
-		Hacks::start_worker();
-	}
-
 	printf("\n");
-	LOG::INFO("Done! Will close in 5 seconds...");
+	LOG::DEBUG("Waiting for a Game to start...");
+	Hacks::start_worker();
+;
 	ProcessHandle::close_process_handle();
-	system("pause");
-	std::this_thread::sleep_for(std::chrono::seconds(5));
 	return 0;
 }

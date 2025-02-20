@@ -67,10 +67,6 @@ public:
     static inline bool visible_by_enemy = false;
     static inline bool illusions_detection = false;
 
-    static inline bool hacks_enabled() {
-        return visible_by_enemy || illusions_detection;
-    }
-
     static inline std::vector<ConfigEntry> config_entries = {
     { "camera_distance", &camera_distance },
     { "sv_cheats", &sv_cheats },
@@ -108,7 +104,7 @@ public:
         std::cin.ignore(10, '\n');
         cl_weather = (DOTA_WEATHER)(ask_for_int("[~] Enter Weather number: ", 1, 10) - 1);
 
-        cout << "[HACKS] Dota2Patcher will not close!\n";
+        cout << "[HACKS]\n";
         visible_by_enemy = ask_for_bool("[~] Visible By Enemy [y/n or 1/0]: ");
         illusions_detection = ask_for_bool("[~] Illusions Detection [y/n or 1/0]: ");
 

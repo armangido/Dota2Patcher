@@ -30,7 +30,7 @@ public:
 	};
 
 	static optional<Interface*> get_first_interface(const string& module_name) {
-		const auto CreateInterfaceFn = Memory::pattern_scan(module_name, Patches::Patterns::CreateInterface);
+		const auto CreateInterfaceFn = Memory::pattern_scan(module_name, Patches::Patterns::create_interface);
 		if (!CreateInterfaceFn) {
 			LOG::CRITICAL("Can't find [{}] CreateInterface pattern!", module_name);
 			return nullopt;

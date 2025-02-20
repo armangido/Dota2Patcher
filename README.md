@@ -11,8 +11,6 @@
 * Set your settings
 * Launch Dota 2
 	* Patcher will wait for a lobby to start
-* Wait for Patcher to do his job
-	* Patcher will close if no errors occurred and if no [CHEAT] functions enabled
 * That's all!
 
 ### 🧾 Documentation:  
