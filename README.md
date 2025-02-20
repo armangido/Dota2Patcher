@@ -22,6 +22,11 @@ Developers can look at [documentation](https://wolf49406.github.io/Dota2Patcher/
 
 ## ❗ Features:
 
+### ✨ NEW: Weather Changer
+Set any type of weather: `Snow, Rain, Moonbeam, Pestilence, Harvest, Sirocco, Spring, Ash, Aurora`  
+
+![weather](https://github.com/user-attachments/assets/54b801b6-eb5a-427b-abce-f3268780d759)
+
 ### ✨ NEW: Visible By Enemy  
 Draws a ring under your hero if you are visible by enemy
 
