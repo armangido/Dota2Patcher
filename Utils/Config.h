@@ -57,24 +57,22 @@ public:
     };
 
     static inline int camera_distance = 1200;
-    static inline int fow_amount = 70;
     static inline bool sv_cheats = false;
     static inline bool fog_enabled = false;
     static inline bool fow_client_nofiltering = false;
     static inline bool set_rendering_enabled = false;
     static inline bool allow_rc_update = false;
+    static inline DOTA_WEATHER cl_weather = DOTA_WEATHER::WEATHER_DEFAULT;
     // HACKS
     static inline bool visible_by_enemy = false;
     static inline bool illusions_detection = false;
-    static inline DOTA_WEATHER cl_weather = DOTA_WEATHER::WEATHER_DEFAULT;
 
     static inline bool hacks_enabled() {
-        return visible_by_enemy || illusions_detection || cl_weather != DOTA_WEATHER::WEATHER_DEFAULT;
+        return visible_by_enemy || illusions_detection;
     }
 
     static inline std::vector<ConfigEntry> config_entries = {
     { "camera_distance", &camera_distance },
-    { "fow_amount", &fow_amount },
     { "sv_cheats", &sv_cheats },
     { "fog_enabled", &fog_enabled },
     { "fow_client_nofiltering", &fow_client_nofiltering },
@@ -87,18 +85,14 @@ public:
 
     static void ask_for_settings() {
         camera_distance = ask_for_int("[~] Enter camera distance [default is 1200]: ", 1200, 1500);
-        fow_amount = ask_for_int("[~] Enter FOW amount [default is 70]: ");
         sv_cheats = ask_for_bool("[~] Unlock sv_cheats? [y/n or 1/0]: ");
         fog_enabled = ask_for_bool("[~] Disable fog? [y/n or 1/0]: ");
-        fow_client_nofiltering = ask_for_bool("[~] Remove FoG anti-aliasing? [y/n or 1/0]: ");
+        fow_client_nofiltering = ask_for_bool("[~] Remove FoG anti-aliasing? (fow_client_nofiltering) [y/n or 1/0]: ");
         set_rendering_enabled = ask_for_bool("[~] Show hidden particles? [y/n or 1/0]: ");
         allow_rc_update = ask_for_bool("[~] Check for BETA update? [y/n or 1/0]: ");
-        cout << "[HACKS] Dota2Patcher will not close!\n";
-        visible_by_enemy = ask_for_bool("[~] Visible By Enemy [y/n or 1/0]: ");
-        illusions_detection = ask_for_bool("[~] Illusions Detection [y/n or 1/0]: ");
 
         // Weather
-        cout << 
+        cout <<
             "[WEATHER]\n"
             "Default: 1\n"
             "Snow: 2\n"
@@ -114,6 +108,10 @@ public:
         std::cin.ignore(10, '\n');
         cl_weather = (DOTA_WEATHER)(ask_for_int("[~] Enter Weather number: ", 1, 10) - 1);
 
+        cout << "[HACKS] Dota2Patcher will not close!\n";
+        visible_by_enemy = ask_for_bool("[~] Visible By Enemy [y/n or 1/0]: ");
+        illusions_detection = ask_for_bool("[~] Illusions Detection [y/n or 1/0]: ");
+
         write_settings();
     }
 
@@ -121,16 +119,15 @@ public:
         cout
             << "[~] Current settings:\n"
             << "[~] Camera distance: " << camera_distance << "\n"
-            << "[~] FOW amount: " << fow_amount << "\n"
             << "[~] sv_heats unlock: " << std::boolalpha << sv_cheats << "\n"
             << "[~] Fog disabled: " << std::boolalpha << fog_enabled << "\n"
             << "[~] Remove FoG anti-aliasing: " << std::boolalpha << fow_client_nofiltering << "\n"
             << "[~] Show hidden particles: " << std::boolalpha << set_rendering_enabled << "\n"
             << "[~] Check for BETA update: " << std::boolalpha << allow_rc_update << "\n"
+            << "[~] Weather: " << int_to_weather(cl_weather) << "\n"
             << "[HACKS]\n"
             << "[~] Visible By Enemy: " << std::boolalpha << visible_by_enemy << "\n"
-            << "[~] Illusions Detection: " << std::boolalpha << illusions_detection << "\n"
-            << "[~] Weather: " << int_to_weather(cl_weather) << "\n";
+            << "[~] Illusions Detection: " << std::boolalpha << illusions_detection << "\n";
     }
 
     static bool read_settings() {

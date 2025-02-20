@@ -24,10 +24,8 @@ void Hacks::start_worker() {
         LOG::DEBUG("Game started, looking for a Local Player and Hero...");
 
         while (!GameData::local_player || !GameData::local_hero) {
-            if (!GameData::local_player && Hacks::find_local_player()) {
+            if (!GameData::local_player && Hacks::find_local_player())
                 LOG::INFO("Local Player -> [{}]", TO_VOID(GameData::local_player));
-                Hacks::find_and_set_convars();
-            }
 
             if (!GameData::local_hero && Hacks::find_local_hero()) {
                 LOG::INFO("Local Hero: [{}] -> [{}]", GameData::local_hero->identity()->entity_name().value(), TO_VOID(GameData::local_hero));

@@ -3,7 +3,6 @@
 #include "Utils/Config.h"
 #include "Utils/Updater.h"
 #include "SourceSDK/CDOTAGamerules.h"
-#include "SourceSDK/CDOTACamera.h"
 #include "SourceSDK/CreateInterface.h"
 #include "SourceSDK/interfaces.h"
 #include "Hacks/Hacks.h"
@@ -98,6 +97,7 @@ int main() {
 
 	LOG::DEBUG("Loading ConVars...");
 	LOG::INFO("ConVars loaded: {}", vmt.cvar->load_convars());
+	Hacks::find_and_set_convars();
 
 	// WAITING FOR A LOBBY
 	printf("\n");
@@ -105,11 +105,6 @@ int main() {
 
 	while (!Scanner::find_CDOTAGamerules())
 		std::this_thread::sleep_for(std::chrono::seconds(1));
-
-	// CAMERA HACK
-	vmt.camera->set_distance(ConfigManager::camera_distance);
-	vmt.camera->set_r_farz(ConfigManager::camera_distance * 2);
-	vmt.camera->set_fow(ConfigManager::fow_amount);
 
 	// PATCHES
 	printf("\n");

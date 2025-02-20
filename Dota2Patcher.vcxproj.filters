@@ -49,9 +49,6 @@
     <ClInclude Include="Dota2Patcher.h">
       <Filter>Headers</Filter>
     </ClInclude>
-    <ClInclude Include="SourceSDK\CDOTACamera.h">
-      <Filter>Headers\SourceSDK</Filter>
-    </ClInclude>
     <ClInclude Include="SourceSDK\CreateInterface.h">
       <Filter>Headers\SourceSDK</Filter>
     </ClInclude>
