@@ -76,9 +76,6 @@
     <ClInclude Include="pch.h">
       <Filter>PCH</Filter>
     </ClInclude>
-    <ClInclude Include="Utils\Config.h">
-      <Filter>Utils</Filter>
-    </ClInclude>
     <ClInclude Include="Utils\Memory.h">
       <Filter>Utils</Filter>
     </ClInclude>
@@ -117,6 +114,9 @@
     </ClInclude>
     <ClInclude Include="SourceSDK\CDOTACamera.h">
       <Filter>Headers\SourceSDK</Filter>
+    </ClInclude>
+    <ClInclude Include="Utils\Config.h">
+      <Filter>Utils</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -9,7 +9,7 @@
 #include "Hacks/Hacks.h"
 
 int main() {
-	bool open_settings = GetAsyncKeyState(VK_SHIFT) & 1;
+	bool open_settings = GetAsyncKeyState(VK_SHIFT) & 0x8000;
 	draw_logo();
 	if (Updater::update_required())
 		return 0;
@@ -17,13 +17,11 @@ int main() {
 	// CONFIG
 	printf("\n");
 
-	if (!ConfigManager::read_settings() || open_settings) {
-		LOG::DEBUG("Opening settings...");
-		ConfigManager::ask_for_settings();
-		printf("\n");
-	}
-
+	ConfigManager::load_settings();
 	ConfigManager::show_settings();
+
+	if (open_settings)
+		ConfigManager::ask_for_settings();
 
 	// GET DOTA2 PROCESS
 	printf("\n");
