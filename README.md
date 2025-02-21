@@ -3,7 +3,7 @@
  
 [![MSBuild](https://github.com/Wolf49406/Dota2Patcher/actions/workflows/msbuild.yml/badge.svg?branch=main)](https://github.com/Wolf49406/Dota2Patcher/actions/workflows/msbuild.yml)
 
-![image](https://github.com/user-attachments/assets/c8d40b32-9eda-40dc-b552-cd3c4020f334)
+![Screenshot_1](https://github.com/user-attachments/assets/4d5d5d69-e3e5-4b6b-8ee3-b35683bc7e64)
 
 ## ❓ How To:
 * Download [latest release](https://github.com/Wolf49406/Dota2Patcher/releases/latest)
@@ -71,11 +71,3 @@ Allows you to use any cheat-protected commands in multiplayer (ex: `dota_camera_
 * `cl_weather`: default `0`
 	* `*any number*`(1-10) - Change weather
 		* ex. `cl_weather 8`
-
-### Raw
-
-* Just copy raw list and past to console
-
-```
-fog_enable 0; dota_camera_distance 1500; r_farz 3000; fow_client_nofiltering 1;
-```
