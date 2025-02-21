@@ -15,7 +15,7 @@ public:
 
     bool in_game() const {
         const auto game_state = this->game_state();
-        return game_state >= DOTA_GAME_STATE::HERO_SELECTION && game_state <= DOTA_GAME_STATE::POST_GAME;
+        return game_state >= DOTA_GAME_STATE::HERO_SELECTION && game_state <= DOTA_GAME_STATE::GAME_IN_PROGRESS;
     }
 };
 

@@ -103,21 +103,21 @@ bool Scanner::find_CDOTACamera() {
 }
 
 bool Scanner::find_CDOTAGamerules() {
-    if (vmt.gamerules)
-        return true;
-
     const auto dota_gamerules_proxy_ptr = vmt.entity_system->find_by_name(ENTITY_NAME_TYPE::BINARY_NAME, "C_DOTAGamerulesProxy");
     if (!dota_gamerules_proxy_ptr)
         return false;
 
     C_DOTAGamerulesProxy* dota_gamerules_proxy = reinterpret_cast<C_DOTAGamerulesProxy*>(dota_gamerules_proxy_ptr.value());
-    LOG::INFO("C_DOTAGamerules_Proxy -> [{}]", TO_VOID(dota_gamerules_proxy_ptr.value()));
 
     const auto dota_gamerules_ptr = dota_gamerules_proxy->gamerules();
     if (!dota_gamerules_ptr)
         return false;
 
-    vmt.gamerules = reinterpret_cast<CDOTAGamerules*>(dota_gamerules_ptr);
+    if (vmt.gamerules == dota_gamerules_ptr)
+        return false;
+
+    vmt.gamerules = dota_gamerules_ptr;
+    LOG::INFO("C_DOTAGamerules_Proxy -> [{}]", TO_VOID(dota_gamerules_proxy_ptr.value()));
     LOG::INFO("CDOTAGamerules -> [{}]", TO_VOID(vmt.gamerules));
     return true;
 }

@@ -106,6 +106,7 @@
     <ClCompile Include="Dota2Patcher.cpp" />
     <ClCompile Include="Hacks\Convars.cpp" />
     <ClCompile Include="Hacks\Entities.cpp" />
+    <ClCompile Include="Hacks\Patches.cpp" />
     <ClCompile Include="Hacks\Worker.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>

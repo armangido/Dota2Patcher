@@ -21,4 +21,5 @@ public:
 	static bool find_local_player();
 	static bool find_local_hero();
 	static void find_and_set_convars();
+	static void apply_patches();
 };
