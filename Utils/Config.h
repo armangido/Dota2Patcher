@@ -57,7 +57,6 @@ public:
     };
 
     static inline int camera_distance = 1200;
-    static inline bool sv_cheats = false;
     static inline bool fog_enabled = false;
     static inline bool fow_client_nofiltering = false;
     static inline bool set_rendering_enabled = false;
@@ -69,7 +68,6 @@ public:
 
     static inline std::vector<ConfigEntry> config_entries = {
     { "camera_distance", &camera_distance },
-    { "sv_cheats", &sv_cheats },
     { "fog_enabled", &fog_enabled },
     { "fow_client_nofiltering", &fow_client_nofiltering },
     { "set_rendering_enabled", &set_rendering_enabled },
@@ -81,7 +79,6 @@ public:
 
     static void ask_for_settings() {
         camera_distance = ask_for_int("[~] Enter camera distance [default is 1200]: ", 1200, 1500);
-        sv_cheats = ask_for_bool("[~] Unlock sv_cheats? [y/n or 1/0]: ");
         fog_enabled = ask_for_bool("[~] Disable fog? [y/n or 1/0]: ");
         fow_client_nofiltering = ask_for_bool("[~] Remove FoG anti-aliasing? (fow_client_nofiltering) [y/n or 1/0]: ");
         set_rendering_enabled = ask_for_bool("[~] Show hidden particles? [y/n or 1/0]: ");
@@ -112,7 +109,6 @@ public:
         cout
             << "[~] Current settings:\n"
             << "[~] Camera distance: " << camera_distance << "\n"
-            << "[~] sv_heats unlock: " << std::boolalpha << sv_cheats << "\n"
             << "[~] Fog disabled: " << std::boolalpha << fog_enabled << "\n"
             << "[~] Remove FoG anti-aliasing: " << std::boolalpha << fow_client_nofiltering << "\n"
             << "[~] Show hidden particles: " << std::boolalpha << set_rendering_enabled << "\n"
