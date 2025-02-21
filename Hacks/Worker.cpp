@@ -7,7 +7,6 @@
 void GameData::reset() {
     local_player = nullptr;
     local_hero = nullptr;
-    local_team = -1;
 }
 
 void Hacks::start_worker() {
@@ -61,7 +60,7 @@ void Hacks::start_worker() {
             std::this_thread::sleep_for(std::chrono::milliseconds(50));
         }
 
-        LOG::DEBUG("Exiting lobby...");
+        LOG::DEBUG("Exiting lobby...\n");
         GameData::reset();
     }
 }
