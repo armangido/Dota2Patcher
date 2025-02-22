@@ -32,8 +32,8 @@ void Hacks::start_worker() {
                 // ConVars
                 Hacks::find_and_set_convars();
                 // Camera Hack
-                vmt.camera->set_distance(ConfigManager::camera_distance);
-                vmt.camera->set_r_farz(ConfigManager::camera_distance * 2);
+                vmt.camera->set_distance(ConfigManager::config_entries["camera_distance"]);
+                vmt.camera->set_r_farz(ConfigManager::config_entries["camera_distance"] * 2);
             }
 
             if (!GameData::local_hero && Hacks::find_local_hero()) {
@@ -46,10 +46,10 @@ void Hacks::start_worker() {
         LOG::DEBUG("Entering in-game loop...");
 
         while (vmt.gamerules->in_game()) {
-            if (ConfigManager::visible_by_enemy)
+            if (ConfigManager::config_entries["visible_by_enemy"])
                 GameData::dota_range_display->set<float>(GameData::local_hero->visible() ? 100.f: 0.f);
 
-            if (!ConfigManager::illusions_detection) {
+            if (!ConfigManager::config_entries["illusions_detection"]) {
                 std::this_thread::sleep_for(std::chrono::milliseconds(50));
                 continue;
             }
@@ -57,7 +57,7 @@ void Hacks::start_worker() {
             for (auto ident = vmt.entity_system->first_identity(); ident; ident = ident->m_pNext().value_or(nullptr)) {
                 if (auto current_ent = ident->base_entity(); current_ent && current_ent->is_hero()) {
                     if (current_ent->team_num() != GameData::local_team) {
-                        if (ConfigManager::illusions_detection && current_ent->is_illusion())
+                        if (ConfigManager::config_entries["illusions_detection"] && current_ent->is_illusion())
                             current_ent->set_client_seen_illusion_modifier(true);
                     }
                 }

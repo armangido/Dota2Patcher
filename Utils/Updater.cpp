@@ -68,7 +68,7 @@ SemVer Updater::get_latest_version(const std::vector<WebVer>& web_versions) {
         }
     }
 
-    if (ConfigManager::allow_rc_update)
+    if (ConfigManager::config_entries["allow_rc_update"])
         return (latest_RC > latest_release) ? latest_RC : latest_release;
 
     return latest_release;

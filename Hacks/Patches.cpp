@@ -19,7 +19,7 @@ void Hacks::apply_patches() {
 // mov		ebp, r13d
 // cmp		dl, al
 // jz		loc_18003A334 <<<<
-	if (ConfigManager::set_rendering_enabled) {
+	if (ConfigManager::config_entries["set_rendering_enabled"]) {
 		Patches::add_patch({
 			"set_rendering_enabled",
 			"particles.dll",
@@ -93,7 +93,7 @@ void Hacks::apply_patches() {
 	// call		qword ptr [rdx+288h]
 	// test		al, al
 	// jnz		short loc_18159CCAA <<<<
-	if (ConfigManager::visible_by_enemy) {
+	if (ConfigManager::config_entries["visible_by_enemy"]) {
 		Patches::add_patch({
 			"visible_by_enemy",
 			"client.dll",
