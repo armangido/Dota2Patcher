@@ -50,13 +50,13 @@ public:
         cout
             << "[~] Current settings:\n"
             << "[~] Camera distance: " << config_entries["camera_distance"] << "\n"
-            << "[~] Fog disabled: " << std::boolalpha << config_entries["fog_enabled"] << "\n"
-            << "[~] Remove FoG anti-aliasing: " << std::boolalpha << config_entries["fow_client_nofiltering"] << "\n"
-            << "[~] Show hidden particles: " << std::boolalpha << config_entries["set_rendering_enabled"] << "\n"
-            << "[~] Check for BETA update: " << std::boolalpha << config_entries["allow_rc_update"] << "\n"
+            << "[~] Fog disabled: " << std::boolalpha << (bool)config_entries["fog_enabled"] << "\n"
+            << "[~] Remove FoG anti-aliasing: " << std::boolalpha << (bool)config_entries["fow_client_nofiltering"] << "\n"
+            << "[~] Show hidden particles: " << std::boolalpha << (bool)config_entries["set_rendering_enabled"] << "\n"
+            << "[~] Check for BETA update: " << std::boolalpha << (bool)config_entries["allow_rc_update"] << "\n"
             << "[HACKS]\n"
-            << "[~] Visible By Enemy: " << std::boolalpha << config_entries["visible_by_enemy"] << "\n"
-            << "[~] Illusions Detection: " << std::boolalpha << config_entries["illusions_detection"] << "\n"
+            << "[~] Visible By Enemy: " << std::boolalpha << (bool)config_entries["visible_by_enemy"] << "\n"
+            << "[~] Illusions Detection: " << std::boolalpha << (bool)config_entries["illusions_detection"] << "\n"
             << "[~] Weather: " << int_to_weather((DOTA_WEATHER)config_entries["cl_weather"]) << "\n"
             ;
     }
@@ -78,15 +78,12 @@ public:
 
         try {
             file >> config_file;
-            LOG::INFO("Loaded config: {}", config_file.dump(4));
 
             bool missing_keys = false;
 
             for (auto& [key, value] : config_entries) {
-                if (config_file.contains(key)) {
-                    LOG::INFO("Loading setting [{}]: {}", key, config_file[key].dump());
+                if (config_file.contains(key))
                     config_entries[key] = config_file[key].get<int>();
-                }
                 else {
                     LOG::ERR("Config missing key '{}'. Requesting user input.", key);
                     config_entries[key] = ask_for_int("[~] Enter value for " + key + ": ", 0, 1000);
@@ -94,9 +91,8 @@ public:
                 }
             }
 
-            if (missing_keys) {
+            if (missing_keys)
                 save_settings();
-            }
 
         }
         catch (const std::exception& e) {
