@@ -34,6 +34,8 @@ void Hacks::start_worker() {
                 // Camera Hack
                 vmt.camera->set_distance(ConfigManager::config_entries["camera_distance"]);
                 vmt.camera->set_r_farz(ConfigManager::config_entries["camera_distance"] * 2);
+                // River Type
+                vmt.gamerules->set_river_vial((DOTA_RIVER)ConfigManager::config_entries["river_vial"]);
             }
 
             if (!GameData::local_hero && Hacks::find_local_hero()) {

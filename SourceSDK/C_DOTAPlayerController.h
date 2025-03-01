@@ -5,8 +5,8 @@ class C_DOTAPlayerController {
 public:
 	bool is_hero_assigned() const {
 		const auto ptr = vmt.schema_system->get_netvar(this, "C_DOTAPlayerController", "m_bHeroAssigned");
-		const auto value = Memory::read_memory<bool>(ptr.value()).value();
-		return value != 0;
+		const auto value = Memory::read_memory<bool>(ptr.value());
+        return value.value_or(0) != 0;
 	}
 
 	CHandle assigned_hero_handle() const {

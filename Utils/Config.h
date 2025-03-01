@@ -15,6 +15,7 @@ public:
         { "visible_by_enemy", 0 },
         { "illusions_detection", 0 },
         { "cl_weather", 0 },
+        { "river_vial", 0},
     };
 
     static void ask_for_settings() {
@@ -43,6 +44,22 @@ public:
         std::cin.ignore(10, '\n');
         config_entries["cl_weather"] = ask_for_int("[~] Enter Weather number: ", 1, 10) - 1;
 
+
+        // River Vial
+        cout <<
+            "[RIVER TYPE]\n"
+            "Default: 1\n"
+            "Oil: 2\n"
+            "Dry: 3\n"
+            "Slime: 4\n"
+            "Chrome: 5\n"
+            "Electric: 6\n"
+            "Potion: 7\n"
+            "Blood: 8\n";
+
+        //std::cin.ignore(10, '\n');
+        config_entries["river_vial"] = ask_for_int("[~] Enter River type: ", 1, 8) - 1;
+
         save_settings();
     }
 
@@ -58,6 +75,7 @@ public:
             << "[~] Visible By Enemy: " << std::boolalpha << (bool)config_entries["visible_by_enemy"] << "\n"
             << "[~] Illusions Detection: " << std::boolalpha << (bool)config_entries["illusions_detection"] << "\n"
             << "[~] Weather: " << int_to_weather((DOTA_WEATHER)config_entries["cl_weather"]) << "\n"
+            << "[~] River type: " << int_to_river((DOTA_RIVER)config_entries["river_vial"]) << "\n"
             ;
     }
 
@@ -79,21 +97,14 @@ public:
         try {
             file >> config_file;
 
-            bool missing_keys = false;
-
             for (auto& [key, value] : config_entries) {
                 if (config_file.contains(key))
                     config_entries[key] = config_file[key].get<int>();
                 else {
                     LOG::ERR("Config missing key '{}'. Requesting user input.", key);
-                    config_entries[key] = ask_for_int("[~] Enter value for " + key + ": ", 0, 1000);
-                    missing_keys = true;
+                    ask_for_settings();
                 }
             }
-
-            if (missing_keys)
-                save_settings();
-
         }
         catch (const std::exception& e) {
             LOG::ERR("Error parsing config file: {}", e.what());
@@ -134,6 +145,20 @@ private:
         case DOTA_WEATHER::WEATHER_SPRING: return "Spring";
         case DOTA_WEATHER::WEATHER_ASH: return "Ash";
         case DOTA_WEATHER::WEATHER_AURORA: return "Aurora";
+        default: return "Default";
+        }
+    }
+
+    static string int_to_river(DOTA_RIVER river) {
+        switch (river) {
+        case DOTA_RIVER::RIVER_DEFAULT: return "Default";
+        case DOTA_RIVER::RIVER_OIL: return "Oil";
+        case DOTA_RIVER::RIVER_DRY: return "Dry";
+        case DOTA_RIVER::RIVER_SLIME: return "Slime";
+        case DOTA_RIVER::RIVER_CHROME: return "Chrome";
+        case DOTA_RIVER::RIVER_ELECTRIC: return "Electric";
+        case DOTA_RIVER::RIVER_POTION: return "Potion";
+        case DOTA_RIVER::RIVER_BLOOD: return "Blood";
         default: return "Default";
         }
     }

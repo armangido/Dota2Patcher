@@ -17,6 +17,10 @@ public:
         const auto game_state = this->game_state();
         return game_state >= DOTA_GAME_STATE::HERO_SELECTION && game_state <= DOTA_GAME_STATE::GAME_IN_PROGRESS;
     }
+
+    void set_river_vial(const DOTA_RIVER river) {
+        Memory::write_memory<DOTA_RIVER>(this + 0x6E8, river);
+    }
 };
 
 class C_DOTAGamerulesProxy {
