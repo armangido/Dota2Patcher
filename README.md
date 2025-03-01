@@ -20,6 +20,9 @@ Developers can look at [documentation](https://wolf49406.github.io/Dota2Patcher/
 
 ## ❗ Features:
 
+### ✨ NEW: River Changer
+Set any pyte of river (aka [River Vials](https://dota2.fandom.com/wiki/River_Vials))
+
 ### ✨ NEW: Weather Changer
 Set any type of weather: `Snow, Rain, Moonbeam, Pestilence, Harvest, Sirocco, Spring, Ash, Aurora`  
 
