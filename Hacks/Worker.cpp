@@ -11,13 +11,13 @@ void GameData::reset() {
 
 void Hacks::start_worker() {
     while (true) {
-        if (!ProcessHandle::get_PID_by_name(L"dota2.exe"))
-            break;
-
         LOG::DEBUG("Waiting for a Lobby...");
 
-        while (!Scanner::find_CDOTAGamerules())
+        while (!Scanner::find_CDOTAGamerules()) {
+            if (!ProcessHandle::get_PID_by_name(L"dota2.exe"))
+                return;
             std::this_thread::sleep_for(std::chrono::seconds(1));
+        }
 
         LOG::DEBUG("Waiting for a Game to start...");
 
