@@ -1,14 +1,3 @@
-```
- _____        _        ___  _____      _       _ 
-|  __ \      | |      |__ \|  __ \    | |     | |
-| |  | | ___ | |_ __ _   ) | |__) |_ _| |_ ___| |__   ___ _ __ 
-| |  | |/ _ \| __/ _` | / /|  ___/ _` | __/ __| '_ \ / _ \ '__|
-| |__| | (_) | || (_| |/ /_| |  | (_| | || (__| | | |  __/ |
-|_____/ \___/ \__\__,_|____|_|   \__,_|\__\___|_| |_|\___|_|
-                                                            
-            The return of legendary Dota2Patcher
- ```
-
 ![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/Wolf49406/Dota2Patcher/msbuild.yml?style=for-the-badge)
 ![GitHub Downloads (all assets, all releases)](https://img.shields.io/github/downloads/Wolf49406/Dota2Patcher/total?style=for-the-badge)
 ![GitHub Repo stars](https://img.shields.io/github/stars/Wolf49406/Dota2Patcher?style=for-the-badge)
