@@ -1,11 +1,12 @@
 <p align="center">
-    <img src="https://img.shields.io/github/actions/workflow/status/Wolf49406/Dota2Patcher/msbuild.yml?style=for-the-badge&logo=appveyor" alt="GitHub Actions Workflow Status">
-    <img src="https://img.shields.io/github/downloads/Wolf49406/Dota2Patcher/total?style=for-the-badge&logo=appveyor" alt="GitHub Downloads">
-    <img src="https://img.shields.io/github/stars/Wolf49406/Dota2Patcher?style=for-the-badge&logo=appveyor" alt="GitHub Repo stars">
-    <img src="https://img.shields.io/github/forks/Wolf49406/Dota2Patcher?style=for-the-badge&logo=appveyor" alt="GitHub forks">
+	<br>
+	<img src="https://github.com/user-attachments/assets/4d5d5d69-e3e5-4b6b-8ee3-b35683bc7e64" alt="Screenshot">
+	<br><br>
+	<img src="https://img.shields.io/github/actions/workflow/status/Wolf49406/Dota2Patcher/msbuild.yml?style=for-the-badge&logo=appveyor" alt="GitHub Actions Workflow Status">
+	<img src="https://img.shields.io/github/downloads/Wolf49406/Dota2Patcher/total?style=for-the-badge&logo=appveyor" alt="GitHub Downloads">
+	<img src="https://img.shields.io/github/stars/Wolf49406/Dota2Patcher?style=for-the-badge&logo=appveyor" alt="GitHub Repo stars">
+	<img src="https://img.shields.io/github/forks/Wolf49406/Dota2Patcher?style=for-the-badge&logo=appveyor" alt="GitHub forks">
 </p>
-
-![Screenshot_1](https://github.com/user-attachments/assets/4d5d5d69-e3e5-4b6b-8ee3-b35683bc7e64)
 
 ## ❓ How To:
 * Download [latest release](https://github.com/Wolf49406/Dota2Patcher/releases/latest)
@@ -14,11 +15,6 @@
 * Launch Dota 2
 	* Patcher will wait for a lobby to start
 * That's all!
-
-### 🧾 Documentation:  
-
-Developers can look at [documentation](https://wolf49406.github.io/Dota2Patcher/) (work in progress)  
-Разработчики могут посмотреть [документацию](https://wolf49406.github.io/Dota2Patcher/) (дополняется)  
 
 ## ❗ Features:
 
