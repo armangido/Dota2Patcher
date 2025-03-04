@@ -1,7 +1,18 @@
-# Dota2Patcher
- The return of legendary Dota2Patcher  
- 
-[![MSBuild](https://github.com/Wolf49406/Dota2Patcher/actions/workflows/msbuild.yml/badge.svg?branch=main)](https://github.com/Wolf49406/Dota2Patcher/actions/workflows/msbuild.yml)
+```
+ _____        _        ___  _____      _       _ 
+|  __ \      | |      |__ \|  __ \    | |     | |
+| |  | | ___ | |_ __ _   ) | |__) |_ _| |_ ___| |__   ___ _ __ 
+| |  | |/ _ \| __/ _` | / /|  ___/ _` | __/ __| '_ \ / _ \ '__|
+| |__| | (_) | || (_| |/ /_| |  | (_| | || (__| | | |  __/ |
+|_____/ \___/ \__\__,_|____|_|   \__,_|\__\___|_| |_|\___|_|
+                                                            
+            The return of legendary Dota2Patcher
+ ```
+
+![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/Wolf49406/Dota2Patcher/msbuild.yml?style=for-the-badge)
+![GitHub Downloads (all assets, all releases)](https://img.shields.io/github/downloads/Wolf49406/Dota2Patcher/total?style=for-the-badge)
+![GitHub Repo stars](https://img.shields.io/github/stars/Wolf49406/Dota2Patcher?style=for-the-badge)
+![GitHub forks](https://img.shields.io/github/forks/Wolf49406/Dota2Patcher?style=for-the-badge)
 
 ![Screenshot_1](https://github.com/user-attachments/assets/4d5d5d69-e3e5-4b6b-8ee3-b35683bc7e64)
 
