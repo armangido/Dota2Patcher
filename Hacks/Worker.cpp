@@ -3,6 +3,7 @@
 #include "../SourceSDK/CBaseEntity.h"
 #include "../SourceSDK/CCvar.h"
 #include "../Utils/Config.h"
+#include "../Utils/Scanner.h"
 
 void GameData::reset() {
     local_player = nullptr;

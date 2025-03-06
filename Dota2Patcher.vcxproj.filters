@@ -1,20 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Source files">
-      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
-      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
-    </Filter>
-    <Filter Include="Headers">
-      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
-      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
-    </Filter>
-    <Filter Include="Headers\SourceSDK">
-      <UniqueIdentifier>{d8a6ef08-9da6-4257-8c7d-67e1c527b1e9}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="PCH">
-      <UniqueIdentifier>{229a1279-d74c-4b1b-a60e-364adbded177}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Utils">
       <UniqueIdentifier>{f22df01b-e06c-41cb-8c79-c619f9134726}</UniqueIdentifier>
     </Filter>
@@ -27,13 +13,16 @@
     <Filter Include="UI\imgui">
       <UniqueIdentifier>{51048d6a-26b3-47df-977a-4a902712d364}</UniqueIdentifier>
     </Filter>
+    <Filter Include="SourceSDK">
+      <UniqueIdentifier>{d8a6ef08-9da6-4257-8c7d-67e1c527b1e9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="pch">
+      <UniqueIdentifier>{229a1279-d74c-4b1b-a60e-364adbded177}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Dota2Patcher.cpp">
-      <Filter>Source files</Filter>
-    </ClCompile>
     <ClCompile Include="pch.cpp">
-      <Filter>PCH</Filter>
+      <Filter>pch</Filter>
     </ClCompile>
     <ClCompile Include="Utils\Memory.cpp">
       <Filter>Utils</Filter>
@@ -71,34 +60,32 @@
     <ClCompile Include="UI\imgui\imgui.cpp">
       <Filter>UI\imgui</Filter>
     </ClCompile>
+    <ClCompile Include="Dota2Patcher.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Dota2Patcher.h">
-      <Filter>Headers</Filter>
-    </ClInclude>
     <ClInclude Include="SourceSDK\CreateInterface.h">
-      <Filter>Headers\SourceSDK</Filter>
+      <Filter>SourceSDK</Filter>
     </ClInclude>
     <ClInclude Include="SourceSDK\CEngineClient.h">
-      <Filter>Headers\SourceSDK</Filter>
+      <Filter>SourceSDK</Filter>
     </ClInclude>
     <ClInclude Include="SourceSDK\interfaces.h">
-      <Filter>Headers\SourceSDK</Filter>
+      <Filter>SourceSDK</Filter>
     </ClInclude>
     <ClInclude Include="SourceSDK\CSource2Client.h">
-      <Filter>Headers\SourceSDK</Filter>
+      <Filter>SourceSDK</Filter>
     </ClInclude>
     <ClInclude Include="SourceSDK\CDOTAGamerules.h">
-      <Filter>Headers\SourceSDK</Filter>
+      <Filter>SourceSDK</Filter>
     </ClInclude>
     <ClInclude Include="SourceSDK\CGameEntitySystem.h">
-      <Filter>Headers\SourceSDK</Filter>
+      <Filter>SourceSDK</Filter>
     </ClInclude>
     <ClInclude Include="SourceSDK\CSchemaSystem.h">
-      <Filter>Headers\SourceSDK</Filter>
+      <Filter>SourceSDK</Filter>
     </ClInclude>
     <ClInclude Include="pch.h">
-      <Filter>PCH</Filter>
+      <Filter>pch</Filter>
     </ClInclude>
     <ClInclude Include="Utils\Memory.h">
       <Filter>Utils</Filter>
@@ -113,31 +100,31 @@
       <Filter>Utils</Filter>
     </ClInclude>
     <ClInclude Include="SourceSDK\C_DOTATeam.h">
-      <Filter>Headers\SourceSDK</Filter>
+      <Filter>SourceSDK</Filter>
     </ClInclude>
     <ClInclude Include="SourceSDK\CBaseEntity.h">
-      <Filter>Headers\SourceSDK</Filter>
+      <Filter>SourceSDK</Filter>
     </ClInclude>
     <ClInclude Include="SourceSDK\CEntityIdentity.h">
-      <Filter>Headers\SourceSDK</Filter>
+      <Filter>SourceSDK</Filter>
     </ClInclude>
     <ClInclude Include="Hacks\Hacks.h">
       <Filter>Hacks</Filter>
     </ClInclude>
     <ClInclude Include="SourceSDK\C_DOTAPlayerController.h">
-      <Filter>Headers\SourceSDK</Filter>
+      <Filter>SourceSDK</Filter>
     </ClInclude>
     <ClInclude Include="SourceSDK\CHandle.h">
-      <Filter>Headers\SourceSDK</Filter>
+      <Filter>SourceSDK</Filter>
     </ClInclude>
     <ClInclude Include="SourceSDK\CCvar.h">
-      <Filter>Headers\SourceSDK</Filter>
+      <Filter>SourceSDK</Filter>
     </ClInclude>
     <ClInclude Include="SourceSDK\Defenitions.h">
-      <Filter>Headers\SourceSDK</Filter>
+      <Filter>SourceSDK</Filter>
     </ClInclude>
     <ClInclude Include="SourceSDK\CDOTACamera.h">
-      <Filter>Headers\SourceSDK</Filter>
+      <Filter>SourceSDK</Filter>
     </ClInclude>
     <ClInclude Include="Utils\Config.h">
       <Filter>Utils</Filter>
@@ -165,6 +152,10 @@
     </ClInclude>
     <ClInclude Include="UI\imgui\imgui.h">
       <Filter>UI\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="Dota2Patcher.h" />
+    <ClInclude Include="Utils\Scanner.h">
+      <Filter>Utils</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

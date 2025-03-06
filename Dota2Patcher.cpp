@@ -1,12 +1,9 @@
 ﻿#include "Dota2Patcher.h"
-#include "Utils/ProcessHandle.h"
 #include "Utils/Config.h"
 #include "Utils/Updater.h"
-#include "SourceSDK/CDOTAGamerules.h"
-#include "SourceSDK/CDOTACamera.h"
 #include "SourceSDK/CreateInterface.h"
-#include "SourceSDK/interfaces.h"
 #include "Hacks/Hacks.h"
+#include "Utils/Scanner.h"
 
 int main() {
 	bool open_settings = GetAsyncKeyState(VK_SHIFT) & 0x8000;
@@ -82,7 +79,7 @@ int main() {
 	// SCANNER
 	printf("\n");
 
-	while (!vmt.find_all())
+	while (!Scanner::find_all())
 		std::this_thread::sleep_for(std::chrono::seconds(1));
 
 	// LOAD NETVARS

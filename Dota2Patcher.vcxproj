@@ -155,6 +155,7 @@
     <ClInclude Include="Utils\Config.h" />
     <ClInclude Include="Utils\Memory.h" />
     <ClInclude Include="Utils\ProcessHandle.h" />
+    <ClInclude Include="Utils\Scanner.h" />
     <ClInclude Include="Utils\Updater.h" />
     <ClInclude Include="Utils\Utils.h" />
   </ItemGroup>
