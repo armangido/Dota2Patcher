@@ -1,11 +1,8 @@
 <p align="center">
-	<br>
-	<img src="https://github.com/user-attachments/assets/4d5d5d69-e3e5-4b6b-8ee3-b35683bc7e64" alt="Screenshot">
+	<img src="https://github.com/user-attachments/assets/3ec3a600-c2a5-4257-8442-768025ea8545">
 	<br><br>
-	<img src="https://img.shields.io/github/actions/workflow/status/Wolf49406/Dota2Patcher/msbuild.yml?style=for-the-badge&logo=appveyor" alt="GitHub Actions Workflow Status">
-	<img src="https://img.shields.io/github/downloads/Wolf49406/Dota2Patcher/total?style=for-the-badge&logo=appveyor" alt="GitHub Downloads">
-	<img src="https://img.shields.io/github/stars/Wolf49406/Dota2Patcher?style=for-the-badge&logo=appveyor" alt="GitHub Repo stars">
-	<img src="https://img.shields.io/github/forks/Wolf49406/Dota2Patcher?style=for-the-badge&logo=appveyor" alt="GitHub forks">
+	<img src="https://img.shields.io/github/actions/workflow/status/Wolf49406/Dota2Patcher/msbuild.yml?style=for-the-badge&logo=appveyor&labelColor=282a36&color=ff79c6">
+	<img src="https://img.shields.io/github/downloads/Wolf49406/Dota2Patcher/total?style=for-the-badge&logo=appveyor&labelColor=282a36&color=ff79c6">
 </p>
 
 ## ❓ How To:
