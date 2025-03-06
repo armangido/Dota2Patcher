@@ -2,32 +2,6 @@
 #include "../Utils/Memory.h"
 #include "CEntityIdentity.h"
 
-// Forward declaration
-class CHandle;
-class CEntityIdentity;
-//
-
-class SchemaName {
-public:
-	optional<string> name() const {
-		const auto name_ptr = Memory::read_memory<uintptr_t>(this + 0x8);
-		return !name_ptr ? nullopt : Memory::read_string(name_ptr.value());
-	}
-};
-
-class CSchemaClassBinding {
-public:
-	optional<string> binary_name() const { // C_DOTA_Unit_Hero_AntiMage
-		optional base = Memory::read_memory<SchemaName*>(this + 0x30);
-		return !base ? nullopt : base.value()->name();
-	}
-
-	optional<string> class_name() const { // C_DOTA_BaseNPC_Hero
-		optional base = Memory::read_memory<SchemaName*>(this + 0x38);
-		return !base ? nullopt : base.value()->name();
-	}
-};
-
 class CGameEntitySystem {
 public:
 	void dump_entities() const { // for testing purposes

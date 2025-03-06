@@ -21,6 +21,12 @@
     <Filter Include="Hacks">
       <UniqueIdentifier>{c3a963f6-7635-4fcb-8ce6-e8e3b0f3fca7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="UI">
+      <UniqueIdentifier>{8a63d574-947d-40cb-a280-f618764deb09}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\imgui">
+      <UniqueIdentifier>{51048d6a-26b3-47df-977a-4a902712d364}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Dota2Patcher.cpp">
@@ -46,6 +52,24 @@
     </ClCompile>
     <ClCompile Include="Hacks\Patches.cpp">
       <Filter>Hacks</Filter>
+    </ClCompile>
+    <ClCompile Include="UI\imgui\imgui_draw.cpp">
+      <Filter>UI\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="UI\imgui\imgui_impl_dx11.cpp">
+      <Filter>UI\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="UI\imgui\imgui_impl_win32.cpp">
+      <Filter>UI\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="UI\imgui\imgui_tables.cpp">
+      <Filter>UI\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="UI\imgui\imgui_widgets.cpp">
+      <Filter>UI\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="UI\imgui\imgui.cpp">
+      <Filter>UI\imgui</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -109,7 +133,7 @@
     <ClInclude Include="SourceSDK\CCvar.h">
       <Filter>Headers\SourceSDK</Filter>
     </ClInclude>
-    <ClInclude Include="SourceSDK\Enums.h">
+    <ClInclude Include="SourceSDK\Defenitions.h">
       <Filter>Headers\SourceSDK</Filter>
     </ClInclude>
     <ClInclude Include="SourceSDK\CDOTACamera.h">
@@ -117,6 +141,30 @@
     </ClInclude>
     <ClInclude Include="Utils\Config.h">
       <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="UI\imgui\imgui_impl_dx11.h">
+      <Filter>UI\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="UI\imgui\imgui_impl_win32.h">
+      <Filter>UI\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="UI\imgui\imgui_internal.h">
+      <Filter>UI\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="UI\imgui\imstb_rectpack.h">
+      <Filter>UI\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="UI\imgui\imstb_textedit.h">
+      <Filter>UI\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="UI\imgui\imstb_truetype.h">
+      <Filter>UI\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="UI\imgui\imconfig.h">
+      <Filter>UI\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="UI\imgui\imgui.h">
+      <Filter>UI\imgui</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

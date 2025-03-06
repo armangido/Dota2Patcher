@@ -19,7 +19,7 @@
 using std::string, std::cout, std::endl, std::optional, std::nullopt;
 
 #include <logger.h>
-#include "SourceSDK/Enums.h"
+#include "SourceSDK/Defenitions.h"
 #include "Utils/Utils.h"
 
 #endif

@@ -1,6 +1,6 @@
 #pragma once
 
-enum class DOTA_GAME_STATE : int {
+enum class DOTA_GAME_STATE {
     INVALID = -1,
     INIT,
     WAIT_FOR_PLAYERS_TO_LOAD,
@@ -60,4 +60,12 @@ enum class DOTA_RIVER {
     RIVER_ELECTRIC,
     RIVER_POTION,
     RIVER_BLOOD
+};
+
+struct vector2D {
+    float x, y;
+};
+
+struct vector3D {
+    float x, y, z;
 };
