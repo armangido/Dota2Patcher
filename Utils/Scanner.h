@@ -11,20 +11,12 @@ public:
         if (vmt.entity_system)
             return true;
 
-        const auto base = Memory::virtual_function<uintptr_t>(vmt.client, 30);
-        if (!base)
+        const auto entity_system = vmt.game_resource->get_entity_system();
+        if (!entity_system)
             return false;
 
-        const auto absolute_address_ptr = Memory::absolute_address<uintptr_t>(base.value());
-        if (!absolute_address_ptr)
-            return false;
-
-        const auto CGameEntitySystem_ptr = Memory::read_memory<uintptr_t>(absolute_address_ptr.value());
-        if (!CGameEntitySystem_ptr || CGameEntitySystem_ptr.value_or(0) == 0)
-            return false;
-
-        vmt.entity_system = reinterpret_cast<CGameEntitySystem*>(CGameEntitySystem_ptr.value());
-        LOG::INFO("CGameEntitySystem -> [{}]", TO_VOID(CGameEntitySystem_ptr.value()));
+        vmt.entity_system = entity_system;
+        LOG::INFO("CGameEntitySystem -> [{}]", TO_VOID(entity_system));
         return true;
     }
 

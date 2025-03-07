@@ -26,7 +26,6 @@ public:
 	struct ModuleInterfaces {
 		string module_name;
 		std::unordered_map<string, std::function<void(uintptr_t)>> interface_handlers;
-		int known_vfuncs;
 	};
 
 	static optional<Interface*> get_first_interface(const string& module_name) {
@@ -67,15 +66,12 @@ public:
 			}
 
 			seen_interfaces.insert(name.value());
-			int vfuncs = Memory::count_vms(base);
 
 			if (iterate_all)
 				LOG::INFO("[{}] -> [{}]", name.value(), TO_VOID(base));
 
 			else if (module.interface_handlers.find(name.value()) != module.interface_handlers.end()) {
 				LOG::INFO("Interface [{}] -> [{}]", name.value(), TO_VOID(base));
-				if (vfuncs != module.known_vfuncs)
-					LOG::ERR("VMT has changed! [{}] -> [{}]", module.known_vfuncs, vfuncs);
 				module.interface_handlers.at(name.value())(base);
 			}
 

@@ -135,6 +135,7 @@
     <ClInclude Include="SourceSDK\CEngineClient.h" />
     <ClInclude Include="SourceSDK\CEntityIdentity.h" />
     <ClInclude Include="SourceSDK\CGameEntitySystem.h" />
+    <ClInclude Include="SourceSDK\CGameResourceService.h" />
     <ClInclude Include="SourceSDK\CHandle.h" />
     <ClInclude Include="SourceSDK\CreateInterface.h" />
     <ClInclude Include="SourceSDK\CSource2Client.h" />

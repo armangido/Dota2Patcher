@@ -157,5 +157,8 @@
     <ClInclude Include="Utils\Scanner.h">
       <Filter>Utils</Filter>
     </ClInclude>
+    <ClInclude Include="SourceSDK\CGameResourceService.h">
+      <Filter>SourceSDK</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
