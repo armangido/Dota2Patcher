@@ -1,10 +1,11 @@
 #pragma once
 #include "..\SourceSDK\interfaces.h"
+#include "..\SourceSDK\WorldToScreen.h"
 
 class Scanner {
 public:
     static bool find_all() {
-        return find_CGameEntitySystem() && find_CDOTACamera();
+        return find_CGameEntitySystem() && find_CDOTACamera() && find_ViewMatrix();
     }
 
     static bool find_CGameEntitySystem() {
@@ -56,6 +57,72 @@ public:
 
         vmt.camera = reinterpret_cast<CDOTACamera*>(camera_base_address.value() - 0x40);
         LOG::INFO("CDOTA_Camera -> [{}]", TO_VOID(vmt.camera));
+        return true;
+    }
+
+    // CRenderGameSystem's last vfunc
+    // movsxd	rax, edx
+    // lea		rcx, unk_1851BFFF0 <<<<
+    // shl		rax, 6
+    // add		rax, rcx
+    // retn
+    // endp
+    //
+    // OR
+    //
+    // CViewRender 5'th vfunc
+    // mov     rax, rsp
+    // mov     [rax+10h], rbx
+    // mov     [rax+18h], rbp
+    // mov     [rax+20h], rsi
+    // mov     [rax+8], rcx
+    // push    rdi
+    // push    r12
+    // push    r13
+    // push    r14
+    // push    r15
+    // sub     rsp, 90h
+    // movaps  xmmword ptr [rax-38h], xmm6
+    // xor     edx, edx
+    // movaps  xmmword ptr [rax-48h], xmm7
+    // mov     r15, rcx
+    // call    sub_18152DF60
+    // movss   xmm6, cs:Y
+    // lea     r13, [r15+10h]
+    // movss   xmm7, cs:dword_18305220C
+    // xor     ebx, ebx
+    // mov     byte ptr [r15+1330h], 1
+    // lea     r15, cs:180000000h
+    // nop     word ptr [rax+rax+00h]
+    // mov     r12d, ebx
+    // lea     rcx, rva unk_1851C08C0[r15]
+    // imul    r14, r12, 990h
+    // mov     edx, ebx
+    // lea     rax, rva unk_1851BFFF0[r15] <<<<
+    // shl     rdx, 6
+    // lea     r9, rva unk_1851C0880[r15]
+    // add     rcx, rdx
+    // lea     r8, rva unk_1851C0840[r15]
+    static bool find_ViewMatrix() {
+        if (WorldToScreen::g_VMatrix)
+            return true;
+
+        const auto base = Memory::pattern_scan("client.dll", Patches::Patterns::VMatrix);
+        if (!base)
+            return false;
+
+        const auto VMatrix_ptr = Memory::absolute_address<uintptr_t>(base.value());
+        if (!VMatrix_ptr || VMatrix_ptr.value_or(0) == 0)
+            return false;
+
+        WorldToScreen::g_VMatrix = VMatrix_ptr.value();
+        LOG::INFO("ViewMatrix -> [{}]", TO_VOID(WorldToScreen::g_VMatrix));
+
+        if (!WorldToScreen::get_windows_size())
+            return false;
+
+        LOG::INFO("Windows Size: {}x{}", WorldToScreen::g_windows_size.x, WorldToScreen::g_windows_size.y);
+
         return true;
     }
 

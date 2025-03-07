@@ -145,6 +145,7 @@
     <ClInclude Include="SourceSDK\interfaces.h" />
     <ClInclude Include="SourceSDK\CSchemaSystem.h" />
     <ClInclude Include="SourceSDK\CCvar.h" />
+    <ClInclude Include="SourceSDK\WorldToScreen.h" />
     <ClInclude Include="UI\imgui\imconfig.h" />
     <ClInclude Include="UI\imgui\imgui.h" />
     <ClInclude Include="UI\imgui\imgui_impl_dx11.h" />

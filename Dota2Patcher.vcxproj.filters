@@ -160,5 +160,8 @@
     <ClInclude Include="SourceSDK\CGameResourceService.h">
       <Filter>SourceSDK</Filter>
     </ClInclude>
+    <ClInclude Include="SourceSDK\WorldToScreen.h">
+      <Filter>SourceSDK</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
