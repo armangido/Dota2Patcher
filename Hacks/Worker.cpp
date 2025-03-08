@@ -62,11 +62,6 @@ void Hacks::start_worker() {
             if (ConfigManager::config_entries["visible_by_enemy"])
                 GameData::dota_range_display->set<float>(GameData::local_hero->visible() ? 100.f: 0.f);
 
-            if (!ConfigManager::config_entries["illusions_detection"]) {
-                std::this_thread::sleep_for(std::chrono::milliseconds(50));
-                continue;
-            }
-
             for (auto ident = vmt.c_entity_system->first_identity(); ident; ident = ident->m_pNext().value_or(nullptr)) {
                 if (auto current_ent = ident->base_entity(); current_ent && current_ent->is_hero()) {
                     if (current_ent->team_num() != GameData::local_team) {

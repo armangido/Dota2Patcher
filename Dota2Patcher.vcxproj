@@ -140,8 +140,7 @@
     <ClInclude Include="SourceSDK\CHandle.h" />
     <ClInclude Include="SourceSDK\CParticleSystemMgr.h" />
     <ClInclude Include="SourceSDK\CSource2Client.h" />
-    <ClInclude Include="SourceSDK\C_DOTAPlayerController.h" />
-    <ClInclude Include="SourceSDK\C_DOTATeam.h" />
+    <ClInclude Include="SourceSDK\CDOTAPlayerController.h" />
     <ClInclude Include="SourceSDK\Defenitions.h" />
     <ClInclude Include="SourceSDK\interfaces.h" />
     <ClInclude Include="SourceSDK\CSchemaSystem.h" />

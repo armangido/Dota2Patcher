@@ -9,11 +9,7 @@ public:
 		dump_file.open("C:\\entity_dump.txt");
 		int ents_count = 0;
 
-		auto ident = this->first_identity();
-		if (!ident)
-			return;
-
-		while (true) {
+		for (auto ident = this->first_identity(); ident; ident = ident->m_pNext().value_or(nullptr)) {
 			ents_count++;
 
 			const auto schema = ident->schema_class_binding();
@@ -32,12 +28,6 @@ public:
 				dump_file << " | handle: " << std::hex << ident->handle().value().get() << " | index: " << ident->handle().value().to_index();
 
 			dump_file << " -> [" << (void*)ident->base_entity() << "]\n";
-
-			const auto next_ent = ident->m_pNext();
-			if (!next_ent)
-				break;
-
-			ident = next_ent.value();
 		}
 		
 		dump_file.close();
@@ -46,11 +36,7 @@ public:
 	}
 
 	optional<CBaseEntity*> find_by_name(const ENTITY_NAME_TYPE& name_type, const string& name_to_find) const {
-		auto ident = this->first_identity();
-		if (!ident)
-			return nullopt;
-
-		while (true) {
+		for (auto ident = this->first_identity(); ident; ident = ident->m_pNext().value_or(nullptr)) {
 			switch (name_type) {
 				case ENTITY_NAME_TYPE::INTERNAL_NAME: {
 					const auto internal_name = ident->internal_name().value_or("");
@@ -79,12 +65,6 @@ public:
 					break;
 				}
 			}
-
-			const auto next_ent = ident->m_pNext();
-			if (!next_ent)
-				break;
-
-			ident = next_ent.value();
 		}
 
 		return nullopt;
@@ -94,9 +74,7 @@ public:
 	std::vector<T*> find_vector_by_name(const ENTITY_NAME_TYPE& name_type, const string& name_to_find) const {
 		std::vector<T*> found;
 
-		auto ident = this->first_identity();
-
-		while (ident) {
+		for (auto ident = this->first_identity(); ident; ident = ident->m_pNext().value_or(nullptr)) {
 			switch (name_type) {
 				case ENTITY_NAME_TYPE::INTERNAL_NAME: {
 					const auto internal_name = ident->internal_name().value_or("");
@@ -125,8 +103,6 @@ public:
 					break;
 				}
 			}
-
-			ident = ident->m_pNext().value_or(nullptr);
 		}
 
 		return found;

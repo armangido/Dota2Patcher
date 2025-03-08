@@ -1,5 +1,5 @@
 #include "Hacks.h"
-#include "../SourceSDK/C_DOTAPlayerController.h"
+#include "../SourceSDK/CDOTAPlayerController.h"
 #include "../SourceSDK/CGameEntitySystem.h"
 #include "../SourceSDK/CBaseEntity.h"
 

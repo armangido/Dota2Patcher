@@ -28,8 +28,9 @@ public:
 
 	std::vector<Modifier*> get_vector(ModifiersList* current_list) const {
 		std::vector<Modifier*> found;
+		size_t count = this->count();
 
-		for (size_t i = 0; i <= this->count(); i++) {
+		for (size_t i = 0; i <= count; i++) {
 			const auto current_modifier = current_list->modifier(i);
 			if (!current_modifier)
 				continue;
@@ -40,7 +41,9 @@ public:
 	}
 
 	optional <Modifier*> find_by_name(ModifiersList* current_list, const string& name) const {
-		for (size_t i = 0; i <= this->count(); i++) {
+		size_t count = this->count();
+
+		for (size_t i = 0; i <= count; i++) {
 			const auto current_modifier = current_list->modifier(i);
 			if (!current_modifier)
 				continue;
