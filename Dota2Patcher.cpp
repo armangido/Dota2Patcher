@@ -72,6 +72,11 @@ int main() {
 			},
 		},
 		{
+			"particles.dll", {
+				{ "ParticleSystemMgr003", [](uintptr_t base) { vmt.particles = (CParticleSystemMgr*)base; } }
+			},
+		},
+		{
 			"tier0.dll", {
 				{ "VEngineCvar007", [](uintptr_t base) { vmt.cvar = (CCvar*)base; } }
 			},
@@ -92,8 +97,8 @@ int main() {
 	printf("\n");
 
 	LOG::DEBUG("Loading NetVars...");
-	LOG::INFO("NetVars loaded [client]: {}", vmt.schema_system->dump_netvars("client.dll", false));
-	LOG::INFO("NetVars loaded [server]: {}", vmt.schema_system->dump_netvars("server.dll", false));
+	LOG::INFO("NetVars loaded [client]: {}", vmt.schema_system->dump_netvars("client.dll"));
+	LOG::INFO("NetVars loaded [server]: {}", vmt.schema_system->dump_netvars("server.dll"));
 
 	// LOAD CONVARS
 	printf("\n");

@@ -138,6 +138,7 @@
     <ClInclude Include="SourceSDK\CGameResourceService.h" />
     <ClInclude Include="SourceSDK\CGameSceneNode.h" />
     <ClInclude Include="SourceSDK\CHandle.h" />
+    <ClInclude Include="SourceSDK\CParticleSystemMgr.h" />
     <ClInclude Include="SourceSDK\CreateInterface.h" />
     <ClInclude Include="SourceSDK\CSource2Client.h" />
     <ClInclude Include="SourceSDK\C_DOTAPlayerController.h" />

@@ -44,13 +44,19 @@ public:
 		return Memory::read_memory<Interface*>(first_interface_base.value());
 	}
 
-	static void load_interfaces(const ModuleInterfaces& module, bool iterate_all = false) {
+	static void load_interfaces(const ModuleInterfaces& module, bool dump_to_file = false) {
 		const auto interface_ptr = get_first_interface(module.module_name);
 		if (!interface_ptr)
 			return;
 
 		Interface* iface = interface_ptr.value();
 		std::unordered_set<std::string> seen_interfaces;
+
+		std::ofstream dump_file;
+		if (dump_to_file) {
+			std::filesystem::create_directories("C:\\interfaces");
+			dump_file.open("C:\\interfaces\\" + module.module_name + ".txt");
+		}
 
 		while (iface) {
 			const auto name = iface->name();
@@ -66,16 +72,19 @@ public:
 			}
 
 			seen_interfaces.insert(name.value());
-
-			if (iterate_all)
-				LOG::INFO("[{}] -> [{}]", name.value(), TO_VOID(base));
-
-			else if (module.interface_handlers.find(name.value()) != module.interface_handlers.end()) {
+			
+			if (dump_to_file)
+				dump_file << "[" << name.value() << "] -> [" << TO_VOID(base) << "]\n";
+			
+			if (module.interface_handlers.find(name.value()) != module.interface_handlers.end()) {
 				LOG::INFO("Interface [{}] -> [{}]", name.value(), TO_VOID(base));
 				module.interface_handlers.at(name.value())(base);
 			}
 
 			iface = iface->next().value_or(nullptr);
 		}
+
+		if (dump_file.is_open())
+			dump_file.close();
 	}
 };

@@ -7,6 +7,7 @@
 #include "CGameResourceService.h"
 #include "CGameEntitySystem.h"
 #include "CSchemaSystem.h"
+#include "CParticleSystemMgr.h"
 #include "CCvar.h"
 
 static class dota_interfaces {
@@ -20,5 +21,6 @@ public:
     static inline CGameEntitySystem* c_entity_system = nullptr;
     static inline CGameEntitySystem* s_entity_system = nullptr;
     static inline CSchemaSystem* schema_system = nullptr;
+    static inline CParticleSystemMgr* particles = nullptr;
     static inline CCvar* cvar = nullptr;
 } vmt;

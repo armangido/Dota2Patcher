@@ -175,5 +175,8 @@
     <ClInclude Include="Utils\vector.h">
       <Filter>Utils</Filter>
     </ClInclude>
+    <ClInclude Include="SourceSDK\CParticleSystemMgr.h">
+      <Filter>SourceSDK</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

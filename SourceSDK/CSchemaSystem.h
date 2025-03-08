@@ -230,7 +230,7 @@ public:
 	* @param scope_name Name of a scope. Ex: client.dll
 	* @param dump_to_file Dump NetVars to files or not
 	*/
-	size_t dump_netvars(const string& scope_name, const bool dump_to_file) const {
+	size_t dump_netvars(const string& scope_name, const bool dump_to_file = false) const {
 		const auto scope = this->type_scope(scope_name);
 		if (!scope)
 			return 0;
