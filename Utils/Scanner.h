@@ -9,13 +9,10 @@ public:
     }
 
     static bool find_CGameEntitySystem() {
-        if (vmt.c_entity_system && vmt.s_entity_system)
-            return true;
-
         const auto c_entity_system = Memory::read_memory<CGameEntitySystem*>(vmt.game_resource + 0x58); // client
         const auto s_entity_system = Memory::read_memory<CGameEntitySystem*>(vmt.game_resource + 0xB8); // server
-
-        if (!c_entity_system || !s_entity_system)
+        
+        if (c_entity_system.value_or(nullptr) == nullptr || s_entity_system.value_or(nullptr) == nullptr)
             return false;
 
         vmt.c_entity_system = c_entity_system.value();
@@ -49,9 +46,6 @@ public:
     // jmp		sub_181499FC0
     // endp
     static bool find_CDOTACamera() {
-        if (vmt.camera)
-            return true;
-
         const auto base = Memory::pattern_scan("client.dll", Patches::Patterns::CDOTACamera);
         if (!base)
             return false;
@@ -109,9 +103,6 @@ public:
     // add     rcx, rdx
     // lea     r8, rva unk_1851C0840[r15]
     static bool find_ViewMatrix() {
-        if (WorldToScreen::g_VMatrix)
-            return true;
-
         const auto base = Memory::pattern_scan("client.dll", Patches::Patterns::VMatrix);
         if (!base)
             return false;
