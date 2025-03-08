@@ -9,15 +9,20 @@ public:
     }
 
     static bool find_CGameEntitySystem() {
-        if (vmt.entity_system)
+        if (vmt.c_entity_system && vmt.s_entity_system)
             return true;
 
-        const auto entity_system = vmt.game_resource->get_entity_system();
-        if (!entity_system)
+        const auto c_entity_system = Memory::read_memory<CGameEntitySystem*>(vmt.game_resource + 0x58); // client
+        const auto s_entity_system = Memory::read_memory<CGameEntitySystem*>(vmt.game_resource + 0xB8); // server
+
+        if (!c_entity_system || !s_entity_system)
             return false;
 
-        vmt.entity_system = entity_system;
-        LOG::INFO("CGameEntitySystem -> [{}]", TO_VOID(entity_system));
+        vmt.c_entity_system = c_entity_system.value();
+        vmt.s_entity_system = s_entity_system.value();
+
+        LOG::INFO("CGameEntitySystem [client] -> [{}]", TO_VOID(c_entity_system.value()));
+        LOG::INFO("CGameEntitySystem [server] -> [{}]", TO_VOID(s_entity_system.value()));
         return true;
     }
 
@@ -127,7 +132,7 @@ public:
     }
 
     static bool find_CDOTAGamerules() {
-        const auto dota_gamerules_proxy_ptr = vmt.entity_system->find_by_name(ENTITY_NAME_TYPE::BINARY_NAME, "C_DOTAGamerulesProxy");
+        const auto dota_gamerules_proxy_ptr = vmt.c_entity_system->find_by_name(ENTITY_NAME_TYPE::BINARY_NAME, "C_DOTAGamerulesProxy");
         if (!dota_gamerules_proxy_ptr)
             return false;
 

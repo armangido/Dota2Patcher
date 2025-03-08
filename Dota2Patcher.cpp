@@ -51,15 +51,20 @@ int main() {
 
 	std::vector<CreateInterface::ModuleInterfaces> interfaces_to_load = {
 		{
+			"client.dll", {
+				{ "Source2Client002", [](uintptr_t base) { vmt.client = (CSource2Client*)base; } }
+			},
+		},
+		{
+			"server.dll", {
+				{ "Source2Server001", [](uintptr_t base) { vmt.server = (CSource2Server*)base; } },
+			}
+		},
+		{
 			"engine2.dll", {
 				{ "Source2EngineToClient001", [](uintptr_t base) { vmt.engine = (CEngineClient*)base; } },
 				{ "GameResourceServiceClientV001", [](uintptr_t base) { vmt.game_resource = (CGameResourceService*)base; } },
 			}
-		},
-		{
-			"client.dll", {
-				{ "Source2Client002", [](uintptr_t base) { vmt.client = (CSource2Client*)base; } }
-			},
 		},
 		{
 			"schemasystem.dll", {
@@ -87,7 +92,8 @@ int main() {
 	printf("\n");
 
 	LOG::DEBUG("Loading NetVars...");
-	LOG::INFO("NetVars loaded: {}", vmt.schema_system->dump_netvars("client.dll", false));
+	LOG::INFO("NetVars loaded [client]: {}", vmt.schema_system->dump_netvars("client.dll", false));
+	LOG::INFO("NetVars loaded [server]: {}", vmt.schema_system->dump_netvars("server.dll", false));
 
 	// LOAD CONVARS
 	printf("\n");

@@ -134,11 +134,8 @@ public:
 
 	optional<CBaseEntity*> find_by_index(uint32_t index, bool hero_only = false) const {
 		for (auto ident = this->first_identity(); ident; ident = ident->m_pNext().value_or(nullptr)) {
-			if (hero_only) {
-				const auto schema = ident->schema_class_binding();
-				if (!schema || schema->class_name().value_or("") != "C_DOTA_BaseNPC_Hero")
-					continue;
-			}
+			if (hero_only && !ident->is_hero())
+				continue;
 
 			if (ident->handle() && ident->handle().value().to_index() == index)
 				return ident->base_entity();

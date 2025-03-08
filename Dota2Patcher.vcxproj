@@ -136,6 +136,7 @@
     <ClInclude Include="SourceSDK\CEntityIdentity.h" />
     <ClInclude Include="SourceSDK\CGameEntitySystem.h" />
     <ClInclude Include="SourceSDK\CGameResourceService.h" />
+    <ClInclude Include="SourceSDK\CGameSceneNode.h" />
     <ClInclude Include="SourceSDK\CHandle.h" />
     <ClInclude Include="SourceSDK\CreateInterface.h" />
     <ClInclude Include="SourceSDK\CSource2Client.h" />
@@ -145,6 +146,7 @@
     <ClInclude Include="SourceSDK\interfaces.h" />
     <ClInclude Include="SourceSDK\CSchemaSystem.h" />
     <ClInclude Include="SourceSDK\CCvar.h" />
+    <ClInclude Include="SourceSDK\ModifierManager.h" />
     <ClInclude Include="SourceSDK\WorldToScreen.h" />
     <ClInclude Include="UI\imgui\imconfig.h" />
     <ClInclude Include="UI\imgui\imgui.h" />
@@ -155,11 +157,13 @@
     <ClInclude Include="UI\imgui\imstb_textedit.h" />
     <ClInclude Include="UI\imgui\imstb_truetype.h" />
     <ClInclude Include="Utils\Config.h" />
+    <ClInclude Include="Utils\matrix.h" />
     <ClInclude Include="Utils\Memory.h" />
     <ClInclude Include="Utils\ProcessHandle.h" />
     <ClInclude Include="Utils\Scanner.h" />
     <ClInclude Include="Utils\Updater.h" />
     <ClInclude Include="Utils\Utils.h" />
+    <ClInclude Include="Utils\vector.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

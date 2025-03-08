@@ -62,11 +62,3 @@ enum class DOTA_RIVER {
     RIVER_BLOOD
 };
 
-struct vector2D {
-    float x, y;
-};
-
-struct vector3D {
-    float x, y, z;
-};
-

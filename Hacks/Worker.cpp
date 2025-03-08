@@ -8,6 +8,8 @@
 void GameData::reset() {
     local_player = nullptr;
     local_hero = nullptr;
+    local_hero_server = nullptr;
+    modifiers_list = nullptr;
 }
 
 void Hacks::start_worker() {
@@ -27,8 +29,8 @@ void Hacks::start_worker() {
 
         LOG::DEBUG("Game started, looking for a Local Player and Hero...");
 
-        while (!GameData::local_player || !GameData::local_hero) {
-            if (!GameData::local_player && Hacks::find_local_player()) {
+        while (!GameData::local_player || !GameData::local_hero || !GameData::local_hero_server) {
+            if (Hacks::find_local_player()) {
                 LOG::INFO("Local Player -> [{}]", TO_VOID(GameData::local_player));
                 // ConVars
                 Hacks::find_and_set_convars();
@@ -37,12 +39,20 @@ void Hacks::start_worker() {
                 vmt.camera->set_r_farz(ConfigManager::config_entries["camera_distance"] * 2);
             }
 
-            if (!GameData::local_hero && Hacks::find_local_hero()) {
-                LOG::INFO("Local Hero: [{}] -> [{}]", GameData::local_hero->identity()->entity_name().value(), TO_VOID(GameData::local_hero));
+            if (Hacks::find_local_hero()) {
+                LOG::INFO("Local Hero [client]: [{}] -> [{}]", GameData::local_hero->identity()->entity_name().value(), TO_VOID(GameData::local_hero));
                 GameData::local_team = GameData::local_hero->team_num();
                 // River Type
                 vmt.gamerules->set_river_vial((DOTA_RIVER)ConfigManager::config_entries["river_vial"]);
             }
+
+            if (Hacks::find_local_hero_server()) {
+                LOG::INFO("Local Hero [server]: [{}] -> [{}]", GameData::local_hero_server->identity()->entity_name().value(), TO_VOID(GameData::local_hero_server));
+
+                const auto modifier_manager = GameData::local_hero_server->modifier_manager();
+                GameData::modifiers_list = modifier_manager->list();
+            }
+
             std::this_thread::sleep_for(std::chrono::seconds(1));
         }
 
@@ -57,7 +67,7 @@ void Hacks::start_worker() {
                 continue;
             }
 
-            for (auto ident = vmt.entity_system->first_identity(); ident; ident = ident->m_pNext().value_or(nullptr)) {
+            for (auto ident = vmt.c_entity_system->first_identity(); ident; ident = ident->m_pNext().value_or(nullptr)) {
                 if (auto current_ent = ident->base_entity(); current_ent && current_ent->is_hero()) {
                     if (current_ent->team_num() != GameData::local_team) {
                         if (ConfigManager::config_entries["illusions_detection"] && current_ent->is_illusion())
@@ -66,7 +76,7 @@ void Hacks::start_worker() {
                 }
             }
 
-            std::this_thread::sleep_for(std::chrono::milliseconds(50));
+            std::this_thread::sleep_for(std::chrono::milliseconds(16));
         }
 
         LOG::DEBUG("Exiting lobby...\n");

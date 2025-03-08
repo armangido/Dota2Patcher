@@ -174,7 +174,7 @@ private:
 
         return nullopt;
     }
-    
+
     static int ask_for_int(const string& prompt, const optional<int> min_value = nullopt, const optional<int> max_value = nullopt) {
         int value;
         while (true) {

@@ -73,6 +73,7 @@ optional<uintptr_t> Memory::pattern_scan(const string& target_module, const stri
 bool Memory::load_modules(const DWORD process_ID) {
     const char* Modules[]{
         "client.dll",
+        "server.dll",
         "engine2.dll",
         "schemasystem.dll",
         "particles.dll",

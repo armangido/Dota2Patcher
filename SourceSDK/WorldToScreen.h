@@ -1,57 +1,6 @@
 #pragma once
 #include "..\Utils\Memory.h"
 
-class VMatrix { // github.com/LWSS/McDota/blob/master/src/SDK/vmatrix.h
-public:
-
-    VMatrix() : m{} {};
-
-    VMatrix(
-        float m00, float m01, float m02, float m03,
-        float m10, float m11, float m12, float m13,
-        float m20, float m21, float m22, float m23,
-        float m30, float m31, float m32, float m33
-    ) {
-        m[0][0] = m00;
-        m[0][1] = m01;
-        m[0][2] = m02;
-        m[0][3] = m03;
-
-        m[1][0] = m10;
-        m[1][1] = m11;
-        m[1][2] = m12;
-        m[1][3] = m13;
-
-        m[2][0] = m20;
-        m[2][1] = m21;
-        m[2][2] = m22;
-        m[2][3] = m23;
-
-        m[3][0] = m30;
-        m[3][1] = m31;
-        m[3][2] = m32;
-        m[3][3] = m33;
-    }
-
-    inline float* operator[](int i) {
-        return m[i];
-    }
-
-    inline const float* operator[](int i) const {
-        return m[i];
-    }
-
-    inline float* Base() {
-        return &m[0][0];
-    }
-
-    inline const float* Base() const {
-        return &m[0][0];
-    }
-
-    float m[4][4];
-};
-
 class WorldToScreen {
 public:
     static bool get_windows_size() {
@@ -68,11 +17,11 @@ public:
     }
 
     static optional <vector2D> get(const vector3D& spot) {
-        VMatrix matrix = Memory::read_memory<VMatrix>(g_VMatrix).value();
+        matrix3x4 matrix = Memory::read_memory<matrix3x4>(g_VMatrix).value();
 
         float x = matrix[0][0] * spot.x + matrix[0][1] * spot.y + matrix[0][2] * spot.z + matrix[0][3];
         float y = matrix[1][0] * spot.x + matrix[1][1] * spot.y + matrix[1][2] * spot.z + matrix[1][3];
-        float w = matrix[3][0] * spot.x + matrix[3][1] * spot.y + matrix[3][2] * spot.z + matrix[3][3];
+        float w = matrix[2][0] * spot.x + matrix[2][1] * spot.y + matrix[2][2] * spot.z + matrix[2][3];
 
         float invw = 1.0f / w;
         x *= invw;

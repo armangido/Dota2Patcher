@@ -163,5 +163,17 @@
     <ClInclude Include="SourceSDK\WorldToScreen.h">
       <Filter>SourceSDK</Filter>
     </ClInclude>
+    <ClInclude Include="SourceSDK\CGameSceneNode.h">
+      <Filter>SourceSDK</Filter>
+    </ClInclude>
+    <ClInclude Include="SourceSDK\ModifierManager.h">
+      <Filter>SourceSDK</Filter>
+    </ClInclude>
+    <ClInclude Include="Utils\matrix.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Utils\vector.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
