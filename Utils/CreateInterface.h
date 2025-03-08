@@ -72,10 +72,10 @@ public:
 			}
 
 			seen_interfaces.insert(name.value());
-			
+
 			if (dump_to_file)
 				dump_file << "[" << name.value() << "] -> [" << TO_VOID(base) << "]\n";
-			
+
 			if (module.interface_handlers.find(name.value()) != module.interface_handlers.end()) {
 				LOG::INFO("Interface [{}] -> [{}]", name.value(), TO_VOID(base));
 				module.interface_handlers.at(name.value())(base);

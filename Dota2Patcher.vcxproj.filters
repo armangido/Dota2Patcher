@@ -63,9 +63,6 @@
     <ClCompile Include="Dota2Patcher.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="SourceSDK\CreateInterface.h">
-      <Filter>SourceSDK</Filter>
-    </ClInclude>
     <ClInclude Include="SourceSDK\CEngineClient.h">
       <Filter>SourceSDK</Filter>
     </ClInclude>
@@ -177,6 +174,9 @@
     </ClInclude>
     <ClInclude Include="SourceSDK\CParticleSystemMgr.h">
       <Filter>SourceSDK</Filter>
+    </ClInclude>
+    <ClInclude Include="Utils\CreateInterface.h">
+      <Filter>Utils</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -1,7 +1,7 @@
 ﻿#include "Dota2Patcher.h"
 #include "Utils/Config.h"
 #include "Utils/Updater.h"
-#include "SourceSDK/CreateInterface.h"
+#include "Utils/CreateInterface.h"
 #include "Hacks/Hacks.h"
 #include "Utils/Scanner.h"
 

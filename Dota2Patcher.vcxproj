@@ -139,7 +139,6 @@
     <ClInclude Include="SourceSDK\CGameSceneNode.h" />
     <ClInclude Include="SourceSDK\CHandle.h" />
     <ClInclude Include="SourceSDK\CParticleSystemMgr.h" />
-    <ClInclude Include="SourceSDK\CreateInterface.h" />
     <ClInclude Include="SourceSDK\CSource2Client.h" />
     <ClInclude Include="SourceSDK\C_DOTAPlayerController.h" />
     <ClInclude Include="SourceSDK\C_DOTATeam.h" />
@@ -158,6 +157,7 @@
     <ClInclude Include="UI\imgui\imstb_textedit.h" />
     <ClInclude Include="UI\imgui\imstb_truetype.h" />
     <ClInclude Include="Utils\Config.h" />
+    <ClInclude Include="Utils\CreateInterface.h" />
     <ClInclude Include="Utils\matrix.h" />
     <ClInclude Include="Utils\Memory.h" />
     <ClInclude Include="Utils\ProcessHandle.h" />
