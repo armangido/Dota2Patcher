@@ -16,8 +16,8 @@ public:
         return true;
     }
 
-    static optional <vector2D> get(const vector3D& spot) {
-        matrix3x4 matrix = Memory::read_memory<matrix3x4>(g_VMatrix).value();
+    static optional <Vector> get(const Vector& spot) {
+        Matrix matrix = Memory::read_memory<Matrix>(g_VMatrix).value();
 
         float x = matrix[0][0] * spot.x + matrix[0][1] * spot.y + matrix[0][2] * spot.z + matrix[0][3];
         float y = matrix[1][0] * spot.x + matrix[1][1] * spot.y + matrix[1][2] * spot.z + matrix[1][3];
@@ -30,10 +30,10 @@ public:
         if (x < -1 || x > 1 || y < -1 || y > 1)
             return nullopt;
 
-        vector2D ret = { (x + 1.0f) * 0.5f * g_windows_size.x , (1.0f - y) * 0.5f * g_windows_size.y };
+        Vector ret = { (x + 1.0f) * 0.5f * g_windows_size.x , (1.0f - y) * 0.5f * g_windows_size.y };
         return ret;
     }
 
-    static inline vector2D g_windows_size;
+    static inline Vector g_windows_size;
     static inline uintptr_t g_VMatrix;
 };

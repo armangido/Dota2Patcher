@@ -51,11 +51,7 @@ public:
 		return reinterpret_cast<ModifierManager*>(ptr.value());
 	}
 
-	vector2D origin2D() const {
-		return this->scene_node()->origin2D();
-	}
-
-	vector3D origin3D() const {
-		return this->scene_node()->origin3D();
+	Vector origin() const {
+		return this->scene_node()->origin();
 	}
 };
