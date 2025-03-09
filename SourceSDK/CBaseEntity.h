@@ -45,13 +45,17 @@ public:
 		const auto ptr = vmt.schema_system->get_netvar(this, "client.dll", "C_DOTA_BaseNPC_Hero", "m_hReplicatingOtherHeroModel");
 
 		if (Memory::read_memory<int>(ptr.value()).value_or(-1) == -1)
-			false;
+			return false;
 
 		switch (this->heroID()) {
-			case DOTA_HERO_ID::npc_dota_hero_meepo: return !this->is_clone();
-			case DOTA_HERO_ID::npc_dota_hero_morphling: return !this->c_modifier_manager()->find_by_name("modifier_morphling_replicate");
-			case DOTA_HERO_ID::npc_dota_hero_arc_warden: return !this->c_modifier_manager()->find_by_name("modifier_arc_warden_tempest_double");
-		default: return true;
+		case DOTA_HERO_ID::npc_dota_hero_meepo:
+			return !this->is_clone();
+		case DOTA_HERO_ID::npc_dota_hero_morphling:
+			return !this->c_modifier_manager()->find_by_name("modifier_morphling_replicate");
+		case DOTA_HERO_ID::npc_dota_hero_arc_warden:
+			return !this->c_modifier_manager()->find_by_name("modifier_arc_warden_tempest_double");
+		default:
+			return true;
 		}
 	}
 
