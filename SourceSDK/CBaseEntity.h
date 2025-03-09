@@ -37,14 +37,14 @@ public:
 	}
 
 	DOTA_HERO_ID heroID() const {
-		auto ptr = vmt.schema_system->get_netvar(this, "client.dll", "C_DOTA_BaseNPC_Hero", "m_iHeroID");
+		const auto ptr = vmt.schema_system->get_netvar(this, "client.dll", "C_DOTA_BaseNPC_Hero", "m_iHeroID");
 		return Memory::read_memory<DOTA_HERO_ID>(ptr.value()).value();
 	}
 
 	bool is_illusion() const {
-		auto ptr = vmt.schema_system->get_netvar(this, "client.dll", "C_DOTA_BaseNPC_Hero", "m_hReplicatingOtherHeroModel");
+		const auto ptr = vmt.schema_system->get_netvar(this, "client.dll", "C_DOTA_BaseNPC_Hero", "m_hReplicatingOtherHeroModel");
 
-		if (heroID() == DOTA_HERO_ID::npc_dota_hero_morphling && this->c_modifier_manager()->find_by_name("modifier_morphling_replicate"))
+		if (this->heroID() == DOTA_HERO_ID::npc_dota_hero_morphling && this->c_modifier_manager()->find_by_name("modifier_morphling_replicate"))
 			return false;
 
 		return Memory::read_memory<int>(ptr.value()).value() != -1 && !is_clone();
