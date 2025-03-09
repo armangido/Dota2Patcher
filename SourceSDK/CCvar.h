@@ -53,6 +53,5 @@ public:
 		return count;
 	}
 
-	//! Global variable to store dumped ConVars
 	static inline std::unordered_map<string, CCvarNode*> g_convars;
 };

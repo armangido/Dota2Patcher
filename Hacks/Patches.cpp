@@ -10,7 +10,7 @@ void Hacks::apply_patches() {
 // push		r12
 // push		r13
 // sub		rsp, 118h
-// movzx	eax, byte ptr [rcx+0A64h]
+// movzx	eax, byte ptr [rcx+9A4h]
 // xor		r13d, r13d
 // shr		al, 7
 // movzx	r12d, dl
@@ -18,50 +18,33 @@ void Hacks::apply_patches() {
 // mov		rsi, rcx
 // mov		ebp, r13d
 // cmp		dl, al
-// jz		loc_18003A334 <<<<
+// jz		loc_18003BE04
+// mov		[r11+20h], r14
+// mov		[r11-28h], r15
+// test		dl, dl
+// jz		short loc_18003BAA2
+// mov		rdx, [rcx+310h]
+// test		rdx, rdx
+// jz		short loc_18003BAA2
+// mov		rax, [rdx+0A8h]
+// mov		r8, 0EFFFFFFFFFFFFFFFh
+// mov		rcx, rax
+// and		rcx, r8
+// cmp		rax, rcx
+// jz		short loc_18003BAA2
+// mov		[rdx+0A8h], rcx
+// mov		rcx, cs:qword_180635B78
+// mov		rax, [rcx]
+// call		qword ptr [rax+3C8h]
+// and		byte ptr [rsi+9A4h], 7Fh <<<<
 	if (ConfigManager::config_entries["set_rendering_enabled"]) {
 		Patches::add_patch({
 			"set_rendering_enabled",
 			"particles.dll",
 			Patches::Patterns::set_rendering_enabled,
-			PATCH_TYPE::TEST,
-			1
-			});
-
-		// idk for some reason set_rendering_enabled causes to crash without this fix
-		// C_SceneEntity almost the last vfunc
-		// #STR: "C_SceneEntity::SetupClientOnlyScene:  Couldn't determine d, "!self", "couldn't load scene file %s\n", "Failed to find soundevent '%s' when falling back from miss"
-		// In the middle there will be #STR: "blank"
-		// xor		edx, edx
-		// lea		rcx, [rsp+180h+var_120]
-		// call		cs:?Purge@CBufferString@@QEAAXH@Z ; CBufferString::Purge(int)
-		// mov		rdi, [rsi+598h]
-		// lea		rdx, [rbp+80h+arg_18]
-		// mov		rcx, r15
-		// call		sub_1802CFE30
-		// mov		r8, rax
-		// mov		[rbp+80h+arg_0], rbx
-		// lea		rdx, [rbp+80h+arg_0]
-		// mov		rcx, rdi
-		// call		sub_1829D6BD0 ; #STR: "blank" <<<<
-		// jmp		loc_1814170EA
-		//
-		// sub_1829D6BD0:
-		// mov		r13, [rax]
-		// mov[rsp + 88h + arg_0],	r13
-		// test		r13, r13
-		// jz		loc_1829D6ED8 <<<<
-		// mov		rbx, [rbx]
-		// test		rbx, rbx
-		// jz		short loc_1829D6C42
-		// mov		rbx, [rbx]
-		// loc_1829D6C42: ; CODE XREF: sub_1829D6BD0+6D↑j
-		Patches::add_patch({
-			"set_rendering_enabled_fix",
-			"client.dll",
-			Patches::Patterns::set_rendering_enabled_fix,
-			PATCH_TYPE::TEST,
-			1
+			PATCH_TYPE::CUSTOM,
+			2,
+			"A0"
 			});
 	}
 
