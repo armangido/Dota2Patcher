@@ -3,9 +3,10 @@
 
 class CCvarNode {
 public:
-	optional <string> name() const {
-		const auto name_ptr = Memory::read_memory<uintptr_t>(this);
-		return !name_ptr ? nullopt : Memory::read_string(name_ptr.value());
+	optional<string> name() const {
+		if (auto name_ptr = Memory::read_memory<uintptr_t>(this))
+			return Memory::read_string(*name_ptr);
+		return nullopt;
 	}
 
 	template <typename T>
