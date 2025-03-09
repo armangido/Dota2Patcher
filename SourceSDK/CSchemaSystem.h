@@ -139,7 +139,7 @@ public:
 		return Memory::read_memory<CSchemaSystemTypeScope*>(scopes_list.value() + scope_index * 8);
 	}
 
-	std::stringstream iterate_netvars(const string& scope_name, const string& class_name, const ClassDescription* class_description, const bool dump_to_file) const {
+	std::stringstream iterate_netvars(const string& class_name, const ClassDescription* class_description, const bool dump_to_file) const {
 		std::stringstream dump_content;
 
 		for (size_t i = 0; auto members_description = class_description->members_description(i); ++i) {
@@ -151,7 +151,7 @@ public:
 			const auto m_type = members_description.value()->m_type()->type_name();
 
 			if (netvar_name && offset.value_or(0) != 0) {
-				g_netvars[scope_name][class_name][netvar_name.value()] = offset.value();
+				g_netvars[class_name][netvar_name.value()] = offset.value();
 				if (dump_to_file)
 					dump_content << netvar_name.value() << " | " << std::hex << offset.value() << " | " << m_type.value_or("unknow") << "\n";
 			}
@@ -166,7 +166,7 @@ public:
 			return 0;
 
 		if (dump_to_file)
-			std::filesystem::create_directories("C:\\netvars\\" + scope_name + "\\");
+			std::filesystem::create_directories("C:\\netvars\\");
 
 		std::unordered_set<string> processed_classes;
 
@@ -205,11 +205,11 @@ public:
 					dump_content << "\n\n";
 
 					dump_content << "[" << name << "]\n";
-					dump_content << iterate_netvars(scope_name, name, desc, dump_to_file).rdbuf();
+					dump_content << iterate_netvars(name, desc, dump_to_file).rdbuf();
 					processed_classes.insert(name);
 
 					if (dump_to_file && dump_content.tellp() != std::streampos(0) && dump_content.str().find("|") != string::npos) {
-						string filename = "C:\\netvars\\" + scope_name + "\\" + name + ".txt";
+						string filename = "C:\\netvars\\" + name + ".txt";
 						std::ofstream dump_file(filename);
 						dump_file << dump_content.rdbuf();
 						dump_file.close();
@@ -223,27 +223,33 @@ public:
 		}
 
 		size_t netvar_count = 0;
-		for (const auto& [scope, class_map] : g_netvars) {
-			if (scope != scope_name)
-				continue;
-			for (const auto& [class_name, netvar_map] : class_map) {
-				netvar_count += netvar_map.size();
-			}
+		for (const auto& [class_name, netvar_map] : g_netvars) {
+			netvar_count += netvar_map.size();
 		}
 
 		return netvar_count;
 	}
 
+	size_t dump_netvars(const size_t scope_index, const bool dump_to_file) const {
+		const auto scope = this->type_scope(scope_index);
+		if (!scope)
+			return 0;
+
+		const auto scope_name = scope.value()->scope_name();
+		if (!scope_name)
+			return 0;
+
+		return dump_netvars(scope_name.value(), dump_to_file);
+	}
+
 	template<typename T>
-	optional<uintptr_t> get_netvar(const T& addr, const string& scope_name, const string& class_name, const string& netvar_name) const {
-		if (auto it_scope = g_netvars.find(scope_name); it_scope != g_netvars.end()) {
-			if (auto it_class = it_scope->second.find(class_name); it_class != it_scope->second.end()) {
-				if (auto it_var = it_class->second.find(netvar_name); it_var != it_class->second.end())
-					return reinterpret_cast<uintptr_t>(addr) + it_var->second;
-			}
+	optional <uintptr_t> get_netvar(const T& addr, const string& class_name, const string& netvar_name) const {
+		if (auto it_class = g_netvars.find(class_name); it_class != g_netvars.end()) {
+			if (auto it_var = it_class->second.find(netvar_name); it_var != it_class->second.end())
+				return reinterpret_cast<uintptr_t>(addr) + it_var->second;
 		}
 		return nullopt;
 	}
 
-	static inline std::unordered_map<string, std::unordered_map<string, std::unordered_map<std::string, int32_t>>> g_netvars;
+	static inline std::unordered_map<string, std::unordered_map<std::string, int32_t>> g_netvars;
 };

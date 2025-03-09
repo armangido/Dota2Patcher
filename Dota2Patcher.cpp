@@ -97,8 +97,7 @@ int main() {
 	printf("\n");
 
 	LOG::DEBUG("Loading NetVars...");
-	LOG::INFO("NetVars loaded [client]: {}", vmt.schema_system->dump_netvars("client.dll"));
-	LOG::INFO("NetVars loaded [server]: {}", vmt.schema_system->dump_netvars("server.dll"));
+	LOG::INFO("NetVars loaded: {}", vmt.schema_system->dump_netvars("client.dll"));
 
 	// LOAD CONVARS
 	printf("\n");
