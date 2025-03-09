@@ -38,14 +38,14 @@ void Hacks::start_worker() {
                 vmt.camera->set_r_farz(ConfigManager::config_entries["camera_distance"] * 2);
             }
 
-            if (Hacks::find_local_hero()) {
+            if (GameData::local_player && Hacks::find_local_hero()) {
                 LOG::INFO("Local Hero [client]: [{}] -> [{}]", GameData::local_hero->identity()->entity_name().value(), TO_VOID(GameData::local_hero));
                 GameData::local_team = GameData::local_hero->team_num();
                 // River Type
                 vmt.gamerules->set_river_vial((DOTA_RIVER)ConfigManager::config_entries["river_vial"]);
             }
 
-            if (Hacks::find_local_hero_server()) {
+            if (GameData::local_hero && Hacks::find_local_hero_server()) {
                 LOG::INFO("Local Hero [server]: [{}] -> [{}]", GameData::local_hero_server->identity()->entity_name().value(), TO_VOID(GameData::local_hero_server));
             }
 

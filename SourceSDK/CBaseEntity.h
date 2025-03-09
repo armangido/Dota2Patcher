@@ -44,10 +44,15 @@ public:
 	bool is_illusion() const {
 		const auto ptr = vmt.schema_system->get_netvar(this, "client.dll", "C_DOTA_BaseNPC_Hero", "m_hReplicatingOtherHeroModel");
 
-		if (this->heroID() == DOTA_HERO_ID::npc_dota_hero_morphling && this->c_modifier_manager()->find_by_name("modifier_morphling_replicate"))
-			return false;
+		if (Memory::read_memory<int>(ptr.value()).value_or(-1) == -1)
+			false;
 
-		return Memory::read_memory<int>(ptr.value()).value() != -1 && !is_clone();
+		switch (this->heroID()) {
+			case DOTA_HERO_ID::npc_dota_hero_meepo: return !this->is_clone();
+			case DOTA_HERO_ID::npc_dota_hero_morphling: return !this->c_modifier_manager()->find_by_name("modifier_morphling_replicate");
+			case DOTA_HERO_ID::npc_dota_hero_arc_warden: return !this->c_modifier_manager()->find_by_name("modifier_arc_warden_tempest_double");
+		default: return true;
+		}
 	}
 
 	CGameSceneNode* scene_node() const {

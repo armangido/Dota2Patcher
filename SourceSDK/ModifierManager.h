@@ -32,7 +32,7 @@ public:
 		if (!current_list)
 			current_list = list();
 
-		for (size_t i = 0; i <= count; i++) {
+		for (size_t i = 0; i < count; i++) {
 			const auto current_modifier = current_list->modifier(i);
 			if (!current_modifier)
 				continue;
@@ -47,7 +47,7 @@ public:
 		if (!current_list)
 			current_list = list();
 
-		for (size_t i = 0; i <= count; i++) {
+		for (size_t i = 0; i < count; i++) {
 			const auto current_modifier = current_list->modifier(i);
 			if (!current_modifier)
 				continue;
