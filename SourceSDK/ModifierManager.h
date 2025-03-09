@@ -26,9 +26,11 @@ public:
 		return Memory::read_memory<ModifiersList*>(this + 0x18).value_or(nullptr);
 	}
 
-	std::vector<Modifier*> get_vector(ModifiersList* current_list) const {
+	std::vector<Modifier*> get_vector(ModifiersList* current_list = nullptr) const {
 		std::vector<Modifier*> found;
 		size_t count = this->count();
+		if (!current_list)
+			current_list = list();
 
 		for (size_t i = 0; i <= count; i++) {
 			const auto current_modifier = current_list->modifier(i);
@@ -40,8 +42,10 @@ public:
 		return found;
 	}
 
-	optional <Modifier*> find_by_name(ModifiersList* current_list, const string& name) const {
+	optional <Modifier*> find_by_name(const string& name, ModifiersList* current_list = nullptr) const {
 		size_t count = this->count();
+		if (!current_list)
+			current_list = list();
 
 		for (size_t i = 0; i <= count; i++) {
 			const auto current_modifier = current_list->modifier(i);

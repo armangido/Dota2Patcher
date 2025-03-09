@@ -9,7 +9,6 @@ void GameData::reset() {
     local_player = nullptr;
     local_hero = nullptr;
     local_hero_server = nullptr;
-    modifiers_list = nullptr;
 }
 
 void Hacks::start_worker() {
@@ -48,9 +47,6 @@ void Hacks::start_worker() {
 
             if (Hacks::find_local_hero_server()) {
                 LOG::INFO("Local Hero [server]: [{}] -> [{}]", GameData::local_hero_server->identity()->entity_name().value(), TO_VOID(GameData::local_hero_server));
-
-                const auto modifier_manager = GameData::local_hero_server->modifier_manager();
-                GameData::modifiers_list = modifier_manager->list();
             }
 
             std::this_thread::sleep_for(std::chrono::seconds(1));

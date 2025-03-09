@@ -36,8 +36,17 @@ public:
 		return Memory::read_memory<bool>(ptr.value()).value();
 	}
 
+	DOTA_HERO_ID heroID() const {
+		auto ptr = vmt.schema_system->get_netvar(this, "client.dll", "C_DOTA_BaseNPC_Hero", "m_iHeroID");
+		return Memory::read_memory<DOTA_HERO_ID>(ptr.value()).value();
+	}
+
 	bool is_illusion() const {
 		auto ptr = vmt.schema_system->get_netvar(this, "client.dll", "C_DOTA_BaseNPC_Hero", "m_hReplicatingOtherHeroModel");
+
+		if (heroID() == DOTA_HERO_ID::npc_dota_hero_morphling && this->c_modifier_manager()->find_by_name("modifier_morphling_replicate"))
+			return false;
+
 		return Memory::read_memory<int>(ptr.value()).value() != -1 && !is_clone();
 	}
 
@@ -46,7 +55,12 @@ public:
 		return Memory::read_memory<CGameSceneNode*>(ptr.value()).value_or(nullptr);
 	}
 
-	ModifierManager* modifier_manager() const {
+	ModifierManager* c_modifier_manager() const {
+		const auto ptr = vmt.schema_system->get_netvar(this, "client.dll", "C_DOTA_BaseNPC", "m_ModifierManager");
+		return reinterpret_cast<ModifierManager*>(ptr.value());
+	}
+
+	ModifierManager* s_modifier_manager() const {
 		const auto ptr = vmt.schema_system->get_netvar(this, "server.dll", "CDOTA_BaseNPC", "m_ModifierManager");
 		return reinterpret_cast<ModifierManager*>(ptr.value());
 	}
