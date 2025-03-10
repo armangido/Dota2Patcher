@@ -15,6 +15,10 @@ public:
 		return this->identity()->is_hero();
 	}
 
+	bool is_thinker() const {
+		return this->identity()->is_thinker();
+	}
+
 	int team_num() const {
 		const auto ptr = vmt.schema_system->get_netvar(this, "C_BaseEntity", "m_iTeamNum");
 		return Memory::read_memory<int>(ptr.value()).value_or(-1);
@@ -29,6 +33,11 @@ public:
 	void set_client_seen_illusion_modifier(bool val) {
 		const auto ptr = vmt.schema_system->get_netvar(this, "C_DOTA_BaseNPC", "m_bHasClientSeenIllusionModifier");
 		Memory::write_memory(ptr.value(), val);
+	}
+
+	void set_custom_health_label(const string& label) {
+		const auto ptr = vmt.schema_system->get_netvar(this, "C_DOTA_BaseNPC", "m_CustomHealthLabel");
+		Memory::write_string(ptr.value(), label);
 	}
 
 	bool is_clone() const {
@@ -46,6 +55,11 @@ public:
 
 		if (Memory::read_memory<int>(ptr.value()).value_or(-1) == -1)
 			return false;
+
+		// If you are reading this, you've been in a coma for almost 20 years.
+		// We are trying a new technique.
+		// We don't know where this message will end up in your dream, but we hope we are getting through.
+		// Please wake up.
 
 		switch (this->heroID()) {
 		case DOTA_HERO_ID::npc_dota_hero_meepo:

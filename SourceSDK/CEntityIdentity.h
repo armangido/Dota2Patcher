@@ -38,6 +38,11 @@ public:
 		return name.value_or("") == "C_DOTA_BaseNPC_Hero";
 	}
 
+	bool is_thinker() const {
+		const auto name = this->internal_name();
+		return name.value_or("") == "npc_dota_thinker";
+	}
+
 	CSchemaClassBinding* schema_class_binding() const {
 		return Memory::read_memory<CSchemaClassBinding*>(this + 0x8).value_or(nullptr);
 	}

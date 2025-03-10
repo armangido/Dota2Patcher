@@ -14,6 +14,7 @@ public:
         { "allow_rc_update", 0 },
         { "visible_by_enemy", 0 },
         { "illusions_detection", 0 },
+        { "charge_of_darkness", 0},
         { "cl_weather", 0 },
         { "river_vial", 0},
     };
@@ -27,6 +28,7 @@ public:
         cout << "[HACKS]\n";
         config_entries["visible_by_enemy"] = ask_for_bool("[~] Visible By Enemy [y/n or 1/0]: ");
         config_entries["illusions_detection"] = ask_for_bool("[~] Illusions Detection [y/n or 1/0]: ");
+        config_entries["charge_of_darkness"] = ask_for_bool("[~] Charge of darkness [y/n or 1/0]: ");
         // Weather
         cout <<
             "[WEATHER]\n"
@@ -74,6 +76,7 @@ public:
             << "[HACKS]\n"
             << "[~] Visible By Enemy: " << std::boolalpha << (bool)config_entries["visible_by_enemy"] << "\n"
             << "[~] Illusions Detection: " << std::boolalpha << (bool)config_entries["illusions_detection"] << "\n"
+            << "[~] Charge of darkness: " << std::boolalpha << (bool)config_entries["charge_of_darkness"] << "\n"
             << "[~] Weather: " << int_to_weather((DOTA_WEATHER)config_entries["cl_weather"]) << "\n"
             << "[~] River type: " << int_to_river((DOTA_RIVER)config_entries["river_vial"]) << "\n"
             ;
