@@ -21,7 +21,8 @@ public:
 		static inline const string CDOTACamera = "48 8D ? ? ? ? ? 48 8D ? ? ? ? ? 48 89 ? ? ? ? ? E9 ? ? ? ? CC CC CC CC CC CC CC CC 48 8D";
 		static inline const string VMatrix = "48 8D 0D ? ? ? ? 48 C1 E0 06";
 
-		static inline const string set_rendering_enabled = "80 A6 A4 09 00 00";
+		static inline const string set_rendering_enabled = "0F 84 ? ? ? ? 4D 89 73";
+		static inline const string set_rendering_enabled_fix = "0F 84 ? ? ? ? 48 8B ? 48 85 ? 74 ? 48 8B ? 48 8B";
 		static inline const string visible_by_enemy = "75 ? 41 8B CE E8 ? ? ? ? 48 85 C0 74 ? 80 B8";
 	};
 
