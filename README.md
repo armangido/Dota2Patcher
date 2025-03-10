@@ -15,22 +15,25 @@
 
 ## ❗ Features:
 
-### ✨ NEW: River Changer
-Set any pyte of river (aka [River Vials](https://dota2.fandom.com/wiki/River_Vials))
+### ✨ NEW: Spirit Breaker Charge  
+![image](https://github.com/user-attachments/assets/b7e030b8-29ac-4ed0-9c0c-d5bef286c5ab)
 
-### ✨ NEW: Weather Changer
-Set any type of weather: `Snow, Rain, Moonbeam, Pestilence, Harvest, Sirocco, Spring, Ash, Aurora`  
-
-![weather](https://github.com/user-attachments/assets/54b801b6-eb5a-427b-abce-f3268780d759)
-
-### ✨ NEW: Visible By Enemy  
+### ✨ Visible By Enemy  
 Draws a ring under your hero if you are visible by enemy
 
 ![image](https://github.com/user-attachments/assets/051de205-f4fb-440b-b04a-81db3c65bca6)
 
-### ✨ NEW: Enemy Illusions Detection
+### ✨ Enemy Illusions Detection
 
 ![image](https://github.com/user-attachments/assets/68fd753a-8f16-439f-9bfa-54542169a9a9)
+
+### ✨ River Changer
+Set any pyte of river (aka [River Vials](https://dota2.fandom.com/wiki/River_Vials))
+
+### ✨ Weather Changer
+Set any type of weather: `Snow, Rain, Moonbeam, Pestilence, Harvest, Sirocco, Spring, Ash, Aurora`  
+
+![weather](https://github.com/user-attachments/assets/54b801b6-eb5a-427b-abce-f3268780d759)
 
 ### ✨ Camera distance patch without ConVars
 Now you don't have to use ConVars (ex: `dota_camera_distance 1500; r_farz 18000`) to set camera distance!  
