@@ -19,7 +19,6 @@ public:
     static inline CDOTAGamerules* gamerules = nullptr;
     static inline CDOTACamera* camera = nullptr;
     static inline CGameEntitySystem* entity_system = nullptr;
-    static inline CGameEntitySystem* s_entity_system = nullptr;
     static inline CSchemaSystem* schema_system = nullptr;
     static inline CParticleSystemMgr* particles = nullptr;
     static inline CCvar* cvar = nullptr;

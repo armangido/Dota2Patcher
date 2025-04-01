@@ -9,17 +9,14 @@ public:
     }
 
     static bool find_CGameEntitySystem() {
-        const auto entity_system = Memory::read_memory<CGameEntitySystem*>(vmt.game_resource + 0x58); // client
-        const auto s_entity_system = Memory::read_memory<CGameEntitySystem*>(vmt.game_resource + 0xB8); // server
+        const auto entity_system = Memory::read_memory<CGameEntitySystem*>(vmt.game_resource + 0x58);
         
-        if (entity_system.value_or(nullptr) == nullptr || s_entity_system.value_or(nullptr) == nullptr)
+        if (entity_system.value_or(nullptr) == nullptr)
             return false;
 
         vmt.entity_system = entity_system.value();
-        vmt.s_entity_system = s_entity_system.value();
 
-        LOG::INFO("CGameEntitySystem [client] -> [{}]", TO_VOID(entity_system.value()));
-        LOG::INFO("CGameEntitySystem [server] -> [{}]", TO_VOID(s_entity_system.value()));
+        LOG::INFO("CGameEntitySystem -> [{}]", TO_VOID(entity_system.value()));
         return true;
     }
 
