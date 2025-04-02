@@ -34,7 +34,7 @@ jobs:
 
     - name: Generate MD5 hash for the built .exe
       run: |
-        $filePath = "Release\Dota2Patcher.exe"
+        $filePath = "D:\a\Dota2Patcher\Dota2Patcher\Release\Dota2Patcher.exe"
         $hash = Get-FileHash $filePath -Algorithm MD5
         $hash.Hash | Out-File -FilePath build_hash.txt
         
