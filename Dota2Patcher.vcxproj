@@ -74,7 +74,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>d3d11.lib;dxgi.lib;dxguid.lib;libcurl_a.lib;normaliz.lib;crypt32.lib;wldap32.lib;ws2_32.lib;$(CoreLibraryDependencies);%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>libcurl_a.lib;normaliz.lib;crypt32.lib;wldap32.lib;ws2_32.lib;$(CoreLibraryDependencies);%(AdditionalDependencies)</AdditionalDependencies>
       <IgnoreSpecificDefaultLibraries>MSVCRT</IgnoreSpecificDefaultLibraries>
       <UACExecutionLevel>RequireAdministrator</UACExecutionLevel>
     </Link>
@@ -100,7 +100,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>d3d11.lib;dxgi.lib;dxguid.lib;libcurl_a.lib;normaliz.lib;crypt32.lib;wldap32.lib;ws2_32.lib;$(CoreLibraryDependencies);%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>libcurl_a.lib;normaliz.lib;crypt32.lib;wldap32.lib;ws2_32.lib;$(CoreLibraryDependencies);%(AdditionalDependencies)</AdditionalDependencies>
       <IgnoreSpecificDefaultLibraries>
       </IgnoreSpecificDefaultLibraries>
       <UACExecutionLevel>RequireAdministrator</UACExecutionLevel>
@@ -116,12 +116,6 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="UI\imgui\imgui.cpp" />
-    <ClCompile Include="UI\imgui\imgui_draw.cpp" />
-    <ClCompile Include="UI\imgui\imgui_impl_dx11.cpp" />
-    <ClCompile Include="UI\imgui\imgui_impl_win32.cpp" />
-    <ClCompile Include="UI\imgui\imgui_tables.cpp" />
-    <ClCompile Include="UI\imgui\imgui_widgets.cpp" />
     <ClCompile Include="Utils\Memory.cpp" />
     <ClCompile Include="Utils\Updater.cpp" />
   </ItemGroup>
@@ -147,14 +141,6 @@
     <ClInclude Include="SourceSDK\CCvar.h" />
     <ClInclude Include="SourceSDK\ModifierManager.h" />
     <ClInclude Include="SourceSDK\WorldToScreen.h" />
-    <ClInclude Include="UI\imgui\imconfig.h" />
-    <ClInclude Include="UI\imgui\imgui.h" />
-    <ClInclude Include="UI\imgui\imgui_impl_dx11.h" />
-    <ClInclude Include="UI\imgui\imgui_impl_win32.h" />
-    <ClInclude Include="UI\imgui\imgui_internal.h" />
-    <ClInclude Include="UI\imgui\imstb_rectpack.h" />
-    <ClInclude Include="UI\imgui\imstb_textedit.h" />
-    <ClInclude Include="UI\imgui\imstb_truetype.h" />
     <ClInclude Include="Utils\Config.h" />
     <ClInclude Include="Utils\CreateInterface.h" />
     <ClInclude Include="Utils\matrix.h" />
