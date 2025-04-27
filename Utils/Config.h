@@ -13,6 +13,7 @@ public:
         { "set_rendering_enabled", 0 },
         { "allow_rc_update", 0 },
         { "visible_by_enemy", 0 },
+        { "dota_hud_chat_enable_all_emoticons", 0},
         { "illusions_detection", 0 },
         { "charge_of_darkness", 0},
         { "cl_weather", 0 },
@@ -27,6 +28,7 @@ public:
         config_entries["allow_rc_update"] = ask_for_bool("[~] Check for BETA update? [y/n or 1/0]: ");
         cout << "[HACKS]\n";
         config_entries["visible_by_enemy"] = ask_for_bool("[~] Visible By Enemy [y/n or 1/0]: ");
+        config_entries["dota_hud_chat_enable_all_emoticons"] = ask_for_bool("[~] Unlock Emoticons [y/n or 1/0]: ");
         config_entries["illusions_detection"] = ask_for_bool("[~] Illusions Detection [y/n or 1/0]: ");
         config_entries["charge_of_darkness"] = ask_for_bool("[~] Charge of darkness [y/n or 1/0]: ");
         // Weather
@@ -75,6 +77,7 @@ public:
             << "[~] Check for BETA update: " << std::boolalpha << (bool)config_entries["allow_rc_update"] << "\n"
             << "[HACKS]\n"
             << "[~] Visible By Enemy: " << std::boolalpha << (bool)config_entries["visible_by_enemy"] << "\n"
+            << "[~] Unlock Emoticons: " << std::boolalpha << (bool)config_entries["dota_hud_chat_enable_all_emoticons"] << "\n"
             << "[~] Illusions Detection: " << std::boolalpha << (bool)config_entries["illusions_detection"] << "\n"
             << "[~] Charge of darkness: " << std::boolalpha << (bool)config_entries["charge_of_darkness"] << "\n"
             << "[~] Weather: " << int_to_weather((DOTA_WEATHER)config_entries["cl_weather"]) << "\n"

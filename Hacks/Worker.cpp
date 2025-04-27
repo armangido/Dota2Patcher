@@ -40,8 +40,6 @@ void Hacks::start_worker() {
             if (GameData::local_player && !GameData::local_hero && Hacks::find_local_hero()) {
                 LOG::INFO("Local Hero: [{}] -> [{}]", GameData::local_hero->identity()->entity_name().value(), TO_VOID(GameData::local_hero));
                 GameData::local_team = GameData::local_hero->team_num();
-                // River Type
-                vmt.gamerules->set_river_vial((DOTA_RIVER)ConfigManager::config_entries["river_vial"]);
             }
 
             std::this_thread::sleep_for(std::chrono::seconds(1));
