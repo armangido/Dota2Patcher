@@ -9,7 +9,7 @@ public:
     }
 
     DOTA_GAME_STATE game_state() const {
-        const auto game_state = Memory::read_memory<int>(this + 0x74);
+        const auto game_state = Memory::read_memory<int>(this + 0x78);
         return game_state.has_value() ? static_cast<DOTA_GAME_STATE>(game_state.value()) : DOTA_GAME_STATE::INVALID;
     }
 
@@ -22,6 +22,6 @@ public:
 class C_DOTAGamerulesProxy {
 public:
     CDOTAGamerules* gamerules() const {
-        return Memory::read_memory<CDOTAGamerules*>(this + 0x510).value_or(nullptr);
+        return Memory::read_memory<CDOTAGamerules*>(this + 0x5E0).value_or(nullptr);
     }
 };
