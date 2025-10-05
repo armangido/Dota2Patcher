@@ -21,7 +21,7 @@ jobs:
         uses: microsoft/setup-msbuild@v1
 
       - name: Build solution or project
-        run: msbuild YourProject.sln /p:Configuration=Release
+        run: msbuild Dota2Patcher.sln /p:Configuration=Release
         # or msbuild path/to/YourProject.vcxproj /p:Configuration=Release
 
       - name: Find first EXE in Release folder
