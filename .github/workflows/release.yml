@@ -30,4 +30,6 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Debug — List build output
-        run: dir D:\a\Dota2Patcher\Dota2Patcher /s /b
+        shell: pwsh
+        run: |
+          Get-ChildItem -Path D:\a\Dota2Patcher\Dota2Patcher -Recurse -File | Select-Object FullName
