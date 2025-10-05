@@ -3,8 +3,7 @@ name: Build C++ (MSBuild) and Release
 on:
   push:
     tags:
-      - "v*"   # e.g. v1.0.0
-  # workflow_dispatch:  # Uncomment to allow manual triggering if you want
+      - "v*"
 
 permissions:
   contents: write
@@ -17,26 +16,19 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Setup MSBuild (Visual Studio)
+      - name: Setup MSBuild
         uses: microsoft/setup-msbuild@v1
 
-      - name: Build solution or project
-        run: msbuild Dota2Patcher.sln /p:Configuration=Release
-        # or msbuild path/to/YourProject.vcxproj /p:Configuration=Release
+      - name: Build Release x64
+        run: msbuild Dota2Patcher.sln /p:Configuration=Release /p:Platform=x64
 
-      - name: Find first EXE in Release folder
-        id: find_exe
-        shell: pwsh
-        run: |
-          $exe = Get-ChildItem -Path $env:GITHUB_WORKSPACE -Filter *.exe -Recurse |
-                 Where-Object { $_.FullName -match '\\Release\\' } |
-                 Select-Object -First 1
-          if (-not $exe) { Write-Error "No EXE found in Release folder."; exit 1 }
-          echo "EXE_PATH=$($exe.FullName)" >> $env:GITHUB_ENV
+      - name: Debug — List files
+        run: dir /s /b
 
       - name: Create GitHub Release and Upload EXE
         uses: softprops/action-gh-release@v1
         with:
-          files: ${{ env.EXE_PATH }}
+          files: |
+            **/x64/Release/*.exe
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
