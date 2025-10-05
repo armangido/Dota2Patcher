@@ -10,7 +10,7 @@ public:
 
     DOTA_GAME_STATE game_state() const {
         const auto game_state = Memory::read_memory<int>(this + 0x78);
-        std::cout << game_state;
+        std::cout << game_state.value();
         return game_state.has_value() ? static_cast<DOTA_GAME_STATE>(game_state.value()) : DOTA_GAME_STATE::INVALID;
     }
 
