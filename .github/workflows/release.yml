@@ -22,14 +22,18 @@ jobs:
       - name: Build Release x64
         run: msbuild Dota2Patcher.sln /p:Configuration=Release /p:Platform=x64
 
+      - name: Locate built EXE
+        id: find_exe
+        shell: pwsh
+        run: |
+          $exe = Get-ChildItem -Path "$env:GITHUB_WORKSPACE" -Filter Dota2Patcher.exe -Recurse | Select-Object -First 1
+          if (-not $exe) { Write-Error "EXE not found"; exit 1 }
+          echo "EXE_PATH=$($exe.FullName)" >> $env:GITHUB_ENV
+          echo "Found EXE at: $($exe.FullName)"
+
       - name: Create GitHub Release and Upload EXE
         uses: softprops/action-gh-release@v1
         with:
-          files: |
-            **/x64/Release/*.exe
+          files: ${{ env.EXE_PATH }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - name: Debug — List build output
-        shell: pwsh
-        run: |
-          Get-ChildItem -Path D:\a\Dota2Patcher\Dota2Patcher -Recurse -File | Select-Object FullName
