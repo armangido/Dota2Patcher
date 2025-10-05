@@ -9,7 +9,10 @@ void GameData::reset() {
     local_player = nullptr;
     local_hero = nullptr;
 }
-
+bool in_game() const {
+    const auto game_state = this->game_state();
+    return game_state == DOTA_GAME_STATE::HERO_SELECTION || game_state == DOTA_GAME_STATE::STRATEGY_TIME || game_state == DOTA_GAME_STATE::PRE_GAME || game_state == DOTA_GAME_STATE::GAME_IN_PROGRESS || game_state == DOTA_GAME_STATE::CUSTOM_GAME_SETUP;
+}
 void Hacks::start_worker() {
     while (true) {
         LOG::DEBUG("Waiting for a Lobby...");
@@ -22,7 +25,7 @@ void Hacks::start_worker() {
 
         LOG::DEBUG("Waiting for a Game to start...");
 
-        while (!vmt.gamerules->in_game())
+        while (!in_game())
             std::this_thread::sleep_for(std::chrono::seconds(1));
 
         LOG::DEBUG("Game started, looking for a Local Player and Hero...");
