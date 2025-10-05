@@ -28,8 +28,10 @@ jobs:
         run: |
           $exe = Get-ChildItem -Path "$env:GITHUB_WORKSPACE" -Filter Dota2Patcher.exe -Recurse | Select-Object -First 1
           if (-not $exe) { Write-Error "EXE not found"; exit 1 }
+          $exe = $exe -replace '\\','/'
           echo "EXE_PATH=$($exe.FullName)" >> $env:GITHUB_ENV
           echo "Found EXE at: $($exe.FullName)"
+          
 
       - name: Create GitHub Release and Upload EXE
         uses: softprops/action-gh-release@v1
