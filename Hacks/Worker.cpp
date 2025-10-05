@@ -21,7 +21,7 @@ void Hacks::start_worker() {
 
         LOG::DEBUG("Waiting for a Game to start...");
 
-        while (vmt.gamerules->!in_game())
+        while (!vmt.gamerules->in_game())
             std::this_thread::sleep_for(std::chrono::seconds(1));
 
         LOG::DEBUG("Game started, looking for a Local Player and Hero...");
