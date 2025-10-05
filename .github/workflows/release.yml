@@ -22,9 +22,6 @@ jobs:
       - name: Build Release x64
         run: msbuild Dota2Patcher.sln /p:Configuration=Release /p:Platform=x64
 
-      - name: Debug — List files
-        run: dir /s /b
-
       - name: Create GitHub Release and Upload EXE
         uses: softprops/action-gh-release@v1
         with:
@@ -32,3 +29,5 @@ jobs:
             **/x64/Release/*.exe
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Debug — List build output
+        run: dir D:\a\Dota2Patcher\Dota2Patcher /s /b
