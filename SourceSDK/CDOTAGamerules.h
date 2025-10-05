@@ -15,6 +15,7 @@ public:
 
     bool in_game() const {
         const auto game_state = this->game_state();
+        std::cout << game_state;
         return game_state == DOTA_GAME_STATE::HERO_SELECTION || game_state == DOTA_GAME_STATE::STRATEGY_TIME || game_state == DOTA_GAME_STATE::PRE_GAME || game_state == DOTA_GAME_STATE::GAME_IN_PROGRESS || game_state == DOTA_GAME_STATE::CUSTOM_GAME_SETUP;
     }
 };
